@@ -5,6 +5,7 @@ import {
   PersonIcon,
 } from "@radix-ui/react-icons";
 import { Button, Card, Flex, Text, TextField } from "@radix-ui/themes";
+import { Link } from "react-router-dom";
 
 export const LoginContainer = () => {
   return (
@@ -28,7 +29,9 @@ export const LoginContainer = () => {
         </Button>
 
         <Button variant="surface">
-          <FilePlusIcon /> Register
+          <Link to={`/register`}>
+            <FilePlusIcon /> Register
+          </Link>
         </Button>
       </Flex>
     </Card>
