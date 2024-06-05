@@ -28,7 +28,14 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Theme>
+    <Theme
+      accentColor="green"
+      grayColor="gray"
+      panelBackground="translucent"
+      scaling="100%"
+      radius="small"
+      style={{ backgroundColor: "#a2dfab" }}
+    >
       <RouterProvider router={router} />
     </Theme>
   </React.StrictMode>
