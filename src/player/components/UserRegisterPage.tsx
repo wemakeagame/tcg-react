@@ -8,6 +8,22 @@ import {
 } from "@radix-ui/themes";
 import { Page } from "../../core/components/Page";
 import { useState } from "react";
+import { User } from "../model/user";
+
+const saveUser = async (userData: User) => {
+  try {
+    const response = await fetch('http://localhost:5500/user', {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData), // body data type must match "Content-Type" header
+    });
+    return await response.json(); // parses JSON response into native JavaScript objects
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 export const UserRegisterPage = () => {
   const [email, setEmail] = useState<string>();
@@ -19,6 +35,12 @@ export const UserRegisterPage = () => {
     // valida e manda informacao para o back end
     console.log(email, username, password, rePassword);
 
+    if(email && username && password && (password === rePassword)) {
+      const user: User = {email, password, username};
+
+      saveUser(user);
+    }
+
     //Rest api
     // get, post, put, patch, delete
   }
@@ -27,7 +49,6 @@ export const UserRegisterPage = () => {
     <Page>
       <Text size="3" align={"center"} style={{ margin: "15px" }}>
         Please fill up the form for the registration.
-        <h1>{password}</h1>
       </Text>
       <Flex gap="2">
         <Flex direction={"column"} flexGrow={"1"}>
