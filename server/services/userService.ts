@@ -19,7 +19,7 @@ export class UserService {
     }
 
 
-    public addUser(user: User): boolean {
+    public addUser(user: User): User {
         return this.userRepository.addUser(user);
     }
 
