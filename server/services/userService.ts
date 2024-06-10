@@ -10,7 +10,10 @@ export class UserService {
 
     public authenticateUser(credential : UserCredential): User | null {
         if(credential.usernameEmail) {
-            const user = this.userRepository.getUser(credential.usernameEmail, credential.usernameEmail);
+
+            const isEmail = credential.usernameEmail.includes('@');
+
+            const user = this.userRepository.getUser(!isEmail ? credential.usernameEmail : undefined, credential.usernameEmail);
 
             return user?.password === credential.password ? user : null;
         }
