@@ -1,14 +1,16 @@
 import {
   FilePlusIcon,
+  InfoCircledIcon,
   LockClosedIcon,
   PaperPlaneIcon,
   PersonIcon,
 } from "@radix-ui/react-icons";
-import { Button, Card, Flex, Text, TextField } from "@radix-ui/themes";
-import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Button, Callout, Card, Flex, Text, TextField } from "@radix-ui/themes";
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../UserContext";
 import { usePostApi } from "../../core/hooks/useApi";
+import { User } from "../model/user";
 
 type LoginCredential = {
   usernameEmail: string;
@@ -20,25 +22,38 @@ export const LoginContainer = () => {
 
   const [usernameEmail, setUsernameEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
-  const [loginResponse, setCredintials] = usePostApi<
-    LoginCredential,
-    boolean
-  >('http://localhost:5500/user/authenticate');
+  const [loginResponse, setCredintials] = usePostApi<LoginCredential, User>(
+    "http://localhost:5500/user/authenticate"
+  );
+  const [error, setError] = useState<string>();
+  const navigate = useNavigate();
 
   const submit = () => {
-    if(usernameEmail && password) {
+    if (usernameEmail && password) {
       setCredintials({
-        usernameEmail, password
-      })
+        usernameEmail,
+        password,
+      });
     }
   };
+
+  useEffect(() => {
+    if (loginResponse && loginResponse.data && login) {
+      login(loginResponse.data);
+      setError(undefined);
+      navigate('/user');
+    } else {
+      if (loginResponse) {
+        setError("Please verify the credentials and try again");
+      }
+    }
+  }, [login, loginResponse, navigate]);
 
   return (
     <Card>
       <Flex direction={"column"} gap={"2"}>
         <Text size={"3"}>Login</Text>
         <Text size={"1"}>Username or E-mail</Text>
-        <>{JSON.stringify(loginResponse)}</>
         <TextField.Root
           placeholder="Enter your username or e-mail"
           value={usernameEmail}
@@ -62,6 +77,15 @@ export const LoginContainer = () => {
         <Button onClick={() => submit()}>
           <PaperPlaneIcon /> Log-in
         </Button>
+
+        {error && (
+          <Callout.Root color="red">
+            <Callout.Icon>
+              <InfoCircledIcon />
+            </Callout.Icon>
+            <Callout.Text>{error}</Callout.Text>
+          </Callout.Root>
+        )}
 
         <Button variant="surface">
           <Link to={`/register`}>

@@ -8,13 +8,13 @@ export interface UserCredential {
 export class UserService {
     userRepository: UserRepository = new UserRepository();
 
-    public authenticateUser(credential : UserCredential): boolean {
+    public authenticateUser(credential : UserCredential): User | null {
         if(credential.usernameEmail) {
             const user = this.userRepository.getUser(credential.usernameEmail, credential.usernameEmail);
 
-            return user?.password === credential.password;
+            return user?.password === credential.password ? user : null;
         }
-        return false;
+        return null;
     }
 
 

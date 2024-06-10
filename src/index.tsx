@@ -8,6 +8,8 @@ import { Theme } from "@radix-ui/themes";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { UserRegisterPage } from "./player/components/UserRegisterPage";
 import { MainPage } from "./game/components/MainPage";
+import { UserLandingPage } from "./player/components/UserLandingPage";
+import { NonAuthorized } from "./core/components/NonAuthorized";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,14 @@ const router = createBrowserRouter([
   {
     path: "/error",
     element: <h1>Something is wrong</h1>,
+  },
+  {
+    path: "/non-authorized",
+    element: <NonAuthorized />,
+  },
+  {
+    path: "/user",
+    element: <UserLandingPage />
   },
   {
     path: "/register",
