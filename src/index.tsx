@@ -7,11 +7,12 @@ import App from "./core/components/App";
 import { Theme } from "@radix-ui/themes";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { UserRegisterPage } from "./player/components/UserRegisterPage";
+import { MainPage } from "./game/components/MainPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <MainPage />,
   },
   {
     path: "/error",
@@ -28,16 +29,18 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Theme
-      accentColor="green"
-      grayColor="gray"
-      panelBackground="translucent"
-      scaling="100%"
-      radius="small"
-      style={{ backgroundColor: "#a2dfab" }}
-    >
-      <RouterProvider router={router} />
-    </Theme>
+    <App>
+      <Theme
+        accentColor="green"
+        grayColor="gray"
+        panelBackground="translucent"
+        scaling="100%"
+        radius="small"
+        style={{ backgroundColor: "#a2dfab" }}
+      >
+        <RouterProvider router={router} />
+      </Theme>
+    </App>
   </React.StrictMode>
 );
 

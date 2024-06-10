@@ -28,7 +28,7 @@ export class UserRepository {
 
 
     public addUser(user: User): User {
-        if(!this.getUser(user.username)) {
+        if(!this.getUser(user.username) && !this.getUser(undefined, user.email)) {
             this.data.push(user);
             return user;
         }

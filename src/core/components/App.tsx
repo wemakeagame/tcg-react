@@ -1,11 +1,25 @@
+import UserContext from "../../player/UserContext";
+import { User } from "../../player/model/user";
 import "./App.css";
-import { MainPage } from "../../game/components/MainPage";
+import { PropsWithChildren, useState } from "react";
 
-function App() {
+export const App: React.FC<PropsWithChildren> = ({children}) => {
+  const [user, setUser] = useState<User>();
+
+  const login = (user: User) => {
+    setUser(user);
+  };
+
+  const logout = () => {
+    setUser(undefined);
+  };
+  
   return (
-    <div className="app">
-      <MainPage></MainPage>;
-    </div>
+     <>
+      <UserContext.Provider value={{ user, login, logout }}>
+        {children}
+      </UserContext.Provider>
+     </>
   );
 }
 
