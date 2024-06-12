@@ -1,6 +1,6 @@
 import {  Flex, Text } from "@radix-ui/themes";
 import { MessagePanel } from "../../core/components/MessagePanel";
-import { LoginContainer } from "../../player/components/LoginContainer";
+import { LoginContainer } from "../../user/components/LoginContainer";
 import { Page } from "../../core/components/Page";
 
 export const MainPage = () => {

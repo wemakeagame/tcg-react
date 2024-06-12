@@ -6,9 +6,9 @@ import reportWebVitals from "./reportWebVitals";
 import App from "./core/components/App";
 import { Theme } from "@radix-ui/themes";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { UserRegisterPage } from "./player/components/UserRegisterPage";
+import { UserRegisterPage } from "./user/components/UserRegisterPage";
 import { MainPage } from "./game/components/MainPage";
-import { UserLandingPage } from "./player/components/UserLandingPage";
+import { UserLandingPage } from "./user/components/UserLandingPage";
 import { NonAuthorized } from "./core/components/NonAuthorized";
 
 const router = createBrowserRouter([

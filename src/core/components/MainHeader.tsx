@@ -2,7 +2,7 @@ import { Half2Icon, PersonIcon } from "@radix-ui/react-icons";
 import { Card, Flex } from "@radix-ui/themes";
 import { Header } from "@radix-ui/themes/dist/cjs/components/table";
 import { Link } from "react-router-dom";
-import { UserHeaderOptions } from "../../player/components/UserHeaderOptions";
+import { UserHeaderOptions } from "../../user/components/UserHeaderOptions";
 
 const Logo = () => {
   return (

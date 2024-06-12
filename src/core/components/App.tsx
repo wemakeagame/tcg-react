@@ -1,5 +1,5 @@
-import UserContext from "../../player/UserContext";
-import { User } from "../../player/model/user";
+import UserContext from "../../user/UserContext";
+import { User } from "../../user/model/user";
 import "./App.css";
 import { PropsWithChildren, useState } from "react";
 
