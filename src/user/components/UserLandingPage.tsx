@@ -1,9 +1,10 @@
 import { Button, Card, Flex, Text } from "@radix-ui/themes";
 import { Page } from "../../core/components/Page";
 import { useAuthData } from "../hooks/useAuthData";
+import { Link } from "react-router-dom";
 
 export const UserLandingPage = () => {
-  const userId = useAuthData();
+  const userId = useAuthData(true);
 
   return (
     <Page>
@@ -12,20 +13,20 @@ export const UserLandingPage = () => {
       </Flex>
       <Flex gap={"3"} justify={"center"}>
         <Card style={{flexGrow: 1}}>
-          <Flex gap={"3"} direction={"column"}>
+          <Flex gap={"3"} direction={"column"} align={'center'}>
             <Text align={"left"} size={"3"}>
               Game
             </Text>
-            <Button> Play </Button>
+            <Link to='/match'><Button> Play </Button></Link>
             <Text align={"center"}>Start play to unlok new cards.</Text>
           </Flex>
         </Card>
         <Card style={{flexGrow: 1}}>
-          <Flex gap={"3"} direction={"column"}>
+          <Flex gap={"3"} direction={"column"} align={'center'}>
             <Text align={"left"} size={"3"}>
               Cards
             </Text>
-            <Button> Manage Deck </Button>
+            <Link to={'/manage-deck'}><Button> Manage Deck </Button></Link>
             <Text align={"center"}>Add or remove cards on your deck</Text>
           </Flex>
         </Card>

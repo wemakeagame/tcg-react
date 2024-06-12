@@ -10,6 +10,7 @@ import { UserRegisterPage } from "./user/components/UserRegisterPage";
 import { MainPage } from "./game/components/MainPage";
 import { UserLandingPage } from "./user/components/UserLandingPage";
 import { NonAuthorized } from "./core/components/NonAuthorized";
+import { ManageDeckPage } from "./card/ManageDeckPage";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
     path: "/register",
     element: <UserRegisterPage />,
   },
+  {
+    path: "/manage-deck",
+    element: <ManageDeckPage />
+  }
 ]);
 
 const root = ReactDOM.createRoot(
