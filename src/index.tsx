@@ -10,7 +10,7 @@ import { UserRegisterPage } from "./user/components/UserRegisterPage";
 import { MainPage } from "./game/components/MainPage";
 import { UserLandingPage } from "./user/components/UserLandingPage";
 import { NonAuthorized } from "./core/components/NonAuthorized";
-import { ManageDeckPage } from "./card/ManageDeckPage";
+import { ManageDeckPage } from "./card/components/ManageDeckPage";
 
 const router = createBrowserRouter([
   {

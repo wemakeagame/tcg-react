@@ -16,6 +16,8 @@ export class GCardController {
     }
 
     private httpGetMethods () {
+
+        //Get card by id
         this.app.get(`${this.path}/:gcardId`, (req: Request, res: Response) => {
             try  {
                 const gcard = this.gcardService.getCard(req.params.gcardId);
@@ -29,7 +31,16 @@ export class GCardController {
             } catch (e) {
                 throw e;
             }
-           
+        })
+
+        // get all cards
+        this.app.get(`${this.path}`, (req: Request, res: Response) => {
+            try  {
+                const gcards = this.gcardService.getCards();
+                res.send(gcards);
+            } catch (e) {
+                throw e;
+            }
         })
     }
 
@@ -47,6 +58,5 @@ export class GCardController {
             
         // });
     }
-
 
 }
