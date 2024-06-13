@@ -40,8 +40,8 @@ function postCall <T, K> (body: T, url: string): Promise<ApiResponse<K>> {
     return apiCall<T, K>( url, 'POST', body);
 }
 
-function getCall <T, K> (url: string): Promise<ApiResponse<K>> {
-    return apiCall<T, K>(url, 'GET');
+function getCall <K> (url: string): Promise<ApiResponse<K>> {
+    return apiCall<null, K>(url, 'GET');
 }
 
  export function usePostApi<T, K>(url: string) {
@@ -59,12 +59,12 @@ function getCall <T, K> (url: string): Promise<ApiResponse<K>> {
     return [response, setBody] as const;
  }
 
- export function useGetApi<T, K>(url: string) {
+ export function useGetApi<K>(url: string) {
     const [response, setResponse] = useState<ApiResponse<K>>();
 
     useEffect(() => {
         if(url) {
-            getCall<T, K>(url).then((data) => {
+            getCall<K>(url).then((data) => {
                 setResponse(data) 
             })
         }
