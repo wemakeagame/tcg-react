@@ -143,7 +143,7 @@ export const GCardEquipamentView: React.FC<GCardEquipamentViewProps> = ({
 };
 
 export const GCardView: React.FC<GCardViewProps> = ({ gcard }) => {
-  if (gcard.type === "moster") {
+  if (gcard.type === "monster") {
     return <GCardMonsterView gcard={gcard as GCardMonster}></GCardMonsterView>;
   }
 

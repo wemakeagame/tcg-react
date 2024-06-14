@@ -5,7 +5,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Red Goblin',
         rarity: 'common',
-        type: 'moster',
+        type: 'monster',
         color: ['red'],
         image: '/assets/gcards/sample.png',
         id: 'gcard1',
@@ -15,7 +15,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Blue Goblin',
         rarity: 'common',
-        type: 'moster',
+        type: 'monster',
         color: ['blue'],
         image: '/assets/gcards/sample.png',
         id: 'gcard2',
@@ -25,7 +25,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Green Goblin',
         rarity: 'common',
-        type: 'moster',
+        type: 'monster',
         color: ['green'],
         image: '/assets/gcards/sample.png',
         id: 'gcard3',
@@ -35,7 +35,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Yellow Goblin',
         rarity: 'common',
-        type: 'moster',
+        type: 'monster',
         color: ['yellow'],
         image: '/assets/gcards/sample.png',
         id: 'gcard4',
@@ -45,7 +45,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Red spider',
         rarity: 'common',
-        type: 'moster',
+        type: 'monster',
         color: ['red'],
         image: '/assets/gcards/sample.png',
         id: 'gcard5',
@@ -55,7 +55,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Blue spider',
         rarity: 'common',
-        type: 'moster',
+        type: 'monster',
         color: ['blue'],
         image: '/assets/gcards/sample.png',
         id: 'gcard6',
@@ -65,7 +65,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Slime',
         rarity: 'common',
-        type: 'moster',
+        type: 'monster',
         color: ['green'],
         image: '/assets/gcards/sample.png',
         id: 'gcard7',
@@ -75,7 +75,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Walking vines',
         rarity: 'common',
-        type: 'moster',
+        type: 'monster',
         color: ['green','yellow'],
         image: '/assets/gcards/sample.png',
         id: 'gcard8',
@@ -85,7 +85,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Wolf',
         rarity: 'common',
-        type: 'moster',
+        type: 'monster',
         color: ['green','blue'],
         image: '/assets/gcards/sample.png',
         id: 'gcard9',
@@ -95,7 +95,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Fire lizard',
         rarity: 'rare',
-        type: 'moster',
+        type: 'monster',
         color: ['red'],
         image: '/assets/gcards/sample.png',
         id: 'gcard10',
@@ -105,7 +105,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Light fairy',
         rarity: 'rare',
-        type: 'moster',
+        type: 'monster',
         color: ['yellow'],
         image: '/assets/gcards/sample.png',
         id: 'gcard11',
@@ -115,7 +115,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Zombie dog',
         rarity: 'rare',
-        type: 'moster',
+        type: 'monster',
         color: ['blue'],
         image: '/assets/gcards/sample.png',
         id: 'gcard12',
@@ -125,7 +125,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Swamp snake',
         rarity: 'rare',
-        type: 'moster',
+        type: 'monster',
         color: ['green'],
         image: '/assets/gcards/sample.png',
         id: 'gcard13',
@@ -135,7 +135,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Lava Golem',
         rarity: 'rare',
-        type: 'moster',
+        type: 'monster',
         color: ['red'],
         image: '/assets/gcards/sample.png',
         id: 'gcard14',
@@ -145,7 +145,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Water Golem',
         rarity: 'rare',
-        type: 'moster',
+        type: 'monster',
         color: ['blue'],
         image: '/assets/gcards/sample.png',
         id: 'gcard15',
@@ -155,7 +155,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Wood Golem',
         rarity: 'rare',
-        type: 'moster',
+        type: 'monster',
         color: ['green'],
         image: '/assets/gcards/sample.png',
         id: 'gcard16',
@@ -165,7 +165,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Hollow spirit',
         rarity: 'rare',
-        type: 'moster',
+        type: 'monster',
         color: ['green', 'blue', 'red', 'yellow'],
         image: '/assets/gcards/sample.png',
         id: 'gcard17',
@@ -175,7 +175,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Sun Eagle',
         rarity: 'rare',
-        type: 'moster',
+        type: 'monster',
         color: ['yellow'],
         image: '/assets/gcards/sample.png',
         id: 'gcard18',
@@ -185,7 +185,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Eating man Plant',
         rarity: 'rare',
-        type: 'moster',
+        type: 'monster',
         color: ['green'],
         image: '/assets/gcards/sample.png',
         id: 'gcard19',
@@ -195,7 +195,7 @@ export const monsterCards: GCardMonster[] = [
     {
         name: 'Moon fairy',
         rarity: 'rare',
-        type: 'moster',
+        type: 'monster',
         color: ['blue'],
         image: '/assets/gcards/sample.png',
         id: 'gcard20',

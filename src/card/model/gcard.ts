@@ -1,5 +1,5 @@
 const rarity = ['common', 'rare', 'epic', 'legendary'] as const;
-const gcardType = ['moster', 'spell', 'equipament'] as const;
+const gcardType = ['monster', 'spell', 'equipament'] as const;
 const gcardColor = ['blue', 'red', 'yellow', 'green'] as const;
 const spell = ['destroy', 'absorb', 'cancel', 'redirect'] as const;
 
