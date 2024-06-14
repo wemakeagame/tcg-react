@@ -11,6 +11,8 @@ export const ManageDeckPage = () => {
   return (
     <Page>
       {response && response.data && <GCardView gcard={response.data[15]}></GCardView>}
+      {response && response.data && <GCardView gcard={response.data[30]}></GCardView>}
+      {response && response.data && <GCardView gcard={response.data[22]}></GCardView>}
       <Flex justify={"center"} align={"center"} direction={"column"}>
         <Link to={"/user"} style={{ alignSelf: "end", margin: "10px" }}>
           <Button>Back</Button>

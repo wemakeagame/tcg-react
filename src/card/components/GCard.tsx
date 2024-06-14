@@ -7,7 +7,7 @@ import {
   GCardSpell,
 } from "../model/gcard";
 import { Card, Flex, Text } from "@radix-ui/themes";
-import { HeartFilledIcon, LightningBoltIcon } from "@radix-ui/react-icons";
+import { HeartFilledIcon, LightningBoltIcon, TargetIcon } from "@radix-ui/react-icons";
 
 type GCardViewBaseProps = PropsWithChildren & {
   gcard: GCard;
@@ -49,7 +49,7 @@ export const GCardViewBase: React.FC<GCardViewBaseProps> = ({
   const color = getBackgroundCard(gcard.color);
 
   return (
-    <Card style={{ width: "300px", background: color }}>
+    <Card style={{ width: "250px", background: color }}>
       <Card>
         <Flex justify={"between"}>
           <Text size={"4"} weight={"bold"}>
@@ -62,9 +62,10 @@ export const GCardViewBase: React.FC<GCardViewBaseProps> = ({
             src={`http://localhost:5500/${gcard.image}`}
             alt=""
             style={{
-              maxWidth: "200px",
+              maxWidth: "160px",
               maxHeight: "auto",
               border: "1px solid #000000",
+              background: "#ffffff",
               margin: "20px",
             }}
           ></img>
@@ -98,8 +99,12 @@ export const GCardMonsterView: React.FC<GCardMonsterViewProps> = ({
     <GCardViewBase gcard={gcard}>
       <Card>
         <Flex justify={"between"}>
-          <Text size={'6'}><LightningBoltIcon/> {gcard.power}</Text>
-          <Text size={'6'}><HeartFilledIcon/> {gcard.life}</Text>
+          <Text size={"6"}>
+            <LightningBoltIcon /> {gcard.power}
+          </Text>
+          <Text size={"6"}>
+            <HeartFilledIcon /> {gcard.life}
+          </Text>
         </Flex>
       </Card>
     </GCardViewBase>
@@ -109,7 +114,9 @@ export const GCardMonsterView: React.FC<GCardMonsterViewProps> = ({
 export const GCardSpellView: React.FC<GCardSpellViewProps> = ({ gcard }) => {
   return (
     <GCardViewBase gcard={gcard}>
-      <span>Effect: {gcard.spell}</span>
+         <Text size={"6"} weight={'bold'}>
+            <TargetIcon /> {gcard.spell}
+          </Text>
     </GCardViewBase>
   );
 };
@@ -120,8 +127,16 @@ export const GCardEquipamentView: React.FC<GCardEquipamentViewProps> = ({
   return (
     <GCardViewBase gcard={gcard}>
       <Flex justify={"between"}>
-        {gcard.power && <span>A: {gcard.power}</span>}
-        {gcard.life && <span>L: {gcard.life}</span>}
+        {gcard.power && (
+          <Text size={"6"}>
+            <LightningBoltIcon /> {gcard.power}
+          </Text>
+        )}
+        {gcard.life && (
+          <Text size={"6"}>
+            <HeartFilledIcon /> {gcard.life}
+          </Text>
+        )}
       </Flex>
     </GCardViewBase>
   );
