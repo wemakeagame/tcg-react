@@ -2,17 +2,17 @@ import { Link } from "react-router-dom";
 import { Text, Flex, Button, Card } from "@radix-ui/themes";
 import { Page } from "../../core/components/Page";
 import { useGetApi } from "../../core/hooks/useApi";
-import { GCard } from "../model/gcard";
-import { GCardView } from "./GCard";
+import { Deck } from "../model/gcard";
+import { useAuthData } from "../../user/hooks/useAuthData";
 
 export const ManageDeckPage = () => {
-  const response = useGetApi<GCard[]>("http://localhost:5500/gcard");
+  const userId = useAuthData();
+  const response = useGetApi<Deck[]>(`http://localhost:5500/user/${userId}/deck`);
 
   return (
     <Page>
-      {response && response.data && <GCardView gcard={response.data[15]}></GCardView>}
-      {response && response.data && <GCardView gcard={response.data[30]}></GCardView>}
-      {response && response.data && <GCardView gcard={response.data[22]}></GCardView>}
+      {response && response.data && <span>{JSON.stringify(response.data)}</span>}
+
       <Flex justify={"center"} align={"center"} direction={"column"}>
         <Link to={"/user"} style={{ alignSelf: "end", margin: "10px" }}>
           <Button>Back</Button>

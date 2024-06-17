@@ -1,11 +1,13 @@
 import {Express, Request, Response} from 'express';
 import { UserService } from '../services/userService';
 import { User } from '../repositories/userRespository';
+import { DeckService } from '../services/deckService';
 
 export class UserController {
     app : Express;
     path = '/user';
     userService = new UserService();
+    deckService = new DeckService();
 
     constructor(app: Express) {
         this.app = app;
@@ -23,6 +25,23 @@ export class UserController {
 
                 if(user) {
                     res.send(this.removePassword(user));
+                } else {
+                    res.statusCode = 404;
+                    res.send({ error: 'Not Found'});
+                }
+            } catch (e) {
+                throw e;
+            }
+           
+        })
+
+        //Get user deck
+        this.app.get(`${this.path}/:userId/deck`, (req: Request, res: Response) => {
+            try  {
+                const deck  = this.deckService.getUserDeck(req.params.userId);
+
+                if(deck) {
+                    res.send(deck);
                 } else {
                     res.statusCode = 404;
                     res.send({ error: 'Not Found'});
@@ -66,6 +85,8 @@ export class UserController {
 
         return userRestrict;
     }
+
+
 
 
 }

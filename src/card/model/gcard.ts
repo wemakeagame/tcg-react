@@ -32,3 +32,8 @@ export interface GCardEquipament extends GCardBase {
 }
 
 export type GCard = GCardMonster | GCardSpell | GCardEquipament;
+
+export type Deck = {
+    userId: string;
+    gcardIds: string[];
+}
