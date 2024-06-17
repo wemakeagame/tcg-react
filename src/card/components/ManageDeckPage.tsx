@@ -85,9 +85,33 @@ const DeckPreview: React.FC<DeckPreviewProps> = ({
   );
 };
 
+function groupCards(cards: (GCard | undefined)[]) {
+  const monsterCards: GCardMonster[] = [];
+  const spellCards: GCardSpell[] = [];
+  const equipamentCards: GCardEquipament[] = [];
+
+  cards.forEach((card) => {
+    if (card?.type === "monster") {
+      monsterCards.push(card as GCardMonster);
+    }
+    if (card?.type === "spell") {
+      spellCards.push(card as GCardSpell);
+    }
+    if (card?.type === "equipament") {
+      equipamentCards.push(card as GCardEquipament);
+    }
+  });
+
+  return {
+    monsterCards,
+    spellCards,
+    equipamentCards,
+  };
+}
+
 export const ManageDeckPage = () => {
   const userId = useAuthData();
-  const deckResponse = useGetApi<Deck[]>(
+  const deckResponse = useGetApi<Deck>(
     `http://localhost:5500/user/${userId}/deck`
   );
 
@@ -111,33 +135,36 @@ export const ManageDeckPage = () => {
 
   useEffect(() => {
     if (cardResponse && cardResponse.data) {
-      const monsterCards: GCardMonster[] = [];
-      const spellCards: GCardSpell[] = [];
-      const equipamentCards: GCardEquipament[] = [];
-
-      cardResponse.data.forEach((card) => {
-        if (card.type === "monster") {
-          monsterCards.push(card as GCardMonster);
-        }
-        if (card.type === "spell") {
-          spellCards.push(card as GCardSpell);
-        }
-        if (card.type === "equipament") {
-          equipamentCards.push(card as GCardEquipament);
-        }
-      });
-
+      const { monsterCards, spellCards, equipamentCards } = groupCards(
+        cardResponse.data
+      );
       setUserMonstersCards(monsterCards);
       setUserSpellsCards(spellCards);
       setUserEquipamentsCards(equipamentCards);
     }
   }, [cardResponse]);
 
+  useEffect(() => {
+    if(cardResponse?.data && deckResponse?.data) {
+      const userCards = cardResponse.data;
+      const cards = deckResponse.data.gcardIds.map(cardId => userCards.find(card => card.id === cardId));
+
+       const { monsterCards, spellCards, equipamentCards } = groupCards(
+        cards
+      );
+
+      setDeckMonstersCards(monsterCards);
+      setDeckSpellsCards(spellCards);
+      setDeckEquipamentsCards(equipamentCards);
+    }
+
+  }, [cardResponse, deckResponse])
+
   return (
     <Page>
       <Flex justify={"center"} align={"center"} direction={"column"}>
         <Flex justify={"between"} align={"center"} width={"100%"}>
-          <Card style={{margin: '10px'}}>
+          <Card style={{ margin: "10px" }}>
             <Flex justify={"between"} minWidth={"300px"}>
               <Flex direction={"column"} justify={"center"} align={"center"}>
                 <strong>Monsters</strong>
