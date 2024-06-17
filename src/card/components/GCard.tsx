@@ -7,11 +7,20 @@ import {
   GCardSpell,
 } from "../model/gcard";
 import { Card, Flex, Text } from "@radix-ui/themes";
-import { HeartFilledIcon, LightningBoltIcon, TargetIcon } from "@radix-ui/react-icons";
+import {
+  HeartFilledIcon,
+  LightningBoltIcon,
+  TargetIcon,
+} from "@radix-ui/react-icons";
+
+type SelectedCardType = {
+    isSelected: boolean;
+    onSelect: (cardId: string) => void;
+  };
 
 export type GCardViewBaseProps = PropsWithChildren & {
   gcard: GCard;
-};
+} & SelectedCardType;
 
 export const colorMap: Record<GCardColor, string> = {
   blue: "#0065bc",
@@ -45,6 +54,7 @@ export const getBackgroundCard = (colors: GCardColor[]) => {
 export const GCardViewBase: React.FC<GCardViewBaseProps> = ({
   children,
   gcard,
+  onSelect,
 }) => {
   const color = getBackgroundCard(gcard.color);
 
@@ -76,27 +86,31 @@ export const GCardViewBase: React.FC<GCardViewBaseProps> = ({
   );
 };
 
+
+
 export type GCardViewProps = {
   gcard: GCard;
-};
+} & SelectedCardType;
 
 export type GCardMonsterViewProps = {
   gcard: GCardMonster;
-};
+} & SelectedCardType;
 
 export type GCardSpellViewProps = {
   gcard: GCardSpell;
-};
+} & SelectedCardType;
 
 export type GCardEquipamentViewProps = {
   gcard: GCardEquipament;
-};
+} & SelectedCardType;
 
 export const GCardMonsterView: React.FC<GCardMonsterViewProps> = ({
   gcard,
+  isSelected,
+  onSelect,
 }) => {
   return (
-    <GCardViewBase gcard={gcard}>
+    <GCardViewBase gcard={gcard} isSelected={isSelected} onSelect={onSelect}>
       <Card>
         <Flex justify={"between"}>
           <Text size={"6"}>
@@ -111,21 +125,27 @@ export const GCardMonsterView: React.FC<GCardMonsterViewProps> = ({
   );
 };
 
-export const GCardSpellView: React.FC<GCardSpellViewProps> = ({ gcard }) => {
+export const GCardSpellView: React.FC<GCardSpellViewProps> = ({
+  gcard,
+  isSelected,
+  onSelect
+}) => {
   return (
-    <GCardViewBase gcard={gcard}>
-         <Text size={"6"} weight={'bold'}>
-            <TargetIcon /> {gcard.spell}
-          </Text>
+    <GCardViewBase gcard={gcard} isSelected={isSelected}  onSelect={onSelect}>
+      <Text size={"6"} weight={"bold"}>
+        <TargetIcon /> {gcard.spell}
+      </Text>
     </GCardViewBase>
   );
 };
 
 export const GCardEquipamentView: React.FC<GCardEquipamentViewProps> = ({
   gcard,
+  isSelected,
+  onSelect,
 }) => {
   return (
-    <GCardViewBase gcard={gcard}>
+    <GCardViewBase gcard={gcard} isSelected={isSelected} onSelect={onSelect}>
       <Flex justify={"between"}>
         {gcard.power && (
           <Text size={"6"}>
@@ -142,21 +162,35 @@ export const GCardEquipamentView: React.FC<GCardEquipamentViewProps> = ({
   );
 };
 
-export const GCardView: React.FC<GCardViewProps> = ({ gcard }) => {
+export const GCardView: React.FC<GCardViewProps> = ({ gcard, isSelected, onSelect }) => {
   if (gcard.type === "monster") {
-    return <GCardMonsterView gcard={gcard as GCardMonster}></GCardMonsterView>;
+    return (
+      <GCardMonsterView
+        gcard={gcard as GCardMonster}
+        isSelected={isSelected}
+        onSelect={onSelect}
+      ></GCardMonsterView>
+    );
   }
 
   if (gcard.type === "equipament") {
     return (
       <GCardEquipamentView
         gcard={gcard as GCardEquipament}
+        isSelected={isSelected}
+        onSelect={onSelect}
       ></GCardEquipamentView>
     );
   }
 
   if (gcard.type === "spell") {
-    return <GCardSpellView gcard={gcard as GCardSpell}></GCardSpellView>;
+    return (
+      <GCardSpellView
+        gcard={gcard as GCardSpell}
+        isSelected={isSelected}
+        onSelect={onSelect}
+      ></GCardSpellView>
+    );
   }
 
   return null;

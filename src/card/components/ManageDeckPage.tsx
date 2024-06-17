@@ -10,19 +10,23 @@ import {
   GCardSpell,
 } from "../model/gcard";
 import { useAuthData } from "../../user/hooks/useAuthData";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GCardCompactView } from "./GCardCompact";
 
 type DeckPreviewProps = {
   monstersCards: GCardMonster[];
   spellsCards: GCardSpell[];
   equipamentsCards: GCardEquipament[];
+  selectedCardId: string | undefined;
+  onSelectCard: (cardId: string) => void;
 };
 
 const DeckPreview: React.FC<DeckPreviewProps> = ({
   monstersCards,
   spellsCards,
   equipamentsCards,
+  selectedCardId,
+  onSelectCard,
 }) => {
   const sizeGroup = "250px";
   return (
@@ -40,7 +44,11 @@ const DeckPreview: React.FC<DeckPreviewProps> = ({
           style={{ background: "#CCCCCC", padding: "15px" }}
         >
           {monstersCards.map((card) => (
-            <GCardCompactView gcard={card} />
+            <GCardCompactView
+              gcard={card}
+              isSelected={selectedCardId === card.id}
+              onSelect={onSelectCard}
+            />
           ))}
         </Flex>
       </Flex>
@@ -59,7 +67,11 @@ const DeckPreview: React.FC<DeckPreviewProps> = ({
           style={{ background: "#CCCCCC", padding: "15px" }}
         >
           {spellsCards.map((card) => (
-            <GCardCompactView gcard={card} />
+            <GCardCompactView
+              gcard={card}
+              isSelected={selectedCardId === card.id}
+              onSelect={onSelectCard}
+            />
           ))}
         </Flex>
       </Flex>
@@ -77,7 +89,11 @@ const DeckPreview: React.FC<DeckPreviewProps> = ({
           style={{ background: "#CCCCCC", padding: "15px" }}
         >
           {equipamentsCards.map((card) => (
-            <GCardCompactView gcard={card} />
+            <GCardCompactView
+              gcard={card}
+              isSelected={selectedCardId === card.id}
+              onSelect={onSelectCard}
+            />
           ))}
         </Flex>
       </Flex>
@@ -132,33 +148,71 @@ export const ManageDeckPage = () => {
   const [userEquipamentsCards, setUserEquipamentsCards] = useState<
     GCardEquipament[]
   >([]);
+  const [selectedCardId, setSelectedCardId] = useState<string>();
 
-  useEffect(() => {
+  const updateView = useCallback(() => {
     if (cardResponse && cardResponse.data) {
       const { monsterCards, spellCards, equipamentCards } = groupCards(
         cardResponse.data
       );
-      setUserMonstersCards(monsterCards);
-      setUserSpellsCards(spellCards);
-      setUserEquipamentsCards(equipamentCards);
+
+      if (deckResponse?.data) {
+        const deckCardsIds = deckResponse.data.gcardIds;
+        const filteredAddedMosterCards = monsterCards.filter(
+          (mcard) => !deckCardsIds.includes(mcard.id)
+        );
+        const filteredAddedSpellCards = spellCards.filter(
+          (mcard) => !deckCardsIds.includes(mcard.id)
+        );
+        const filteredAddedEquipCards = equipamentCards.filter(
+          (mcard) => !deckCardsIds.includes(mcard.id)
+        );
+
+        setUserMonstersCards(filteredAddedMosterCards);
+        setUserSpellsCards(filteredAddedSpellCards);
+        setUserEquipamentsCards(filteredAddedEquipCards);
+      }
     }
-  }, [cardResponse]);
 
-  useEffect(() => {
-    if(cardResponse?.data && deckResponse?.data) {
+    if (cardResponse?.data && deckResponse?.data) {
       const userCards = cardResponse.data;
-      const cards = deckResponse.data.gcardIds.map(cardId => userCards.find(card => card.id === cardId));
-
-       const { monsterCards, spellCards, equipamentCards } = groupCards(
-        cards
+      const cards = deckResponse.data.gcardIds.map((cardId) =>
+        userCards.find((card) => card.id === cardId)
       );
+
+      const { monsterCards, spellCards, equipamentCards } = groupCards(cards);
 
       setDeckMonstersCards(monsterCards);
       setDeckSpellsCards(spellCards);
       setDeckEquipamentsCards(equipamentCards);
     }
+  }, [cardResponse, deckResponse?.data]);
 
-  }, [cardResponse, deckResponse])
+  useEffect(() => {
+    updateView();
+  }, [cardResponse, deckResponse, updateView]);
+
+  const updateSelectedCard = useCallback((cardId: string) => {
+    setSelectedCardId(cardId);
+  }, []);
+
+  const removeCardFromDeck = useCallback(() => {
+    if (deckResponse?.data) {
+      deckResponse.data.gcardIds = deckResponse.data.gcardIds.filter(
+        (id) => id !== selectedCardId
+      );
+      updateView();
+    }
+  }, [deckResponse, selectedCardId, updateView]);
+
+  const addCardToDeck = useCallback(() => {
+    if (deckResponse?.data && selectedCardId) {
+      if (!deckResponse.data.gcardIds.includes(selectedCardId)) {
+        deckResponse.data.gcardIds.push(selectedCardId);
+        updateView();
+      }
+    }
+  }, [deckResponse, selectedCardId, updateView]);
 
   return (
     <Page>
@@ -168,14 +222,14 @@ export const ManageDeckPage = () => {
             <Flex justify={"between"} minWidth={"300px"}>
               <Flex direction={"column"} justify={"center"} align={"center"}>
                 <strong>Monsters</strong>
-                20 / 20
+                {deckMonstersCards.length} / 20
               </Flex>
               <Flex direction={"column"} justify={"center"} align={"center"}>
                 <strong>Spells</strong>
-                10 / 10
+                {deckSpellsCards.length} / 10
               </Flex>
               <Flex direction={"column"} justify={"center"} align={"center"}>
-                <strong>Equipaments</strong>5 / 5
+                <strong>Equipaments</strong> {deckEquipamentsCards.length} / 5
               </Flex>
             </Flex>
           </Card>
@@ -202,11 +256,13 @@ export const ManageDeckPage = () => {
               monstersCards={deckMonstersCards}
               spellsCards={deckSpellsCards}
               equipamentsCards={deckEquipamentsCards}
+              selectedCardId={selectedCardId}
+              onSelectCard={updateSelectedCard}
             />
           </Card>
           <Flex flexGrow={"1"} direction={"column"} gap={"4"}>
-            <Button> {`<---`} </Button>
-            <Button> {`--->`} </Button>
+            <Button onClick={() => addCardToDeck()}> {`<---`} </Button>
+            <Button onClick={() => removeCardFromDeck()}> {`--->`} </Button>
           </Flex>
           <Card style={{ flexGrow: "1" }}>
             <Flex>
@@ -219,6 +275,8 @@ export const ManageDeckPage = () => {
               monstersCards={userMonstersCards}
               spellsCards={userSpellsCards}
               equipamentsCards={userEquipamentsCards}
+              selectedCardId={selectedCardId}
+              onSelectCard={updateSelectedCard}
             />
           </Card>
         </Flex>

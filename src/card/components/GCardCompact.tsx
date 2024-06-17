@@ -11,11 +11,14 @@ import { GCardEquipamentViewProps, GCardMonsterViewProps, GCardSpellViewProps, G
 export const GCardCompactViewBase: React.FC<GCardViewBaseProps> = ({
   children,
   gcard,
+  onSelect,
+  isSelected
 }) => {
   const color = getBackgroundCard(gcard.color);
+  const outline = isSelected ? `4px solid red` : '';
 
   return (
-    <Card style={{ height:"70px" , background: color }}>
+    <Card style={{ height:"70px" , background: color, outline: outline }} onClick={() => onSelect(gcard.id)}>
       <Card>
         <Flex justify={"between"}>
           <Text size={"4"} weight={"bold"}>
@@ -32,9 +35,11 @@ export const GCardCompactViewBase: React.FC<GCardViewBaseProps> = ({
 
 export const GCardMonsterCompactView: React.FC<GCardMonsterViewProps> = ({
   gcard,
+  isSelected,
+  onSelect
 }) => {
   return (
-    <GCardCompactViewBase gcard={gcard}>
+    <GCardCompactViewBase gcard={gcard} isSelected={isSelected}  onSelect={onSelect}>
           <Text size={"6"}>
             <LightningBoltIcon /> {gcard.power}
           </Text>
@@ -45,9 +50,9 @@ export const GCardMonsterCompactView: React.FC<GCardMonsterViewProps> = ({
   );
 };
 
-export const GCardSpellCompactView: React.FC<GCardSpellViewProps> = ({ gcard }) => {
+export const GCardSpellCompactView: React.FC<GCardSpellViewProps> = ({ gcard, isSelected, onSelect}) => {
   return (
-    <GCardCompactViewBase gcard={gcard}>
+    <GCardCompactViewBase gcard={gcard} isSelected={isSelected}  onSelect={onSelect}>
          <Text size={"6"} weight={'bold'}>
             <TargetIcon /> {gcard.spell}
           </Text>
@@ -57,9 +62,11 @@ export const GCardSpellCompactView: React.FC<GCardSpellViewProps> = ({ gcard }) 
 
 export const GCardEquipamentCompactView: React.FC<GCardEquipamentViewProps> = ({
   gcard,
+  isSelected,
+  onSelect
 }) => {
   return (
-    <GCardCompactViewBase gcard={gcard}>
+    <GCardCompactViewBase gcard={gcard} isSelected={isSelected}  onSelect={onSelect}>
       <Flex justify={"between"}>
         {gcard.power && (
           <Text size={"6"}>
@@ -76,21 +83,23 @@ export const GCardEquipamentCompactView: React.FC<GCardEquipamentViewProps> = ({
   );
 };
 
-export const GCardCompactView: React.FC<GCardViewProps> = ({ gcard }) => {
+export const GCardCompactView: React.FC<GCardViewProps> = ({ gcard, isSelected, onSelect }) => {
   if (gcard.type === "monster") {
-    return <GCardMonsterCompactView gcard={gcard as GCardMonster}></GCardMonsterCompactView>;
+    return <GCardMonsterCompactView gcard={gcard as GCardMonster} isSelected={isSelected}  onSelect={onSelect}/>;
   }
 
   if (gcard.type === "equipament") {
     return (
       <GCardEquipamentCompactView
         gcard={gcard as GCardEquipament}
-      ></GCardEquipamentCompactView>
+        isSelected={isSelected}
+        onSelect={onSelect}
+      />
     );
   }
 
   if (gcard.type === "spell") {
-    return <GCardSpellCompactView gcard={gcard as GCardSpell}></GCardSpellCompactView>;
+    return <GCardSpellCompactView gcard={gcard as GCardSpell} isSelected={isSelected}  onSelect={onSelect}/>
   }
 
   return null;
