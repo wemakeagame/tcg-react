@@ -15,7 +15,7 @@ export const GCardCompactViewBase: React.FC<GCardViewBaseProps> = ({
   const color = getBackgroundCard(gcard.color);
 
   return (
-    <Card style={{ width: "250px", height:"50px" , background: color }}>
+    <Card style={{ height:"70px" , background: color }}>
       <Card>
         <Flex justify={"between"}>
           <Text size={"4"} weight={"bold"}>

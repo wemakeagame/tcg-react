@@ -24,30 +24,62 @@ const DeckPreview: React.FC<DeckPreviewProps> = ({
   spellsCards,
   equipamentsCards,
 }) => {
+  const sizeGroup = "250px";
   return (
     <>
+      <Text size={"2"}>Monsters</Text>
+
       <Flex
         direction={"column"}
-        style={{ maxHeight: "300px", overflow: "auto" }}
+        style={{ maxHeight: sizeGroup, overflow: "auto" }}
       >
-        <Text size={"2"}>Monsters</Text>
-        <Flex gap={"2"} direction={'column'} wrap={"nowrap"} style={{background: '#CCCCCC', padding: '15px'}}>
+        <Flex
+          gap={"2"}
+          direction={"column"}
+          wrap={"nowrap"}
+          style={{ background: "#CCCCCC", padding: "15px" }}
+        >
           {monstersCards.map((card) => (
             <GCardCompactView gcard={card} />
           ))}
         </Flex>
       </Flex>
-      <Flex direction={"column"} gap={"2"}>
-        <Text size={"2"}>Spells</Text>
-        {spellsCards.map((card) => (
-          <GCardCompactView gcard={card} />
-        ))}
+
+      <Text size={"2"}>Spells</Text>
+
+      <Flex
+        direction={"column"}
+        gap={"2"}
+        style={{ maxHeight: sizeGroup, overflow: "auto" }}
+      >
+        <Flex
+          gap={"2"}
+          direction={"column"}
+          wrap={"nowrap"}
+          style={{ background: "#CCCCCC", padding: "15px" }}
+        >
+          {spellsCards.map((card) => (
+            <GCardCompactView gcard={card} />
+          ))}
+        </Flex>
       </Flex>
-      <Flex direction={"column"} gap={"2"}>
-        <Text size={"2"}>Equipaments</Text>
-        {equipamentsCards.map((card) => (
-          <GCardCompactView gcard={card} />
-        ))}
+      <Text size={"2"}>Equipaments</Text>
+
+      <Flex
+        direction={"column"}
+        gap={"2"}
+        style={{ maxHeight: sizeGroup, overflow: "auto" }}
+      >
+        <Flex
+          gap={"2"}
+          direction={"column"}
+          wrap={"nowrap"}
+          style={{ background: "#CCCCCC", padding: "15px" }}
+        >
+          {equipamentsCards.map((card) => (
+            <GCardCompactView gcard={card} />
+          ))}
+        </Flex>
       </Flex>
     </>
   );
@@ -104,26 +136,26 @@ export const ManageDeckPage = () => {
   return (
     <Page>
       <Flex justify={"center"} align={"center"} direction={"column"}>
-        <Link to={"/user"} style={{ alignSelf: "end", margin: "10px" }}>
-          <Button>Back</Button>
-        </Link>
-        <Text size={"5"}>Manage deck</Text>
-
-        <Card>
-          <Flex justify={"between"} minWidth={"300px"}>
-            <Flex direction={"column"} justify={"center"} align={"center"}>
-              <strong>Monsters</strong>
-              20 / 20
+        <Flex justify={"between"} align={"center"} width={"100%"}>
+          <Card style={{margin: '10px'}}>
+            <Flex justify={"between"} minWidth={"300px"}>
+              <Flex direction={"column"} justify={"center"} align={"center"}>
+                <strong>Monsters</strong>
+                20 / 20
+              </Flex>
+              <Flex direction={"column"} justify={"center"} align={"center"}>
+                <strong>Spells</strong>
+                10 / 10
+              </Flex>
+              <Flex direction={"column"} justify={"center"} align={"center"}>
+                <strong>Equipaments</strong>5 / 5
+              </Flex>
             </Flex>
-            <Flex direction={"column"} justify={"center"} align={"center"}>
-              <strong>Spells</strong>
-              10 / 10
-            </Flex>
-            <Flex direction={"column"} justify={"center"} align={"center"}>
-              <strong>Equipaments</strong>5 / 5
-            </Flex>
-          </Flex>
-        </Card>
+          </Card>
+          <Link to={"/user"} style={{ alignSelf: "end", margin: "10px" }}>
+            <Button>Back</Button>
+          </Link>
+        </Flex>
 
         <Flex
           style={{ width: "100%", marginTop: "15px" }}
