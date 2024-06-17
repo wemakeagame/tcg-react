@@ -9,18 +9,18 @@ import {
 import { Card, Flex, Text } from "@radix-ui/themes";
 import { HeartFilledIcon, LightningBoltIcon, TargetIcon } from "@radix-ui/react-icons";
 
-type GCardViewBaseProps = PropsWithChildren & {
+export type GCardViewBaseProps = PropsWithChildren & {
   gcard: GCard;
 };
 
-const colorMap: Record<GCardColor, string> = {
+export const colorMap: Record<GCardColor, string> = {
   blue: "#0065bc",
   red: "red",
   green: "green",
   yellow: "yellow",
 };
 
-const getBackgroundCard = (colors: GCardColor[]) => {
+export const getBackgroundCard = (colors: GCardColor[]) => {
   if (colors.length === 2) {
     return `linear-gradient(90deg, ${colorMap[colors[0]]} 0%, ${
       colorMap[colors[1]]
