@@ -159,13 +159,13 @@ export const ManageDeckPage = () => {
       if (deckResponse?.data) {
         const deckCardsIds = deckResponse.data.gcardIds;
         const filteredAddedMosterCards = monsterCards.filter(
-          (mcard) => !deckCardsIds.includes(mcard.id)
+          (card) => !deckCardsIds.includes(card.id)
         );
         const filteredAddedSpellCards = spellCards.filter(
-          (mcard) => !deckCardsIds.includes(mcard.id)
+          (card) => !deckCardsIds.includes(card.id)
         );
         const filteredAddedEquipCards = equipamentCards.filter(
-          (mcard) => !deckCardsIds.includes(mcard.id)
+          (card) => !deckCardsIds.includes(card.id)
         );
 
         setUserMonstersCards(filteredAddedMosterCards);
