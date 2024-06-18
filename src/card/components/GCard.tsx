@@ -10,13 +10,14 @@ import { Card, Flex, Text } from "@radix-ui/themes";
 import {
   HeartFilledIcon,
   LightningBoltIcon,
+  StarFilledIcon,
   TargetIcon,
 } from "@radix-ui/react-icons";
 
 type SelectedCardType = {
-    isSelected: boolean;
-    onSelect: (cardId: string) => void;
-  };
+  isSelected: boolean;
+  onSelect: (cardId: string) => void;
+};
 
 export type GCardViewBaseProps = PropsWithChildren & {
   gcard: GCard;
@@ -82,11 +83,22 @@ export const GCardViewBase: React.FC<GCardViewBaseProps> = ({
         </Flex>
       </Card>
       {children}
+      <Flex
+        style={{
+          background: "#dfd5d5",
+          padding: "2px",
+          borderRadius: "5px",
+          border: `1px solid #cccccc}`,
+        }}
+        align={"center"}
+      >
+        {gcard.color.map((color) => (
+          <StarFilledIcon color={colorMap[color]} />
+        ))}
+      </Flex>
     </Card>
   );
 };
-
-
 
 export type GCardViewProps = {
   gcard: GCard;
@@ -128,10 +140,10 @@ export const GCardMonsterView: React.FC<GCardMonsterViewProps> = ({
 export const GCardSpellView: React.FC<GCardSpellViewProps> = ({
   gcard,
   isSelected,
-  onSelect
+  onSelect,
 }) => {
   return (
-    <GCardViewBase gcard={gcard} isSelected={isSelected}  onSelect={onSelect}>
+    <GCardViewBase gcard={gcard} isSelected={isSelected} onSelect={onSelect}>
       <Text size={"6"} weight={"bold"}>
         <TargetIcon /> {gcard.spell}
       </Text>
@@ -162,7 +174,11 @@ export const GCardEquipamentView: React.FC<GCardEquipamentViewProps> = ({
   );
 };
 
-export const GCardView: React.FC<GCardViewProps> = ({ gcard, isSelected, onSelect }) => {
+export const GCardView: React.FC<GCardViewProps> = ({
+  gcard,
+  isSelected,
+  onSelect,
+}) => {
   if (gcard.type === "monster") {
     return (
       <GCardMonsterView

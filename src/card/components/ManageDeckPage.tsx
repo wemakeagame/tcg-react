@@ -12,6 +12,7 @@ import {
 import { useAuthData } from "../../user/hooks/useAuthData";
 import { useCallback, useEffect, useState } from "react";
 import { GCardCompactView } from "./GCardCompact";
+import { GCardView } from "./GCard";
 
 type DeckPreviewProps = {
   monstersCards: GCardMonster[];
@@ -216,6 +217,10 @@ export const ManageDeckPage = () => {
 
   return (
     <Page>
+      {cardResponse && cardResponse.data && <GCardView gcard={cardResponse.data[0]} isSelected={false} onSelect={() => null}></GCardView>}
+      {cardResponse && cardResponse.data && <GCardView gcard={cardResponse.data[10]} isSelected={false} onSelect={() => null}></GCardView>}
+      {cardResponse && cardResponse.data && <GCardView gcard={cardResponse.data[26]} isSelected={false} onSelect={() => null}></GCardView>}
+      {cardResponse && cardResponse.data && <GCardView gcard={cardResponse.data[30]} isSelected={false} onSelect={() => null}></GCardView>}
       <Flex justify={"center"} align={"center"} direction={"column"}>
         <Flex justify={"between"} align={"center"} width={"100%"}>
           <Card style={{ margin: "10px" }}>

@@ -5,7 +5,7 @@ import { PropsWithChildren } from "react";
 
 export const Page: React.FC<PropsWithChildren> = ({ children }) => {
   return (
-    <Container size="3" style={{ paddingTop: "15px" }}>
+    <Container size="4" style={{ paddingTop: "15px" }}>
       <Flex direction={"column"}>
         <MainHeader />
         {children}
