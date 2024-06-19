@@ -17,7 +17,7 @@ export const UserLandingPage = () => {
             <Text align={"left"} size={"3"}>
               Game
             </Text>
-            <Link to='/match'><Button> Play </Button></Link>
+            <Link to='/waiting-battle'><Button> Play </Button></Link>
             <Text align={"center"}>Start play to unlok new cards.</Text>
           </Flex>
         </Card>

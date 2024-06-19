@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { Text, Flex, Button, Card } from "@radix-ui/themes";
+import { Text, Flex, Button, Card, Callout } from "@radix-ui/themes";
 import { Page } from "../../core/components/Page";
-import { useGetApi } from "../../core/hooks/useApi";
+import { useGetApi, usePostApi } from "../../core/hooks/useApi";
 import {
   Deck,
   GCard,
@@ -12,7 +12,8 @@ import {
 import { useAuthData } from "../../user/hooks/useAuthData";
 import { useCallback, useEffect, useState } from "react";
 import { GCardCompactView } from "./GCardCompact";
-import { GCardView } from "./GCard";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { toast } from "react-toastify";
 
 type DeckPreviewProps = {
   monstersCards: GCardMonster[];
@@ -133,7 +134,12 @@ export const ManageDeckPage = () => {
   );
 
   const cardResponse = useGetApi<GCard[]>("http://localhost:5500/gcard");
-
+  const [addCardResponse, setAddCardBody] = usePostApi<{userId: string, gcardId: string}, {message: string}>(
+    "http://localhost:5500/user/addCardDeck"
+  );
+  const [removeCardResponse, setRemoveCardBody] = usePostApi<{userId: string, gcardId: string}, {message: string}>(
+    "http://localhost:5500/user/removeCardDeck"
+  );
   const [deckMonstersCards, setDeckMonstersCards] = useState<GCardMonster[]>(
     []
   );
@@ -199,21 +205,31 @@ export const ManageDeckPage = () => {
 
   const removeCardFromDeck = useCallback(() => {
     if (deckResponse?.data) {
-      deckResponse.data.gcardIds = deckResponse.data.gcardIds.filter(
-        (id) => id !== selectedCardId
-      );
-      updateView();
+      if(userId && selectedCardId) {
+        deckResponse.data.gcardIds = deckResponse.data.gcardIds.filter(
+          (id) => id !== selectedCardId
+        );
+        updateView();
+        setRemoveCardBody({userId, gcardId:selectedCardId});
+        toast('Card removed');
+      }
+    
     }
-  }, [deckResponse, selectedCardId, updateView]);
+  }, [deckResponse?.data, selectedCardId, setRemoveCardBody, updateView, userId]);
 
   const addCardToDeck = useCallback(() => {
     if (deckResponse?.data && selectedCardId) {
       if (!deckResponse.data.gcardIds.includes(selectedCardId)) {
-        deckResponse.data.gcardIds.push(selectedCardId);
-        updateView();
+        if(userId) {
+          deckResponse.data.gcardIds.push(selectedCardId);
+        
+          setAddCardBody({userId, gcardId:selectedCardId})
+          updateView();
+          toast('Card Added');
+        }
       }
     }
-  }, [deckResponse, selectedCardId, updateView]);
+  }, [deckResponse?.data, selectedCardId, setAddCardBody, updateView, userId]);
 
   return (
     <Page>

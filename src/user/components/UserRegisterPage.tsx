@@ -66,6 +66,7 @@ export const UserRegisterPage = () => {
   const [isRegisterDone, setIsRegisterDone] = useState(false);
 
   const onSubmmit = async () => {
+    //TODO move to usePostapi
     console.log(email, username, password, rePassword);
 
     if (email && username && password && password === rePassword) {

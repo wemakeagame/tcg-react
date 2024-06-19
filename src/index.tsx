@@ -11,6 +11,8 @@ import { MainPage } from "./game/components/MainPage";
 import { UserLandingPage } from "./user/components/UserLandingPage";
 import { NonAuthorized } from "./core/components/NonAuthorized";
 import { ManageDeckPage } from "./card/components/ManageDeckPage";
+import 'react-toastify/dist/ReactToastify.css';
+import { BattleWaitingPage } from "./game/components/BattleWaitingPage";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "/manage-deck",
     element: <ManageDeckPage />
+  },
+  {
+    path: "/waiting-battle",
+    element: <BattleWaitingPage />
   }
 ]);
 
