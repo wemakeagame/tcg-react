@@ -77,6 +77,34 @@ export class UserController {
                 res.send(null);
             }
         });
+
+        // Add card to deck
+        this.app.post(`${this.path}/:userId/addCardDeck`, (req: Request, res: Response) => {
+            try {
+                const {userId, gcardId} = req.body;
+                const response = this.deckService.addCardDeck(userId, gcardId)
+    
+                if(response === 'added') {
+                    res.send(response);
+                }
+            } catch (e) {
+                throw e;
+            }
+        });
+
+         // Remove card to deck
+         this.app.post(`${this.path}/:userId/removeCardDeck`, (req: Request, res: Response) => {
+            try {
+                const {userId, gcardId} = req.body;
+                const response = this.deckService.removeCardDeck(userId, gcardId)
+    
+                if(response === 'removed') {
+                    res.send(response);
+                }
+            } catch (e) {
+                throw e;
+            }
+        });
     }
 
     removePassword(user: User) {
