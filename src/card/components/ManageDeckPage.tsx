@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Text, Flex, Button, Card, Callout } from "@radix-ui/themes";
+import { Text, Flex, Button, Card } from "@radix-ui/themes";
 import { Page } from "../../core/components/Page";
 import { useGetApi, usePostApi } from "../../core/hooks/useApi";
 import {
@@ -12,7 +12,6 @@ import {
 import { useAuthData } from "../../user/hooks/useAuthData";
 import { useCallback, useEffect, useState } from "react";
 import { GCardCompactView } from "./GCardCompact";
-import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { toast } from "react-toastify";
 
 type DeckPreviewProps = {

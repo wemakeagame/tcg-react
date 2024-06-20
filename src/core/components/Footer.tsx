@@ -1,11 +1,11 @@
-import { Card, Flex } from "@radix-ui/themes";
+import { Card, Flex } from '@radix-ui/themes';
 
-export const Footer = () => {
+export function Footer() {
   return (
-    <Card style={{marginTop: '10px'}}>
-      <Flex justify={"center"} >
+    <Card style={{ marginTop: '10px' }}>
+      <Flex justify="center">
         <h6>TCG in React - wemakeagame </h6>
       </Flex>
     </Card>
   );
-};
+}

@@ -1,17 +1,17 @@
-import { PersonIcon } from "@radix-ui/react-icons";
-import { DropdownMenu, Button } from "@radix-ui/themes";
-import { useContext } from "react";
-import UserContext from "../UserContext";
-import { useNavigate } from "react-router-dom";
+import { PersonIcon } from '@radix-ui/react-icons';
+import { DropdownMenu, Button } from '@radix-ui/themes';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import UserContext from '../UserContext';
 
-export const UserHeaderOptions = () => {
+export function UserHeaderOptions() {
   const { user, logout } = useContext(UserContext);
   const navigate = useNavigate();
 
   const requestLogout = () => {
     if (logout) {
       logout();
-      navigate("/");
+      navigate('/');
     }
   };
 
@@ -34,4 +34,4 @@ export const UserHeaderOptions = () => {
       ) : null}
     </>
   );
-};
+}
