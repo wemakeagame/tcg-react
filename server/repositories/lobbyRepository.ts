@@ -1,6 +1,3 @@
-import { GCard } from "./model/gcard";
-import { cardsMock } from "./model/gcard.mock";
-
 type Lobby = {
     userId: string;
     queueIndex: number;

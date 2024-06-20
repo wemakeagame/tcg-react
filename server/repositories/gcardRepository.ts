@@ -9,10 +9,10 @@ export class GCardRepository {
     }        
 
 
-    public addCard(GCard: GCard): GCard | null {
-        // TODO
-        return null;
-    }
+    // public addCard(gcard: GCard): GCard | null {
+    //     // TODO
+    //     return null;
+    // }
 
     public getCards() {
         return this.data;

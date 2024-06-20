@@ -1,19 +1,20 @@
 import { LobbyRepository } from "../repositories/lobbyRepository";
 
 const TIME_REMOVE_LOBBY = 10000;
-const TIME_CHECK_LOBBY = 1000;
+const TIME_CHECK_LOBBY = 5000;
 export class LobbyService {
-    matchRepository: LobbyRepository = new LobbyRepository();
+    lobbyRepository: LobbyRepository = new LobbyRepository();
 
     constructor() {
-        const intervalDeleteOldLobby = setInterval(() => {
-            const lobbyData = this.matchRepository.getLobbyData();
+        // remove non respoding users from the list
+        setInterval(() => {
+            const lobbyData = this.lobbyRepository.getLobbyData();
 
             lobbyData.forEach(lobby => {
                 const lastReceived = lobby.lastReceived.valueOf();
                 const diffDate = new Date().valueOf() - lastReceived;
                 if(diffDate > TIME_REMOVE_LOBBY) {
-                    this.matchRepository.unregisterUserLobby(lobby.userId);
+                    this.lobbyRepository.unregisterUserLobby(lobby.userId);
                 }
 
             });
@@ -23,24 +24,25 @@ export class LobbyService {
     }
 
     public registerUserLobby(userId: string) {
-        this.matchRepository.registerUserLobby(userId);
+        this.lobbyRepository.registerUserLobby(userId);
     }
 
     public unregisterUserLobby(userId: string) {
-        this.matchRepository.unregisterUserLobby(userId);
+        this.lobbyRepository.unregisterUserLobby(userId);
     }
 
     public verifyLobby(userId: string) {
-        const lobbyUser = this.matchRepository.getLobbyUser(userId);
+        const lobbyUser = this.lobbyRepository.getLobbyUser(userId);
         if(lobbyUser) {
             lobbyUser.lastReceived = new Date();
-            this.matchRepository.updateLobbyUser(lobbyUser);
+            this.lobbyRepository.updateLobbyUser(lobbyUser);
         }
 
         return false;
     }
 
     public checkOponent(userId: string) {
-        return this.matchRepository.checkOponent(userId);
+        return this.lobbyRepository.checkOponent(userId);
+
     }
 }

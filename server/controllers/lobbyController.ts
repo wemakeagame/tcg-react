@@ -1,54 +1,54 @@
-import {Express, Request, Response} from 'express';
-import { LobbyService } from '../services/lobbyService';
+import { Express, Request, Response } from "express";
+import { LobbyService } from "../services/lobbyService";
 
 export class LobbyController {
-    app : Express;
-    path = '/match';
-    matchService = new LobbyService();
+  app: Express;
+  path = "/match";
+  lobbyService = new LobbyService();
 
-    constructor(app: Express) {
-        this.app = app;
-    }
+  constructor(app: Express) {
+    this.app = app;
+  }
 
-    listenMethods() {
-       this.httpGetMethods();
-       this.httpPostMethods();
-    }
+  listenMethods() {
+    this.httpGetMethods();
+    this.httpPostMethods();
+  }
 
-    private httpGetMethods () {
+  private httpGetMethods() {}
 
-    }
+  private httpPostMethods() {
+    // register user for match
+    this.app.post(`${this.path}/lobby`, (req: Request, res: Response) => {
+      try {
+        this.lobbyService.registerUserLobby(req.body?.userId);
 
-    private httpPostMethods () {
-        // register user for match
-        this.app.post(`${this.path}/lobby`, (req: Request, res: Response) => {
-            try {
-                this.matchService.registerUserLobby(req.body?.userId);
+        res.send({ message: "registerd" });
+      } catch (e) {
+        res.statusCode = 500;
+        res.send({ error: "It was not possible to register now" });
+      }
+    });
 
-                res.send({message: 'registerd'});
-            } catch(e) {
-                res.statusCode = 500;
-                res.send({error: 'It was not possible to register now'});
-            }
-        });
+    //wainting for match
+    this.app.post(
+      `${this.path}/lobby/verify`,
+      (req: Request, res: Response) => {
+        try {
+          const userId = req.body?.userId;
+          this.lobbyService.verifyLobby(userId);
+          const lobbyOponent = this.lobbyService.checkOponent(userId);
 
-        //wainting for match 
-        this.app.post(`${this.path}/lobby/verify`, (req: Request, res: Response) => {
-            try {
-                const userId = req.body?.userId;
-                this.matchService.verifyLobby(userId);
-               const lobbyOponent = this.matchService.checkOponent(userId);
-
-               if(lobbyOponent) {
-                res.send({message: 'connect'});
-               } else {
-                res.send({message: 'waiting'});
-               }
-            } catch(e) {
-                res.statusCode = 500;
-                res.send({error: 'It was not possible to register now'});
-            }
-        });
-    }
-
+          if (lobbyOponent) {
+            res.send({ message: "connect" });
+          } else {
+            res.send({ message: "waiting" });
+          }
+        } catch (e) {
+          res.statusCode = 500;
+          res.send({ error: "It was not possible to register now" });
+        }
+      }
+    );
+  }
 }
