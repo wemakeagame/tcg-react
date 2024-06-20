@@ -3,7 +3,7 @@ import { LobbyService } from "../services/lobbyService";
 
 export class LobbyController {
   app: Express;
-  path = "/match";
+  path = "/lobby";
   lobbyService = new LobbyService();
 
   constructor(app: Express) {
@@ -19,11 +19,11 @@ export class LobbyController {
 
   private httpPostMethods() {
     // register user for match
-    this.app.post(`${this.path}/lobby`, (req: Request, res: Response) => {
+    this.app.post(`${this.path}/register`, (req: Request, res: Response) => {
       try {
         this.lobbyService.registerUserLobby(req.body?.userId);
 
-        res.send({ message: "registerd" });
+        res.send({ message: "registered" });
       } catch (e) {
         res.statusCode = 500;
         res.send({ error: "It was not possible to register now" });
@@ -32,8 +32,9 @@ export class LobbyController {
 
     //wainting for match
     this.app.post(
-      `${this.path}/lobby/verify`,
+      `${this.path}/verify`,
       (req: Request, res: Response) => {
+        console.log("VERIFY:", this.lobbyService.getLobbyUser(req.body.userId));
         try {
           const userId = req.body?.userId;
           this.lobbyService.verifyLobby(userId);

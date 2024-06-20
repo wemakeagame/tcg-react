@@ -55,7 +55,6 @@ export const getBackgroundCard = (colors: GCardColor[]) => {
 export const GCardViewBase: React.FC<GCardViewBaseProps> = ({
   children,
   gcard,
-  onSelect,
 }) => {
   const color = getBackgroundCard(gcard.color);
 

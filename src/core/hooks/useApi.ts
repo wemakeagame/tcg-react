@@ -34,7 +34,7 @@ async function apiCall<T, K>  (url: string, method: 'GET' | 'POST', body?: T): P
   
       return resolved;
     }
-  };
+  }
 
 function postCall <T, K> (body: T, url: string): Promise<ApiResponse<K>> {
     return apiCall<T, K>( url, 'POST', body);

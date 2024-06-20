@@ -32,13 +32,17 @@ export class LobbyService {
     }
 
     public verifyLobby(userId: string) {
-        const lobbyUser = this.lobbyRepository.getLobbyUser(userId);
+        const lobbyUser = this.getLobbyUser(userId);
         if(lobbyUser) {
             lobbyUser.lastReceived = new Date();
             this.lobbyRepository.updateLobbyUser(lobbyUser);
         }
 
         return false;
+    }
+
+    public getLobbyUser (userId: string) {
+        return  this.lobbyRepository.getLobbyUser(userId);
     }
 
     public checkOponent(userId: string) {

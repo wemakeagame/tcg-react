@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import {Express, Request, Response} from 'express';
 import { GcardService } from '../services/gcardService';
 

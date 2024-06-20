@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Link } from "react-router-dom";
 import { Text, Flex, Button, Card } from "@radix-ui/themes";
 import { Page } from "../../core/components/Page";

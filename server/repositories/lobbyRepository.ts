@@ -2,6 +2,7 @@ type Lobby = {
     userId: string;
     queueIndex: number;
     lastReceived: Date;
+    oponentUserId?: string;
 }
 
 export class LobbyRepository {
@@ -35,6 +36,7 @@ export class LobbyRepository {
         this.data.forEach(lobby => {
             if(lobby.userId === lobbyUser.userId) {
                 lobby.lastReceived = lobbyUser.lastReceived;
+                lobby.oponentUserId = lobbyUser.oponentUserId;
             }
         })
     }
@@ -50,10 +52,19 @@ export class LobbyRepository {
 
 
     public checkOponent(userId: string) {
-        const filteredLobby = this.data.filter(lobby => lobby.userId !== userId);
+        const filteredLobby = this.data.filter(lobby => lobby.userId !== userId && !lobby.oponentUserId);
         filteredLobby.sort((a, b) => a.queueIndex - b.queueIndex);
         if(filteredLobby.length) {
-            return filteredLobby[0];
+            const oponent = filteredLobby[0];
+            oponent.oponentUserId = userId;
+            const user = this.getLobbyUser(userId);
+
+            if(user) {
+                user.oponentUserId = oponent.userId;
+                this.updateLobbyUser(user);
+            }
+            
+            return oponent;
         }
 
         return null;

@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import {Express, Request, Response} from 'express';
 import { UserService } from '../services/userService';
 import { User } from '../repositories/userRespository';
