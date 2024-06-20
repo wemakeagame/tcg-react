@@ -30,26 +30,40 @@ export class LobbyController {
       }
     });
 
+    // unregister user
+    this.app.post(`${this.path}/unregister`, (req: Request, res: Response) => {
+      try {
+        this.lobbyService.unregisterUserLobby(req.body?.userId);
+
+        res.send({ message: "unregistered" });
+      } catch (e) {
+        res.statusCode = 500;
+        res.send({ error: "It was not possible to register now" });
+      }
+    });
+
     //wainting for match
-    this.app.post(
-      `${this.path}/verify`,
-      (req: Request, res: Response) => {
-        console.log("VERIFY:", this.lobbyService.getLobbyUser(req.body.userId));
-        try {
-          const userId = req.body?.userId;
+    this.app.post(`${this.path}/verify`, (req: Request, res: Response) => {
+      try {
+        const userId = req.body?.userId;
+        const lobbyUser = this.lobbyService.getLobbyUser(req.body.userId);
+
+        if (lobbyUser?.oponentUserId) {
+          res.send({ message: "connecting" });
+        } else {
           this.lobbyService.verifyLobby(userId);
           const lobbyOponent = this.lobbyService.checkOponent(userId);
 
           if (lobbyOponent) {
-            res.send({ message: "connect" });
+            res.send({ message: "connecting" });
           } else {
             res.send({ message: "waiting" });
           }
-        } catch (e) {
-          res.statusCode = 500;
-          res.send({ error: "It was not possible to register now" });
         }
+      } catch (e) {
+        res.statusCode = 500;
+        res.send({ error: "It was not possible to register now" });
       }
-    );
+    });
   }
 }

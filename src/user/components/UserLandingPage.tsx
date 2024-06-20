@@ -3,8 +3,10 @@ import {
 } from '@radix-ui/themes';
 import { Link } from 'react-router-dom';
 import { Page } from '../../core/components/Page';
+import { useAuthData } from '../hooks/useAuthData';
 
 export function UserLandingPage() {
+  useAuthData(true);
   return (
     <Page>
       <Flex justify="end" style={{ padding: '10px' }}>

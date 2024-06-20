@@ -8,13 +8,19 @@ export interface User {
 }
 
 export class UserRepository {
-    currentId = 1;
+    currentId = 2;
     data: User[] = [
         {
-            username: 'admin',
-            email: 'admin@admin.com',
+            username: 'player1',
+            email: 'player1@tcg.com',
             id: '1',
-            password: 'admin',
+            password: '123',
+        },
+        {
+            username: 'player2',
+            email: 'player2@tcg.com',
+            id: '2',
+            password: '123',
         }
     ]
 

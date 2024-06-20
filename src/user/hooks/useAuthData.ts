@@ -3,15 +3,15 @@ import UserContext from "../UserContext";
 import { useNavigate } from "react-router-dom";
 
 
-export const useAuthData = (skipRedirection?: boolean) => {
+export const useAuthData = (redirect?: boolean) => {
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if(!user && skipRedirection) {
+        if(!user && redirect) {
             navigate('/non-authorized');
         }
-    }, [user, navigate, skipRedirection])
+    }, [user, navigate, redirect])
 
-    return user?.id;
+    return user;
 }

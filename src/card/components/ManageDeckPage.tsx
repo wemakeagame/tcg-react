@@ -128,9 +128,9 @@ function groupCards(cards: (GCard | undefined)[]) {
 }
 
 export const ManageDeckPage = () => {
-  const userId = useAuthData();
+  const user = useAuthData(true);
   const deckResponse = useGetApi<Deck>(
-    `http://localhost:5500/user/${userId}/deck`
+    `http://localhost:5500/user/${user?.id}/deck`
   );
 
   const cardResponse = useGetApi<GCard[]>("http://localhost:5500/gcard");
@@ -205,31 +205,31 @@ export const ManageDeckPage = () => {
 
   const removeCardFromDeck = useCallback(() => {
     if (deckResponse?.data) {
-      if(userId && selectedCardId) {
+      if(user?.id && selectedCardId) {
         deckResponse.data.gcardIds = deckResponse.data.gcardIds.filter(
           (id) => id !== selectedCardId
         );
         updateView();
-        setRemoveCardBody({userId, gcardId:selectedCardId});
+        setRemoveCardBody({userId: user.id, gcardId:selectedCardId});
         toast('Card removed');
       }
     
     }
-  }, [deckResponse?.data, selectedCardId, setRemoveCardBody, updateView, userId]);
+  }, [deckResponse?.data, selectedCardId, setRemoveCardBody, updateView, user?.id]);
 
   const addCardToDeck = useCallback(() => {
     if (deckResponse?.data && selectedCardId) {
       if (!deckResponse.data.gcardIds.includes(selectedCardId)) {
-        if(userId) {
+        if(user?.id) {
           deckResponse.data.gcardIds.push(selectedCardId);
         
-          setAddCardBody({userId, gcardId:selectedCardId})
+          setAddCardBody({userId: user.id, gcardId:selectedCardId})
           updateView();
           toast('Card Added');
         }
       }
     }
-  }, [deckResponse?.data, selectedCardId, setAddCardBody, updateView, userId]);
+  }, [deckResponse?.data, selectedCardId, setAddCardBody, updateView, user?.id]);
 
   return (
     <Page>

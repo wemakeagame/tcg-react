@@ -21,7 +21,7 @@ export function UserHeaderOptions() {
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
             <Button variant="soft">
-              <PersonIcon />
+              <PersonIcon /> {user.username}
               <DropdownMenu.TriggerIcon />
             </Button>
           </DropdownMenu.Trigger>
