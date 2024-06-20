@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { UserController } from './controllers/userController';
 import { GCardController } from './controllers/gcardController';
+import { MatchController } from './controllers/matchController';
 
 const app = express();
 const port = 5500;
@@ -22,9 +23,11 @@ app.use(express.static('public'));
 
 const userController = new UserController(app);
 const gcardController = new GCardController(app);
+const matchController = new MatchController(app);
 
 userController.listenMethods();
 gcardController.listenMethods();
+matchController.listenMethods();
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
