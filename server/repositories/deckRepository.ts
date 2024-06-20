@@ -37,4 +37,10 @@ export class DeckRepository {
         throw new Error('Not found');
     }
 
+    public registerNewUserDeck(userId: string) {
+        this.data.push({
+            userId,
+            gcardIds: [...cardsMock.map(gcard => gcard.id)]
+        })
+    }
 }

@@ -43,6 +43,24 @@ export class MatchRepository {
     }
 
     public unregisterUserLobby(userId: string) {
-        this.data = this.data.filter(lobby => lobby.userId === userId);
+        this.data = this.data.filter(lobby => lobby.userId !== userId);
     }
+
+    // can be used only with remove user from lobby.
+    public getLobbyData() {
+        return this.data;
+    }
+
+
+    public checkOponent(userId: string) {
+        const filteredLobby = this.data.filter(lobby => lobby.userId !== userId);
+        filteredLobby.sort((a, b) => a.queueIndex - b.queueIndex);
+        if(filteredLobby.length) {
+            return filteredLobby[0];
+        }
+
+        return null;
+    }
+
+
 }

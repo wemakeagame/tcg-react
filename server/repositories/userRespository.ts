@@ -8,6 +8,7 @@ export interface User {
 }
 
 export class UserRepository {
+    currentId = 1;
     data: User[] = [
         {
             username: 'admin',
@@ -29,6 +30,8 @@ export class UserRepository {
 
     public addUser(user: User): User {
         if(!this.getUser(user.username) && !this.getUser(undefined, user.email)) {
+            this.currentId++;
+            user.id = this.currentId.toString();
             this.data.push(user);
             return user;
         }

@@ -57,7 +57,8 @@ export class UserController {
         // Save User
         this.app.post(`${this.path}`, (req: Request, res: Response) => {
             try {
-                const saved = this.userService.addUser(req.body);
+                const saved: User = this.userService.addUser(req.body);
+                this.deckService.registerNewUserDeck(saved.id);
 
                 res.send(saved);
             } catch(e) {

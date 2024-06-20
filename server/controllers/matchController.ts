@@ -35,9 +35,15 @@ export class MatchController {
         //wainting for match 
         this.app.post(`${this.path}/lobby/verify`, (req: Request, res: Response) => {
             try {
-                this.matchService.verifyLobby(req.body?.userId);
+                const userId = req.body?.userId;
+                this.matchService.verifyLobby(userId);
+               const lobbyOponent = this.matchService.checkOponent(userId);
 
-                // res.send({message: 'registerd'});
+               if(lobbyOponent) {
+                res.send({message: 'connect'});
+               } else {
+                res.send({message: 'waiting'});
+               }
             } catch(e) {
                 res.statusCode = 500;
                 res.send({error: 'It was not possible to register now'});

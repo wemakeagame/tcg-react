@@ -15,4 +15,8 @@ export class DeckService {
         return this.deckRepository.removeCardDeck(userId, gcardId);
     }
 
+    public registerNewUserDeck(userId: string) {
+        return this.deckRepository.registerNewUserDeck(userId);
+    }
+
 }
