@@ -1,9 +1,9 @@
-import { MatchRepository } from "../repositories/matchRepository";
+import { LobbyRepository } from "../repositories/lobbyRepository";
 
 const TIME_REMOVE_LOBBY = 10000;
 const TIME_CHECK_LOBBY = 1000;
-export class MatchService {
-    matchRepository: MatchRepository = new MatchRepository();
+export class LobbyService {
+    matchRepository: LobbyRepository = new LobbyRepository();
 
     constructor() {
         const intervalDeleteOldLobby = setInterval(() => {

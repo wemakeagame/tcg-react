@@ -1,10 +1,10 @@
 import {Express, Request, Response} from 'express';
-import { MatchService } from '../services/matchService';
+import { LobbyService } from '../services/lobbyService';
 
-export class MatchController {
+export class LobbyController {
     app : Express;
     path = '/match';
-    matchService = new MatchService();
+    matchService = new LobbyService();
 
     constructor(app: Express) {
         this.app = app;

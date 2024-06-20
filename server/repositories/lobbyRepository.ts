@@ -7,7 +7,7 @@ type Lobby = {
     lastReceived: Date;
 }
 
-export class MatchRepository {
+export class LobbyRepository {
     private data: Lobby[] = []
     private indexLobby = 0;
 
