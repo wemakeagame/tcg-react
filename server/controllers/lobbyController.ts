@@ -1,13 +1,16 @@
 import { Express, Request, Response } from "express";
 import { LobbyService } from "../services/lobbyService";
+import { MatchController } from "./matchController";
 
 export class LobbyController {
   app: Express;
   path = "/lobby";
   lobbyService = new LobbyService();
+  matchController: MatchController;
 
-  constructor(app: Express) {
+  constructor(app: Express, matchController: MatchController) {
     this.app = app;
+    this.matchController = matchController;
   }
 
   listenMethods() {
@@ -55,6 +58,9 @@ export class LobbyController {
           const lobbyOponent = this.lobbyService.checkOponent(userId);
 
           if (lobbyOponent) {
+            if(lobbyOponent.oponentUserId) {
+                this.matchController.registerMatch(lobbyOponent.oponentUserId, lobbyOponent.userId);
+            }
             res.send({ message: "connecting" });
           } else {
             res.send({ message: "waiting" });

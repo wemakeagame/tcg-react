@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import { UserController } from './controllers/userController';
 import { GCardController } from './controllers/gcardController';
 import { LobbyController } from './controllers/lobbyController';
+import { MatchController } from './controllers/matchController';
 
 const app = express();
 const port = 5500;
@@ -23,11 +24,13 @@ app.use(express.static('public'));
 
 const userController = new UserController(app);
 const gcardController = new GCardController(app);
-const lobbyController = new LobbyController(app);
+const matchController = new MatchController(app);
+const lobbyController = new LobbyController(app, matchController);
 
 userController.listenMethods();
 gcardController.listenMethods();
 lobbyController.listenMethods();
+matchController.listenMethods();
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
