@@ -30,14 +30,6 @@ export class MatchService {
         this.matchRepository.registerMatch(player1Id, player2Id);
     }
 
-    // public registerUserLobby(userId: string) {
-    //     this.lobbyRepository.registerUserLobby(userId);
-    // }
-
-    // public unregisterUserLobby(userId: string) {
-    //     this.lobbyRepository.unregisterUserLobby(userId);
-    // }
-
     public verifyConnection(userId: string) {
         const match = this.getMatchByUser(userId);
         if(match) {
@@ -58,8 +50,8 @@ export class MatchService {
         return  this.matchRepository.getMatchByUser(userId);
     }
 
-    // public checkOponent(userId: string) {
-    //     return this.lobbyRepository.checkOponent(userId);
-
-    // }
+    public updateChat( userId: string, message: string, username: string) {
+        const match = this.getMatchByUser(userId);
+        match?.chat.push({username, message})
+    }
 }

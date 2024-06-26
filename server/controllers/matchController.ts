@@ -1,13 +1,16 @@
 import { Express, Request, Response } from "express";
 import { MatchService } from "../services/matchService";
+import { UserService } from "../services/userService";
 
 export class MatchController {
   app: Express;
   path = "/match";
   matchService = new MatchService();
+  userService;
 
-  constructor(app: Express) {
+  constructor(app: Express, userService: UserService) {
     this.app = app;
+    this.userService = userService;
   }
 
   listenMethods() {
@@ -18,29 +21,24 @@ export class MatchController {
   private httpGetMethods() {}
 
   private httpPostMethods() {
-    // register user for match
-    // this.app.post(`${this.path}/register`, (req: Request, res: Response) => {
-    //   try {
-    //     this.matchService.registerUserLobby(req.body?.userId);
+    // register message chat
+    this.app.post(`${this.path}/chat`, (req: Request, res: Response) => {
+      try {
+        const user = this.userService.getUserNameById(req.body?.userId);
+        if(user) {
+          this.matchService.updateChat(req.body?.userId, req.body?.message, user.username);
 
-    //     res.send({ message: "registered" });
-    //   } catch (e) {
-    //     res.statusCode = 500;
-    //     res.send({ error: "It was not possible to register now" });
-    //   }
-    // });
-
-    // unregister user
-    // this.app.post(`${this.path}/unregister`, (req: Request, res: Response) => {
-    //   try {
-    //     this.lobbyService.unregisterUserLobby(req.body?.userId);
-
-    //     res.send({ message: "unregistered" });
-    //   } catch (e) {
-    //     res.statusCode = 500;
-    //     res.send({ error: "It was not possible to register now" });
-    //   }
-    // });
+          res.send({ message: "chat updated" });
+        } else {
+          res.statusCode = 500;
+          res.send({ error: "User not allowed here" });
+        }
+     
+      } catch (e) {
+        res.statusCode = 500;
+        res.send({ error: "It was not possible send the message now" });
+      }
+    });
 
     //wainting for match
     this.app.post(`${this.path}/verify`, (req: Request, res: Response) => {

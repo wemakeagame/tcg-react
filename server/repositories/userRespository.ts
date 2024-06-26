@@ -33,6 +33,9 @@ export class UserRepository {
         }
     }
 
+    public getUserNameById(userId: string) : User | undefined {
+        return this.data.find(user => user.id === userId)
+    }
 
     public addUser(user: User): User {
         if(!this.getUser(user.username) && !this.getUser(undefined, user.email)) {

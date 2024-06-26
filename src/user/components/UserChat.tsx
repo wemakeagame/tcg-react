@@ -1,6 +1,6 @@
 import { Button, Card, Text, TextField } from "@radix-ui/themes";
 import * as Form from '@radix-ui/react-form';
-import { useCallback, useState } from "react";
+import {useCallback, useRef, useState } from "react";
 
 export type ChatMessage = { username: string, message: string };
 
@@ -16,20 +16,24 @@ const getAlignmentMessage = (chatMessage: ChatMessage, username: string) => {
 
 export const UserChat: React.FC<UserChatProps> = ({ username, chat, onSendMessage }) => {
     const [message, setMessage] = useState<string>();
+    const messagesListRef = useRef<HTMLDivElement | null>(null);
     const sendMessage = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         setMessage((prevMessage) => {
             if (prevMessage) {
                 onSendMessage(prevMessage);
             }
+            messagesListRef.current?.scrollTo({
+                top: messagesListRef.current?.scrollHeight
+            })
             return '';
         });
     }, []);
 
     return <Card>
-        <Text>Chat {message}</Text>
+        <Text>Chat {username}</Text>
         <Card style={{ height: '200px', marginTop: '10px' }}>
-            <div style={{ height: '150px', overflow: 'auto', padding: '10px' }}>{chat.map(chatMessage => <p style={{ fontSize: '12px', fontWeight: 'normal', margin: '0', textAlign: getAlignmentMessage(chatMessage, username) }}>
+            <div style={{ height: '150px', overflow: 'auto', padding: '10px' }} ref={messagesListRef}>{chat.map(chatMessage => <p style={{ fontSize: '12px', fontWeight: 'normal', margin: '0', textAlign: getAlignmentMessage(chatMessage, username) }}>
                 <span style={{ fontSize: '15px', }}>
                     <strong>{`${chatMessage.username}: `}</strong>
                 </span>

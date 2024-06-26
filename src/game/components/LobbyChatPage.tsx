@@ -12,9 +12,14 @@ import { ChatMessage, UserChat } from "../../user/components/UserChat";
 export function LobbyChatPage() {
   const user = useAuthData();
   const navigate = useNavigate();
-  const [matchResponse, setVerifyRequest] = usePostApi<{ userId: string }, ({ chat?: ChatMessage[], message?: string })>(
-    "http://localhost:5500/match/verify"
-  );
+  const [matchResponse, setVerifyRequest] = usePostApi<
+    { userId: string },
+    { chat?: ChatMessage[]; message?: string }
+  >("http://localhost:5500/match/verify");
+  const [, setMessageBody] = usePostApi<
+    { userId: string; message: string },
+    { message: string }
+  >("http://localhost:5500/match/chat");
   const [chat, setChat] = useState<ChatMessage[]>([]);
 
   useInterval(2000, () => {
@@ -32,14 +37,20 @@ export function LobbyChatPage() {
     }
 
     if (matchResponse?.data?.chat) {
-      setChat(matchResponse.data.chat)
+      setChat(matchResponse.data.chat);
     }
   }, [matchResponse]);
 
   const sendMessage = useCallback((message: string) => {
-    console.log(message);
-  }, [])
-
+    if(user?.id) {
+      setMessageBody({ userId: user?.id, message });
+      setChat(chat => {
+        const newChat = [...chat];
+        newChat.push({ username: user.username, message});
+        return newChat;
+      })
+    }
+  }, []);
 
   return (
     <Page>
@@ -47,7 +58,13 @@ export function LobbyChatPage() {
         <Card>
           <Flex direction="column" align="center">
             <Text size="6" weight="bold">
-              {user && <UserChat username={user?.username} chat={chat} onSendMessage={sendMessage}/>}
+              {user && (
+                <UserChat
+                  username={user?.username}
+                  chat={chat}
+                  onSendMessage={sendMessage}
+                />
+              )}
             </Text>
           </Flex>
         </Card>

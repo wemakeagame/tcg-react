@@ -28,4 +28,8 @@ export class UserService {
     public getUser(username: string, email?: string): User | undefined {
         return this.userRepository.getUser(username, email);
     }
+
+    public getUserNameById(userId: string) {
+        return this.userRepository.getUserNameById(userId);
+    }
 }

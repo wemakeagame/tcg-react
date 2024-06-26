@@ -24,7 +24,7 @@ app.use(express.static('public'));
 
 const userController = new UserController(app);
 const gcardController = new GCardController(app);
-const matchController = new MatchController(app);
+const matchController = new MatchController(app, userController.userService);
 const lobbyController = new LobbyController(app, matchController);
 
 userController.listenMethods();
