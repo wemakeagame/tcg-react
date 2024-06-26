@@ -4,7 +4,7 @@ type Match = {
     player2Id: string;
     lastReceivedPlayer1 : Date;
     lastReceivedPlayer2: Date;
-    chat: {playerId: string, message: string}[];
+    chat: {username: string, message: string}[];
 }
 
 export class MatchRepository {
@@ -20,7 +20,14 @@ export class MatchRepository {
                 id: this.indexMatch,
                 player1Id,
                 player2Id,
-                chat: [],
+                chat: [{
+                    username: 'system',
+                    message: 'player 1 connected'
+                },
+                {
+                    username: 'system',
+                    message: 'player 2 connected'
+                }],
                 lastReceivedPlayer1: new Date(),
                 lastReceivedPlayer2: new Date(),
             })

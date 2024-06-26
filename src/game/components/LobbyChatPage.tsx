@@ -1,20 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Button, Card, Flex, Text } from "@radix-ui/themes";
+import { Card, Flex, Text } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
 import { Page } from "../../core/components/Page";
-import { Timer } from "../../core/components/Timer";
 import { useInterval } from "../../core/hooks/useInterval";
 import { usePostApi } from "../../core/hooks/useApi";
 import { useAuthData } from "../../user/hooks/useAuthData";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { ChatMessage, UserChat } from "../../user/components/UserChat";
 
 export function LobbyChatPage() {
   const user = useAuthData();
   const navigate = useNavigate();
-  const [matchResponse, setVerifyRequest] = usePostApi<{ userId: string }, ({ chat?: string[], message?: string })>(
+  const [matchResponse, setVerifyRequest] = usePostApi<{ userId: string }, ({ chat?: ChatMessage[], message?: string })>(
     "http://localhost:5500/match/verify"
   );
+  const [chat, setChat] = useState<ChatMessage[]>([]);
 
   useInterval(2000, () => {
     if (user?.id) {
@@ -29,6 +30,10 @@ export function LobbyChatPage() {
       toast("Disconnected");
       navigate("/waiting-battle");
     }
+
+    if (matchResponse?.data?.chat) {
+      setChat(matchResponse.data.chat)
+    }
   }, [matchResponse]);
 
 
@@ -38,8 +43,7 @@ export function LobbyChatPage() {
         <Card>
           <Flex direction="column" align="center">
             <Text size="6" weight="bold">
-              You should have a chat here
-              <>{JSON.stringify(matchResponse?.data)}</>
+              {user && <UserChat username={user?.username} chat={chat} />}
             </Text>
           </Flex>
         </Card>
