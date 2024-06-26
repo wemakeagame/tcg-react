@@ -5,7 +5,7 @@ import { Page } from "../../core/components/Page";
 import { useInterval } from "../../core/hooks/useInterval";
 import { usePostApi } from "../../core/hooks/useApi";
 import { useAuthData } from "../../user/hooks/useAuthData";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ChatMessage, UserChat } from "../../user/components/UserChat";
 
@@ -36,6 +36,10 @@ export function LobbyChatPage() {
     }
   }, [matchResponse]);
 
+  const sendMessage = useCallback((message: string) => {
+    console.log(message);
+  }, [])
+
 
   return (
     <Page>
@@ -43,7 +47,7 @@ export function LobbyChatPage() {
         <Card>
           <Flex direction="column" align="center">
             <Text size="6" weight="bold">
-              {user && <UserChat username={user?.username} chat={chat} />}
+              {user && <UserChat username={user?.username} chat={chat} onSendMessage={sendMessage}/>}
             </Text>
           </Flex>
         </Card>
