@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Express, Request, Response } from "express";
 import { MatchService } from "../services/matchService";
 
 export class MatchController {
@@ -43,30 +43,25 @@ export class MatchController {
     // });
 
     //wainting for match
-    // this.app.post(`${this.path}/verify`, (req: Request, res: Response) => {
-    //   try {
-    //     const userId = req.body?.userId;
-    //     const lobbyUser = this.lobbyService.getLobbyUser(req.body.userId);
+    this.app.post(`${this.path}/verify`, (req: Request, res: Response) => {
+      try {
+        const userId = req.body?.userId;
+        const match = this.matchService.getMatchByUser(req.body.userId);
 
-    //     if (lobbyUser?.oponentUserId) {
-    //       res.send({ message: "connecting" });
-    //     } else {
-    //       this.lobbyService.verifyLobby(userId);
-    //       const lobbyOponent = this.lobbyService.checkOponent(userId);
-
-    //       if (lobbyOponent) {
-    //         res.send({ message: "connecting" });
-    //       } else {
-    //         res.send({ message: "waiting" });
-    //       }
-    //     }
-    //   } catch (e) {
-    //     res.statusCode = 500;
-    //     res.send({ error: "It was not possible to register now" });
-    //   }
-    // });
+        if (match) {
+          res.send({ chat: match.chat });
+          this.matchService.verifyConnection(userId);
+        } else {
+          res.send({ message: "disconnected" });
+        }
+      } catch (e) {
+        res.statusCode = 500;
+        res.send({ error: "It was not possible to verify connection" });
+      }
+    });
   }
 
+  //TODO: update this when dependecy injection is already implemented.
   public registerMatch(player1Id: string, player2Id: string) {
     this.matchService.registerMatch(player1Id, player2Id);
   }

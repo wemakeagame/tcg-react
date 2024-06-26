@@ -1,6 +1,6 @@
 import { MatchRepository } from "../repositories/matchRepository";
 
-const TIME_REMOVE_MATCH = 20000;
+const TIME_REMOVE_MATCH = 5000;
 const TIME_CHECK_MATCH = 5000;
 export class MatchService {
     matchRepository: MatchRepository = new MatchRepository();
@@ -38,19 +38,25 @@ export class MatchService {
     //     this.lobbyRepository.unregisterUserLobby(userId);
     // }
 
-    // public verifyLobby(userId: string) {
-    //     const lobbyUser = this.getLobbyUser(userId);
-    //     if(lobbyUser) {
-    //         lobbyUser.lastReceived = new Date();
-    //         this.lobbyRepository.updateLobbyUser(lobbyUser);
-    //     }
+    public verifyConnection(userId: string) {
+        const match = this.getMatchByUser(userId);
+        if(match) {
+            const isPlayer1:boolean = match.player1Id === userId;
+            if(isPlayer1) {
+                match.lastReceivedPlayer1 = new Date();
+            } else {
+                match.lastReceivedPlayer2 = new Date();
+            }
+            
+            this.matchRepository.updateMatchConnection(match);
+        }
 
-    //     return false;
-    // }
+        return false;
+    }
 
-    // public getLobbyUser (userId: string) {
-    //     return  this.lobbyRepository.getLobbyUser(userId);
-    // }
+    public getMatchByUser (userId: string) {
+        return  this.matchRepository.getMatchByUser(userId);
+    }
 
     // public checkOponent(userId: string) {
     //     return this.lobbyRepository.checkOponent(userId);

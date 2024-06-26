@@ -7,18 +7,29 @@ import { useInterval } from "../../core/hooks/useInterval";
 import { usePostApi } from "../../core/hooks/useApi";
 import { useAuthData } from "../../user/hooks/useAuthData";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export function LobbyChatPage() {
-  // const userId = useAuthData();
-  // const navigate = useNavigate();
-  // const [waitingReponse, setVerifyRequest] = usePostApi<{ userId: string }, {message: string}>(
-  //   "http://localhost:5500/lobby/verify"
-  // );
-  // const [registerResponse, setRegisterBody] = usePostApi<{ userId: string }, {message: string}>(
-  //   "http://localhost:5500/lobby/register"
-  // );
+  const user = useAuthData();
+  const navigate = useNavigate();
+  const [matchResponse, setVerifyRequest] = usePostApi<{ userId: string }, ({ chat?: string[], message?: string })>(
+    "http://localhost:5500/match/verify"
+  );
 
- 
+  useInterval(2000, () => {
+    if (user?.id) {
+      setVerifyRequest({
+        userId: user?.id,
+      });
+    }
+  });
+
+  useEffect(() => {
+    if (matchResponse?.data?.message === "disconnected") {
+      toast("Disconnected");
+      navigate("/waiting-battle");
+    }
+  }, [matchResponse]);
 
 
   return (
@@ -28,6 +39,7 @@ export function LobbyChatPage() {
           <Flex direction="column" align="center">
             <Text size="6" weight="bold">
               You should have a chat here
+              <>{JSON.stringify(matchResponse?.data)}</>
             </Text>
           </Flex>
         </Card>

@@ -27,24 +27,24 @@ export class MatchRepository {
         }        
     }
 
-    // public getLobbyUser(userId: string) {
-    //     const lobbyUser = this.data.find(lobby => lobby.userId === userId);
+    public getMatchByUser(userId: string) {
+        const match = this.data.find(match => match.player1Id === userId || match.player2Id === userId);
 
-    //     if(lobbyUser) {
-    //         return {...lobbyUser};
-    //     } 
+        if(match) {
+            return {...match};
+        } 
 
-    //     return null;
-    // }
+        return null;
+    }
 
-    // public updateLobbyUser(lobbyUser: Lobby) {
-    //     this.data.forEach(lobby => {
-    //         if(lobby.userId === lobbyUser.userId) {
-    //             lobby.lastReceived = lobbyUser.lastReceived;
-    //             lobby.oponentUserId = lobbyUser.oponentUserId;
-    //         }
-    //     })
-    // }
+    public updateMatchConnection(match: Match) {
+        this.data.forEach(m => {
+            if(m.id === match.id) {
+                m.lastReceivedPlayer1 = match.lastReceivedPlayer1;
+                m.lastReceivedPlayer2 = match.lastReceivedPlayer2;
+            }
+        })
+    }
 
     public unregisterMatch(matchId: number) {
         this.data = this.data.filter(match => match.id !== matchId);
