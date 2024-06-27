@@ -32,8 +32,12 @@ export function LobbyChatPage() {
 
   useEffect(() => {
     if (matchResponse?.data?.message === "disconnected") {
-      toast("Disconnected");
-      navigate("/waiting-battle");
+      toast("The other player disconnected...");
+      const timeoutToRedirect = setTimeout(() => {
+        navigate("/waiting-battle");
+      }, 2000)
+
+      return () => clearTimeout(timeoutToRedirect);
     }
 
     if (matchResponse?.data?.chat) {
