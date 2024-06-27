@@ -1,9 +1,19 @@
-type Match = {
-    id: number;
-    player1Id: string;
-    player2Id: string;
-    lastReceivedPlayer1 : Date;
-    lastReceivedPlayer2: Date;
+import { GCard, GCardMonster, GCardSpell } from "./model/gcard";
+
+export type PlayerMatch = {
+    lastReceived : Date;
+    userId: string;
+    hand: GCard['id'][];
+    monsters: GCardMonster['id'][];
+    traps: GCardSpell['id'][];
+    deck: GCard['id'][];
+}
+
+
+export type Match = {
+    id?: number;
+    player1: PlayerMatch;
+    player2: PlayerMatch;
     chat: {username: string, message: string}[];
 }
 
@@ -11,31 +21,8 @@ export class MatchRepository {
     private data: Match[] = []
     private indexMatch = 0;
 
-    public registerMatch(player1Id: string, player2Id: string) {
-        const isUserInAMatch = this.data.some(match => match.player1Id === player1Id || match.player1Id === player2Id || match.player2Id === player1Id || match.player2Id === player2Id);
-
-        if(!isUserInAMatch) {
-            this.indexMatch++;
-            this.data.push({
-                id: this.indexMatch,
-                player1Id,
-                player2Id,
-                chat: [{
-                    username: 'system',
-                    message: 'player 1 connected'
-                },
-                {
-                    username: 'system',
-                    message: 'player 2 connected'
-                }],
-                lastReceivedPlayer1: new Date(),
-                lastReceivedPlayer2: new Date(),
-            })
-        }        
-    }
-
     public getMatchByUser(userId: string) {
-        const match = this.data.find(match => match.player1Id === userId || match.player2Id === userId);
+        const match = this.data.find(match => match.player1.userId === userId || match.player2.userId === userId);
 
         if(match) {
             return {...match};
@@ -47,10 +34,24 @@ export class MatchRepository {
     public updateMatchConnection(match: Match) {
         this.data.forEach(m => {
             if(m.id === match.id) {
-                m.lastReceivedPlayer1 = match.lastReceivedPlayer1;
-                m.lastReceivedPlayer2 = match.lastReceivedPlayer2;
+                m.player1.lastReceived = match.player1.lastReceived;
+                m.player2.lastReceived = match.player2.lastReceived;
             }
         })
+    }
+
+    public isUserInMatch(userId1: string, userId2: string) {
+        const isUserInAMatch = this.data.some(match => match.player1.userId === userId1 
+            || match.player1.userId === userId2 
+            || match.player2.userId === userId1 || match.player2.userId === userId2);
+
+            return isUserInAMatch;
+    }
+
+    public registerMatch(match: Match) {
+        this.indexMatch++;
+        match.id = this.indexMatch;
+        this.data.push(match);
     }
 
     public unregisterMatch(matchId: number) {
@@ -61,26 +62,5 @@ export class MatchRepository {
     public getMatchData() {
         return this.data;
     }
-
-
-    // public checkOponent(userId: string) {
-    //     const filteredLobby = this.data.filter(lobby => lobby.userId !== userId && !lobby.oponentUserId);
-    //     filteredLobby.sort((a, b) => a.queueIndex - b.queueIndex);
-    //     if(filteredLobby.length) {
-    //         const oponent = filteredLobby[0];
-    //         oponent.oponentUserId = userId;
-    //         const user = this.getLobbyUser(userId);
-
-    //         if(user) {
-    //             user.oponentUserId = oponent.userId;
-    //             this.updateLobbyUser(user);
-    //         }
-            
-    //         return oponent;
-    //     }
-
-    //     return null;
-    // }
-
 
 }

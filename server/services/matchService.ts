@@ -1,4 +1,4 @@
-import { MatchRepository } from "../repositories/matchRepository";
+import { Match, MatchRepository } from "../repositories/matchRepository";
 
 const TIME_REMOVE_MATCH = 5000;
 const TIME_CHECK_MATCH = 5000;
@@ -11,12 +11,14 @@ export class MatchService {
             const matchData = this.matchRepository.getMatchData();
 
             matchData.forEach(match => {
-                const lastReceivedPlayer1 = match.lastReceivedPlayer1.valueOf();
-                const lastReceivedPlayer2 = match.lastReceivedPlayer2.valueOf();
-                const diffDatePlayer1 = new Date().valueOf() - lastReceivedPlayer1;
-                const diffDatePlayer2 = new Date().valueOf() - lastReceivedPlayer2;
-                if(diffDatePlayer1 > TIME_REMOVE_MATCH || diffDatePlayer2 > TIME_REMOVE_MATCH) {
-                    this.matchRepository.unregisterMatch(match.id);
+                if(match.id) {
+                    const lastReceivedPlayer1 = match.player1.lastReceived.valueOf();
+                    const lastReceivedPlayer2 = match.player2.lastReceived.valueOf();
+                    const diffDatePlayer1 = new Date().valueOf() - lastReceivedPlayer1;
+                    const diffDatePlayer2 = new Date().valueOf() - lastReceivedPlayer2;
+                    if(diffDatePlayer1 > TIME_REMOVE_MATCH || diffDatePlayer2 > TIME_REMOVE_MATCH) {
+                        this.matchRepository.unregisterMatch(match.id);
+                    }
                 }
 
             });
@@ -27,17 +29,53 @@ export class MatchService {
 
 
     public registerMatch(player1Id: string, player2Id: string) {
-        this.matchRepository.registerMatch(player1Id, player2Id);
+        const isUserInAMatch = this.matchRepository.isUserInMatch(player1Id, player2Id);
+
+        if(!isUserInAMatch) {
+            const match: Match = {
+                player1: {
+                    lastReceived: new Date(),
+                    userId: player1Id,
+                    hand: [],
+                    monsters: [],
+                    traps: [],
+                    deck: []
+                },
+                player2: {
+                    lastReceived: new Date(),
+                    userId: player2Id,
+                    hand: [],
+                    monsters: [],
+                    traps: [],
+                    deck: []
+                },
+                chat: [{
+                    username: 'system',
+                    message: 'player 1 connected'
+                },
+                {
+                    username: 'system',
+                    message: 'player 2 connected'
+                }],
+            }
+
+            this.matchRepository.registerMatch(match);
+        }        
     }
+
+
+    // getCardDeck(userId: string) {
+
+    // }
 
     public verifyConnection(userId: string) {
         const match = this.getMatchByUser(userId);
         if(match) {
-            const isPlayer1:boolean = match.player1Id === userId;
+            const isPlayer1:boolean = match.player1.userId === userId;
             if(isPlayer1) {
-                match.lastReceivedPlayer1 = new Date();
+                match.player1.lastReceived = new Date();
             } else {
-                match.lastReceivedPlayer2 = new Date();
+                match.player2.lastReceived  = new Date();
             }
             
             this.matchRepository.updateMatchConnection(match);
