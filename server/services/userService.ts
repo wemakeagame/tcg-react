@@ -1,3 +1,4 @@
+import { Inject, Injectable } from "@decorators/di";
 import { User, UserRepository } from "../repositories/userRespository";
 
 export interface UserCredential {
@@ -5,8 +6,9 @@ export interface UserCredential {
     password: string;
 }
 
+@Injectable()
 export class UserService {
-    userRepository: UserRepository = new UserRepository();
+    constructor(@Inject('UserRepository') private userRepository: UserRepository) {}
 
     public authenticateUser(credential : UserCredential): User | null {
         if(credential.usernameEmail) {
@@ -19,7 +21,6 @@ export class UserService {
         }
         return null;
     }
-
 
     public addUser(user: User): User {
         return this.userRepository.addUser(user);

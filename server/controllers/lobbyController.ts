@@ -1,16 +1,15 @@
+import { Inject } from "@decorators/di";
 import { Express, Request, Response } from "express";
 import { LobbyService } from "../services/lobbyService";
 import { MatchController } from "./matchController";
 
 export class LobbyController {
-  app: Express;
   path = "/lobby";
-  lobbyService = new LobbyService();
-  matchController: MatchController;
 
-  constructor(app: Express, matchController: MatchController) {
-    this.app = app;
-    this.matchController = matchController;
+  constructor(
+    @Inject('app') private app: Express, 
+    @Inject('MatchController') private matchController: MatchController, 
+    @Inject('LobbyService') private lobbyService: LobbyService) {
   }
 
   listenMethods() {

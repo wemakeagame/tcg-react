@@ -1,15 +1,15 @@
 /* eslint-disable no-useless-catch */
+import { Inject } from '@decorators/di';
 import {Express, Request, Response} from 'express';
 import { GcardService } from '../services/gcardService';
 
 export class GCardController {
-    app : Express;
     path = '/gcard';
-    gcardService = new GcardService();
 
-    constructor(app: Express) {
-        this.app = app;
-    }
+    constructor(
+        @Inject('app') private app: Express, 
+        @Inject('GcardService') private gcardService: GcardService) {
+      }
 
     listenMethods() {
        this.httpGetMethods();

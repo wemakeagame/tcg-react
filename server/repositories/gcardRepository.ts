@@ -1,6 +1,8 @@
+import { Injectable } from "@decorators/di";
 import { GCard } from "./model/gcard";
 import { cardsMock } from "./model/gcard.mock";
 
+@Injectable()
 export class GCardRepository {
     private data: GCard[] = cardsMock
 

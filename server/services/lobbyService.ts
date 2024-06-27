@@ -1,11 +1,12 @@
+import { Inject, Injectable } from "@decorators/di";
 import { LobbyRepository } from "../repositories/lobbyRepository";
 
 const TIME_REMOVE_LOBBY = 10000;
 const TIME_CHECK_LOBBY = 5000;
-export class LobbyService {
-    lobbyRepository: LobbyRepository = new LobbyRepository();
 
-    constructor() {
+@Injectable()
+export class LobbyService {
+    constructor(@Inject('LobbyRepository') private lobbyRepository: LobbyRepository) {
         // remove non respoding users from the list
         setInterval(() => {
             const lobbyData = this.lobbyRepository.getLobbyData();

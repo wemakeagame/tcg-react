@@ -1,3 +1,4 @@
+import { Injectable } from "@decorators/di";
 
 
 export interface User {
@@ -7,6 +8,7 @@ export interface User {
     email: string;
 }
 
+@Injectable()
 export class UserRepository {
     currentId = 2;
     data: User[] = [

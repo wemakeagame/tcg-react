@@ -1,8 +1,11 @@
+import { Inject, Injectable } from "@decorators/di";
 import { GCardRepository } from "../repositories/gcardRepository";
 import { GCard } from "../repositories/model/gcard";
 
+@Injectable()
 export class GcardService {
-    gcardRepository: GCardRepository = new GCardRepository();
+
+    constructor(@Inject('GCardRepository') private gcardRepository: GCardRepository){}
 
     // public addGCard(gcard: GCard): GCard | null {
     //     return this.gcardRepository.addCard(gcard);

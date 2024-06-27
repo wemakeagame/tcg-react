@@ -1,16 +1,17 @@
+import { Inject, Injectable } from "@decorators/di";
 import { Express, Request, Response } from "express";
 import { MatchService } from "../services/matchService";
 import { UserService } from "../services/userService";
 
+@Injectable()
 export class MatchController {
-  app: Express;
   path = "/match";
-  matchService = new MatchService();
-  userService;
 
-  constructor(app: Express, userService: UserService) {
-    this.app = app;
-    this.userService = userService;
+  constructor(
+    @Inject('app') private app: Express, 
+    @Inject('UserService') private userService: UserService,
+    @Inject('MatchService') private matchService: MatchService,
+  ) {
   }
 
   listenMethods() {

@@ -1,3 +1,4 @@
+import { Injectable } from "@decorators/di";
 import { GCard, GCardMonster, GCardSpell } from "./model/gcard";
 
 export type PlayerMatch = {
@@ -16,7 +17,7 @@ export type Match = {
     player2: PlayerMatch;
     chat: {username: string, message: string}[];
 }
-
+@Injectable()
 export class MatchRepository {
     private data: Match[] = []
     private indexMatch = 0;

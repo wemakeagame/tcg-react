@@ -1,10 +1,12 @@
+import { Injectable } from "@decorators/di";
+
 type Lobby = {
     userId: string;
     queueIndex: number;
     lastReceived: Date;
     oponentUserId?: string;
 }
-
+@Injectable()
 export class LobbyRepository {
     private data: Lobby[] = []
     private indexLobby = 0;

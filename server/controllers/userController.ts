@@ -3,16 +3,17 @@ import {Express, Request, Response} from 'express';
 import { UserService } from '../services/userService';
 import { User } from '../repositories/userRespository';
 import { DeckService } from '../services/deckService';
+import { Inject } from '@decorators/di';
 
 export class UserController {
-    app : Express;
     path = '/user';
-    userService = new UserService();
-    deckService = new DeckService();
 
-    constructor(app: Express) {
-        this.app = app;
-    }
+    constructor(
+        @Inject('app') private app: Express, 
+        @Inject('UserService') private userService: UserService,
+        @Inject('MatchService') private deckService: DeckService,
+      ) {
+      }
 
     listenMethods() {
        this.httpGetMethods();

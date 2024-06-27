@@ -1,11 +1,13 @@
+import { Inject, Injectable } from "@decorators/di";
 import { Match, MatchRepository } from "../repositories/matchRepository";
 
 const TIME_REMOVE_MATCH = 5000;
 const TIME_CHECK_MATCH = 5000;
-export class MatchService {
-    matchRepository: MatchRepository = new MatchRepository();
 
-    constructor() {
+@Injectable()
+export class MatchService {
+    
+    constructor(@Inject('MatchRepository') private matchRepository: MatchRepository) {
         // remove non respoding users from the list
         setInterval(() => {
             const matchData = this.matchRepository.getMatchData();

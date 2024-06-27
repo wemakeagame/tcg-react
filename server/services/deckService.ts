@@ -1,7 +1,9 @@
+import { Inject, Injectable } from "@decorators/di";
 import { DeckRepository } from "../repositories/deckRepository";
 
+@Injectable()
 export class DeckService {
-    private deckRepository: DeckRepository = new DeckRepository();
+    constructor(@Inject('DeckRepository') private deckRepository: DeckRepository){}
 
     public getUserDeck (userId: string) {
         return this.deckRepository.getUserDeck(userId);
