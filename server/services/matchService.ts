@@ -79,7 +79,9 @@ export class MatchService {
                 this.buyCard([...deckPlayer2.gcardIds], match.player2, 4);
             }
 
-            this.matchRepository.registerMatch(match);
+            if(deckPlayer1 && deckPlayer2) {
+                this.matchRepository.registerMatch(match);
+            }
         }        
     }
 

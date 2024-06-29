@@ -59,7 +59,7 @@ export const GCardViewBase: React.FC<GCardViewBaseProps> = ({
   const color = getBackgroundCard(gcard.color);
 
   return (
-    <Card style={{ width: "250px", background: color }}>
+    <Card style={{ width: "200px", background: color }}>
       <Card>
         <Flex justify={"between"}>
           <Text size={"4"} weight={"bold"}>
@@ -72,7 +72,7 @@ export const GCardViewBase: React.FC<GCardViewBaseProps> = ({
             src={`http://localhost:5500/${gcard.image}`}
             alt=""
             style={{
-              maxWidth: "160px",
+              maxWidth: "120px",
               maxHeight: "auto",
               border: "1px solid #000000",
               background: "#ffffff",

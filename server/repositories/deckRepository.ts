@@ -8,6 +8,10 @@ export class DeckRepository {
         {
             userId: '1',
             gcardIds: [...cardsMock.map(gcard => gcard.id)]
+        },
+        {
+            userId: '2',
+            gcardIds: [...cardsMock.map(gcard => gcard.id)]
         }
     ]
 
