@@ -14,6 +14,7 @@ import { ManageDeckPage } from "./card/components/ManageDeckPage";
 import 'react-toastify/dist/ReactToastify.css';
 import { BattleWaitingPage } from "./game/components/BattleWaitingPage";
 import { LobbyChatPage } from "./game/components/LobbyChatPage";
+import { BattleStagePage } from "./game/components/BattleStagePage";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
   {
     path: "/waiting-battle",
     element: <BattleWaitingPage />
+  },
+  {
+    path: "/battle",
+    element: <BattleStagePage />
   },
   {
     path: "/lobby-chat",
