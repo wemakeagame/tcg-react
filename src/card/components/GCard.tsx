@@ -32,21 +32,18 @@ export const colorMap: Record<GCardColor, string> = {
 
 export const getBackgroundCard = (colors: GCardColor[]) => {
   if (colors.length === 2) {
-    return `linear-gradient(90deg, ${colorMap[colors[0]]} 0%, ${
-      colorMap[colors[1]]
-    } 100%`;
+    return `linear-gradient(90deg, ${colorMap[colors[0]]} 0%, ${colorMap[colors[1]]
+      } 100%`;
   }
 
   if (colors.length === 3) {
-    return `linear-gradient(90deg, ${colorMap[colors[0]]} 0%, ${
-      colorMap[colors[1]]
-    } 50% , ${colorMap[colors[2]]} 100%`;
+    return `linear-gradient(90deg, ${colorMap[colors[0]]} 0%, ${colorMap[colors[1]]
+      } 50% , ${colorMap[colors[2]]} 100%`;
   }
 
   if (colors.length === 4) {
-    return `linear-gradient(90deg, ${colorMap[colors[0]]} 0%, ${
-      colorMap[colors[1]]
-    } 33% , ${colorMap[colors[2]]} 66%, ${colorMap[colors[3]]} 100%`;
+    return `linear-gradient(90deg, ${colorMap[colors[0]]} 0%, ${colorMap[colors[1]]
+      } 33% , ${colorMap[colors[2]]} 66%, ${colorMap[colors[3]]} 100%`;
   }
 
   return colorMap[colors[0]];
@@ -59,41 +56,45 @@ export const GCardViewBase: React.FC<GCardViewBaseProps> = ({
   const color = getBackgroundCard(gcard.color);
 
   return (
-    <Card style={{ width: "200px", background: color }}>
-      <Card>
-        <Flex justify={"between"}>
-          <Text size={"4"} weight={"bold"}>
-            {gcard.name}
-          </Text>
-          <Text size={"1"}>{gcard.rarity}</Text>
+    <Card style={{ width: "160px", background: color, padding: '3px' }}>
+      <Flex justify={'between'} direction={'column'} height="100%">
+        <Card>
+          <Flex justify={"between"}>
+            <Text size={"2"} weight={"bold"} wrap={'nowrap'}>
+              {gcard.name}
+            </Text>
+            <Text size={"1"} style={{ top: '-10px', position: 'relative' }}>{gcard.rarity}</Text>
+          </Flex>
+          <Flex align={"center"} justify={"center"} style={{ background: color }}>
+            <img
+              src={`http://localhost:5500/${gcard.image}`}
+              alt=""
+              style={{
+                maxWidth: "120px",
+                maxHeight: "auto",
+                border: "1px solid #000000",
+                background: "#ffffff",
+                margin: "10px",
+              }}
+            ></img>
+          </Flex>
+        </Card>
+        {children}
+        <Flex
+          style={{
+            background: "#dfd5d5",
+            padding: "2px",
+            borderRadius: "5px",
+            border: `1px solid #cccccc}`,
+          }}
+          align={"center"}
+          justify={'center'}
+        >
+          <Text size={'1'} weight={"bold"} style={{ fontStyle: "italic" }}>{gcard.type} - </Text>
+          {gcard.color.map((color) => (
+            <StarFilledIcon color={colorMap[color]} />
+          ))}
         </Flex>
-        <Flex align={"center"} justify={"center"} style={{ background: color }}>
-          <img
-            src={`http://localhost:5500/${gcard.image}`}
-            alt=""
-            style={{
-              maxWidth: "120px",
-              maxHeight: "auto",
-              border: "1px solid #000000",
-              background: "#ffffff",
-              margin: "20px",
-            }}
-          ></img>
-        </Flex>
-      </Card>
-      {children}
-      <Flex
-        style={{
-          background: "#dfd5d5",
-          padding: "2px",
-          borderRadius: "5px",
-          border: `1px solid #cccccc}`,
-        }}
-        align={"center"}
-      >
-        {gcard.color.map((color) => (
-          <StarFilledIcon color={colorMap[color]} />
-        ))}
       </Flex>
     </Card>
   );
@@ -122,7 +123,7 @@ export const GCardMonsterView: React.FC<GCardMonsterViewProps> = ({
 }) => {
   return (
     <GCardViewBase gcard={gcard} isSelected={isSelected} onSelect={onSelect}>
-      <Card>
+      <Card style={{ padding: '5px' }}>
         <Flex justify={"between"}>
           <Text size={"6"}>
             <LightningBoltIcon /> {gcard.power}
@@ -143,7 +144,7 @@ export const GCardSpellView: React.FC<GCardSpellViewProps> = ({
 }) => {
   return (
     <GCardViewBase gcard={gcard} isSelected={isSelected} onSelect={onSelect}>
-      <Text size={"6"} weight={"bold"}>
+      <Text size={"6"} weight={"bold"} align="center">
         <TargetIcon /> {gcard.spell}
       </Text>
     </GCardViewBase>
