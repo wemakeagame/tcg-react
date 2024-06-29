@@ -1,14 +1,14 @@
 import { Inject } from "@decorators/di";
 import { Express, Request, Response } from "express";
 import { LobbyService } from "../services/lobbyService";
-import { MatchController } from "./matchController";
+import { MatchService } from "../services/matchService";
 
 export class LobbyController {
   path = "/lobby";
 
   constructor(
     @Inject('app') private app: Express, 
-    @Inject('MatchController') private matchController: MatchController, 
+    @Inject('MatchService') private matchService: MatchService, 
     @Inject('LobbyService') private lobbyService: LobbyService) {
   }
 
@@ -58,7 +58,7 @@ export class LobbyController {
 
           if (lobbyOponent) {
             if(lobbyOponent.oponentUserId) {
-                this.matchController.registerMatch(lobbyOponent.oponentUserId, lobbyOponent.userId);
+                this.matchService.registerMatch(lobbyOponent.oponentUserId, lobbyOponent.userId);
             }
             res.send({ message: "connecting" });
           } else {

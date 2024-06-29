@@ -3,7 +3,6 @@ import { Express, Request, Response } from "express";
 import { MatchService } from "../services/matchService";
 import { UserService } from "../services/userService";
 
-@Injectable()
 export class MatchController {
   path = "/match";
 
@@ -48,7 +47,10 @@ export class MatchController {
         const match = this.matchService.getMatchByUser(req.body.userId);
 
         if (match) {
-          res.send({ chat: match.chat });
+          res.send({ 
+            chat: match.chat, 
+            player1: userId === match.player1.userId ? match.player1 : null, 
+            player2: userId === match.player2.userId ? match.player2 : null });
           this.matchService.verifyConnection(userId);
         } else {
           res.send({ message: "disconnected" });
@@ -58,10 +60,5 @@ export class MatchController {
         res.send({ error: "It was not possible to verify connection" });
       }
     });
-  }
-
-  //TODO: update this when dependecy injection is already implemented.
-  public registerMatch(player1Id: string, player2Id: string) {
-    this.matchService.registerMatch(player1Id, player2Id);
   }
 }

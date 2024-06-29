@@ -1,13 +1,19 @@
 import { Inject, Injectable } from "@decorators/di";
-import { Match, MatchRepository } from "../repositories/matchRepository";
+import { Match, MatchRepository, PlayerMatch } from "../repositories/matchRepository";
+import { Deck } from "../repositories/model/deck";
+import { getRandomInt } from "../utils/utilsFunctions";
+import { DeckService } from "./deckService";
 
-const TIME_REMOVE_MATCH = 5000;
+const TIME_REMOVE_MATCH = 8000;
 const TIME_CHECK_MATCH = 5000;
 
 @Injectable()
 export class MatchService {
     
-    constructor(@Inject('MatchRepository') private matchRepository: MatchRepository) {
+    constructor(
+        @Inject('MatchRepository') private matchRepository: MatchRepository,
+        @Inject('DeckService') private deckService: DeckService
+    ) {
         // remove non respoding users from the list
         setInterval(() => {
             const matchData = this.matchRepository.getMatchData();
@@ -34,6 +40,10 @@ export class MatchService {
         const isUserInAMatch = this.matchRepository.isUserInMatch(player1Id, player2Id);
 
         if(!isUserInAMatch) {
+
+            const deckPlayer1 = this.deckService.getUserDeck(player1Id);
+            const deckPlayer2 = this.deckService.getUserDeck(player2Id);
+            
             const match: Match = {
                 player1: {
                     lastReceived: new Date(),
@@ -61,14 +71,31 @@ export class MatchService {
                 }],
             }
 
+            if(deckPlayer1) {
+                this.buyCard([...deckPlayer1.gcardIds], match.player1, 4);
+            }
+
+            if(deckPlayer2) {
+                this.buyCard([...deckPlayer2.gcardIds], match.player2, 4);
+            }
+
             this.matchRepository.registerMatch(match);
         }        
     }
 
+    private buyCard(deckPlayer: Deck['gcardIds'], playerMatch: PlayerMatch, amount?: number) {
+        const totalCards = amount || 1;
+        let newPlayerDeck: Deck['gcardIds'] = [];
 
-    // getCardDeck(userId: string) {
+        for(let i = 0; i<totalCards; i++) {
+            const indexCard = getRandomInt(0, deckPlayer.length - 1);
+            const gcardId = deckPlayer[indexCard];
+            playerMatch.hand.push(gcardId);
+            newPlayerDeck = deckPlayer.filter(id => id !== gcardId);
+        }
 
-    // }
+        playerMatch.deck = newPlayerDeck;
+    }
 
     public verifyConnection(userId: string) {
         const match = this.getMatchByUser(userId);
