@@ -11,7 +11,7 @@ export class UserController {
     constructor(
         @Inject('app') private app: Express, 
         @Inject('UserService') private userService: UserService,
-        @Inject('MatchService') private deckService: DeckService,
+        @Inject('DeckService') private deckService: DeckService,
       ) {
       }
 

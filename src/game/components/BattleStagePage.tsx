@@ -1,3 +1,4 @@
+import { ThickArrowDownIcon, ThickArrowUpIcon } from "@radix-ui/react-icons";
 import { Card, Flex } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import { GCardView } from "../../card/components/GCard";
@@ -40,21 +41,19 @@ export const BattleStagePage = () => {
             <Flex flexGrow={'1'}>
                 board opponet
             </Flex>
-            <Flex>
-                Indicators
+            <Flex justify={'center'}>
+                <ThickArrowUpIcon width={30} height={30} /> <ThickArrowDownIcon width={30} height={30} />
             </Flex>
 
             <Flex>
-                board player
+
             </Flex>
 
-            <Flex flexGrow={'1'} justify={'between'}>
-                <Flex>
+            <Flex flexGrow={'1'} justify={'between'} gap="2">
+                <Flex gap={'2'} style={{ background: "#4CAF50", padding: '10px' }}>
                     {hand.map(gcard => gcard && <GCardView gcard={gcard} isSelected={false} onSelect={(id) => id} />)}
                 </Flex>
-                <Flex> Menu
-                    <Card>Deck: {player?.deck.length}</Card>
-                </Flex>
+                <Card style={{ flexGrow: '0.5' }}>Deck: {player?.deck.length}</Card>
             </Flex>
         </Flex>
     </Page>
