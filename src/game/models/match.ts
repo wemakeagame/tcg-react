@@ -12,6 +12,7 @@ export type PlayerMatch = {
 
 export type Match = {
     id?: number;
+    turn: PlayerMatch['userId'];
     player1?: PlayerMatch;
     player2?: PlayerMatch;
     chat: {username: string, message: string}[];

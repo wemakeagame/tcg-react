@@ -15,6 +15,7 @@ export type Match = {
     id?: number;
     player1: PlayerMatch;
     player2: PlayerMatch;
+    turn: PlayerMatch['userId']
     chat: {username: string, message: string}[];
 }
 @Injectable()

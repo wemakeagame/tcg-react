@@ -6,7 +6,13 @@ import { PlayerMatch } from "../models/match";
 export const useBattleVerify = (userId: string | undefined) => {
     const [matchResponse, setVerifyRequest] = usePostApi<
         { userId: string },
-        { chat?: ChatMessage[]; message?: string, player1?: PlayerMatch, player2?: PlayerMatch  }
+        { 
+            chat?: ChatMessage[]; 
+            message?: string, 
+            player1?: PlayerMatch, 
+            player2?: PlayerMatch, 
+            turn: PlayerMatch['userId'] 
+        }
     >("http://localhost:5500/match/verify");
 
     useInterval(2000, () => {

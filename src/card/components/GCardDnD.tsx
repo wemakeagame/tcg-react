@@ -1,10 +1,15 @@
 import { useDrag } from "react-dnd";
 import { GCardView, GCardViewProps } from "./GCard";
 
-export const GCardDnD: React.FC<GCardViewProps> = ({
+type GCardDnDProps = GCardViewProps & {
+    canDrag: boolean
+}
+
+export const GCardDnD: React.FC<GCardDnDProps> = ({
     gcard,
     isSelected,
     onSelect,
+    canDrag
 }) => {
     const [{opacity}, drag] = useDrag(() => ({
         type: gcard.type,
@@ -16,6 +21,7 @@ export const GCardDnD: React.FC<GCardViewProps> = ({
         }
       }))
 
+    const outline = canDrag ? '5px solid red' : 'none';
 
-    return <div ref={drag} style={{opacity}}><GCardView gcard={gcard} isSelected={isSelected} onSelect={onSelect} /></div>
+    return <div ref={canDrag ? drag : null} style={{opacity, outline }}><GCardView gcard={gcard} isSelected={isSelected} onSelect={onSelect} /></div>
 }

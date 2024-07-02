@@ -45,6 +45,7 @@ export class MatchService {
             const deckPlayer2 = this.deckService.getUserDeck(player2Id);
             
             const match: Match = {
+                turn: getRandomInt(0,100) > 50 ? player1Id : player2Id,
                 player1: {
                     lastReceived: new Date(),
                     userId: player1Id,

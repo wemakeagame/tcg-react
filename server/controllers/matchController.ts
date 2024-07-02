@@ -50,7 +50,9 @@ export class MatchController {
           res.send({ 
             chat: match.chat, 
             player1: userId === match.player1.userId ? match.player1 : null, 
-            player2: userId === match.player2.userId ? match.player2 : null });
+            player2: userId === match.player2.userId ? match.player2 : null,
+            turn: match.turn
+          });
           this.matchService.verifyConnection(userId);
         } else {
           res.send({ message: "disconnected" });
