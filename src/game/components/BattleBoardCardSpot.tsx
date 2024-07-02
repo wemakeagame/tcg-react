@@ -16,8 +16,8 @@ export const BattleBoardCardSpot: React.FC<BattleBoardCardSpotProps> = ({type, o
     const style = {
         width: "170px", 
         height: "240px",
-        background: (type.includes('spell') ? 'blue' : 'red'),
-        top: type.includes('monster') ? '10px' : '0'
+        background: (type.includes('spell') ? 'red' : 'blue'),
+        top: type.includes('monster') ? '-10px' : '0'
     }
       
     return <Card ref={drop} style={style}></Card>

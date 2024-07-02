@@ -123,8 +123,7 @@ export const GCardMonsterView: React.FC<GCardMonsterViewProps> = ({
 }) => {
   return (
     <GCardViewBase gcard={gcard} isSelected={isSelected} onSelect={onSelect}>
-      <Card style={{ padding: '5px' }}>
-        <Flex justify={"between"}>
+        <Flex justify={"between"} style={{padding: "0 10px"}}>
           <Text size={"6"}>
             <LightningBoltIcon /> {gcard.power}
           </Text>
@@ -132,7 +131,6 @@ export const GCardMonsterView: React.FC<GCardMonsterViewProps> = ({
             <HeartFilledIcon /> {gcard.life}
           </Text>
         </Flex>
-      </Card>
     </GCardViewBase>
   );
 };

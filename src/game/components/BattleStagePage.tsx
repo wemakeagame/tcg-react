@@ -1,4 +1,4 @@
-import { ThickArrowDownIcon, ThickArrowUpIcon } from "@radix-ui/react-icons";
+import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
 import { Card, Flex } from "@radix-ui/themes";
 import { useCallback, useEffect, useState } from "react";
 import { GCard } from "../../card/model/gcard";
@@ -11,6 +11,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { GCardDnD } from "../../card/components/GCardDnD";
 import { BattleBoardCardSpot } from "./BattleBoardCardSpot";
+import { DialogPlaceCard } from "./DialogPlaceCard";
 
 export const BattleStagePage = () => {
     const user = useAuthData(true);
@@ -20,6 +21,8 @@ export const BattleStagePage = () => {
     const [player, setPlayer] = useState<PlayerMatch>();
     const [canPlaceCard, setCanPlaceCard] = useState(false);
     const [isMyTurn, setIsMyTurn] = useState(false);
+    const [isPlaceCardOptionsOpen, setIsPlaceCardOptionsOpen] = useState(false);
+    const [placingCard, setPlacingCard] = useState<GCard>();
 
     useEffect(() => {
         if (matchResponse) {
@@ -43,10 +46,16 @@ export const BattleStagePage = () => {
 
 
     const onDropCardStop = useCallback((gcard: GCard) => {
-        console.log(gcard);
+        setPlacingCard(gcard);
+        setIsPlaceCardOptionsOpen(true);
     }, []);
 
+    const onClosePlaceCard = useCallback(() => {
+        setIsPlaceCardOptionsOpen(false);
+    }, [])
+
     return <Page>
+        {placingCard ? <DialogPlaceCard open={isPlaceCardOptionsOpen} gcard={placingCard} onClose={onClosePlaceCard}/> : null}
         <DndProvider backend={HTML5Backend}>
             <Flex direction={'column'} gap="4">
                 <Flex justify={'end'}>
@@ -58,8 +67,8 @@ export const BattleStagePage = () => {
                     board opponet
                 </Flex>
                 {player ? <Flex justify={'center'} gap="2">
-                    <ThickArrowDownIcon width={30} height={30} color={isMyTurn ? 'red' : 'gray' } />
-                    <ThickArrowUpIcon width={30} height={30} color={!isMyTurn ? 'red' : 'gray' } />
+                    {isMyTurn ? <TriangleDownIcon width={80} height={80} /> : null }
+                    {!isMyTurn ? <TriangleUpIcon width={80} height={80} /> : null }
                 </Flex> : null}
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
@@ -71,8 +80,8 @@ export const BattleStagePage = () => {
                     <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} />
                 </Flex>
 
-                <Flex flexGrow={'1'} justify={'between'} gap="4">
-                    <Flex gap={'2'} style={{ background: "#4CAF50", padding: '10px' }}>
+                <Flex flexGrow={'1'} justify={'between'} gap="2">
+                    <Flex gap={'4'} style={{ background: "#4CAF50", padding: '10px' }}>
                         {hand.map(gcard => gcard && <GCardDnD gcard={gcard} isSelected={false} onSelect={(id) => id} canDrag={canPlaceCard} />)}
                     </Flex>
                     <Card style={{ flexGrow: '0.5' }}>Deck: {player?.deck.length}</Card>
