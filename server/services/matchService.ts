@@ -1,6 +1,8 @@
 import { Inject, Injectable } from "@decorators/di";
-import { Match, MatchRepository, PlayerMatch } from "../repositories/matchRepository";
+import { GCardRepository } from "../repositories/gcardRepository";
+import { BoardCard, BoardMosterCard, Match, MatchRepository, PlayerMatch } from "../repositories/matchRepository";
 import { Deck } from "../repositories/model/deck";
+import { GCard } from "../repositories/model/gcard";
 import { getRandomInt } from "../utils/utilsFunctions";
 import { DeckService } from "./deckService";
 
@@ -12,7 +14,8 @@ export class MatchService {
     
     constructor(
         @Inject('MatchRepository') private matchRepository: MatchRepository,
-        @Inject('DeckService') private deckService: DeckService
+        @Inject('DeckService') private deckService: DeckService,
+        @Inject('GCardRepository') private gCardRepository: GCardRepository
     ) {
         // remove non respoding users from the list
         setInterval(() => {
@@ -123,5 +126,38 @@ export class MatchService {
     public updateChat( userId: string, message: string, username: string) {
         const match = this.getMatchByUser(userId);
         match?.chat.push({username, message})
+    }
+
+    private checkIsCardInPosition(
+        typeCard: GCard['type'], 
+        position: BoardCard['boardPostion'], 
+        playerMatch: PlayerMatch) {
+            if(typeCard === 'monster') {
+                return playerMatch.monsters.find(m => m.boardPostion === position);
+            } else if(typeCard === 'spell') {
+                return playerMatch.traps.find(m => m.boardPostion === position);
+            }
+    }
+
+    public placeMonsterCard( userId: string, cardToPlace: BoardMosterCard) {
+        const match = this.getMatchByUser(userId);
+        if(match) {
+            const board = match.player1.userId === userId ? match.player1 : match.player2;
+            const card = this.gCardRepository.getCard(cardToPlace.gcardId);
+            if(card) {
+                const isPostionFree = !this.checkIsCardInPosition(card.type, cardToPlace.boardPostion, board);
+
+                if(isPostionFree) {
+                    this.matchRepository.placeMonsterCard(userId, cardToPlace);
+                }
+            }
+            
+
+        } else {
+            throw new Error("User not present in a match");
+        }
+
+
+        
     }
 }

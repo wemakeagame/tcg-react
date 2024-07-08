@@ -1,12 +1,27 @@
 import { Injectable } from "@decorators/di";
 import { GCard, GCardMonster, GCardSpell } from "./model/gcard";
 
+
+export type BoardCard = {
+    gcardId: GCard['id']
+    boardPostion: 1 | 2 | 3
+    revelead : boolean
+}
+
+export type BoardMosterCard = BoardCard & {
+    position: 'attack' | 'defense'
+}
+
+export type BoardEquipamentCard = Omit<BoardCard, "revelead">;
+
+export type BoarSpellCard = BoardCard;
+
 export type PlayerMatch = {
     lastReceived : Date;
     userId: string;
     hand: GCard['id'][];
-    monsters: GCardMonster['id'][];
-    traps: GCardSpell['id'][];
+    monsters: BoardMosterCard[];
+    traps: BoarSpellCard[];
     deck: GCard['id'][];
 }
 
@@ -63,6 +78,14 @@ export class MatchRepository {
     // // can be used only with remove user from match.
     public getMatchData() {
         return this.data;
+    }
+
+    public placeMonsterCard(userId: string, cardToPlace: BoardMosterCard) {
+        const match = this.data.find(match => match.player1.userId === userId || match.player2.userId === userId);
+        if(match) {
+            const board = match.player1.userId === userId ? match.player1 : match.player2;
+            board.monsters.push(cardToPlace);
+        }
     }
 
 }

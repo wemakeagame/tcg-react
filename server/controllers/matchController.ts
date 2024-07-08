@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@decorators/di";
 import { Express, Request, Response } from "express";
+import { BoardMosterCard } from "../repositories/matchRepository";
 import { MatchService } from "../services/matchService";
 import { UserService } from "../services/userService";
 
@@ -54,6 +55,24 @@ export class MatchController {
             turn: match.turn
           });
           this.matchService.verifyConnection(userId);
+        } else {
+          res.send({ message: "disconnected" });
+        }
+      } catch (e) {
+        res.statusCode = 500;
+        res.send({ error: "It was not possible to verify connection" });
+      }
+    });
+
+    //wainting for match
+    this.app.post(`${this.path}/place-monster-card`, (req: Request, res: Response) => {
+      try {
+        const userId = req.body?.userId;
+        const cardToPlace = req.body?.cardToPlace as BoardMosterCard;
+       
+
+        if (userId && cardToPlace) {
+          this.matchService.placeMonsterCard(userId, cardToPlace);
         } else {
           res.send({ message: "disconnected" });
         }
