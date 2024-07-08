@@ -1,5 +1,6 @@
 import { Injectable } from "@decorators/di";
 import { GCard } from "./model/gcard";
+import { User } from "./userRespository";
 
 
 export type BoardCard = {
@@ -80,11 +81,25 @@ export class MatchRepository {
         return this.data;
     }
 
-    public placeMonsterCard(userId: string, cardToPlace: BoardMosterCard) {
+    private getMatchDataByUser(userId: User['id']) {
         const match = this.data.find(match => match.player1.userId === userId || match.player2.userId === userId);
+
+        return match;
+    }
+
+    public placeMonsterCard(userId: string, cardToPlace: BoardMosterCard) {
+        const match = this.getMatchDataByUser(userId);
         if(match) {
             const board = match.player1.userId === userId ? match.player1 : match.player2;
             board.monsters.push(cardToPlace);
+        }
+    }
+
+    public removeCardFromHand(userId: string, gcardId: GCard['id']) {
+        const match = this.getMatchDataByUser(userId);
+        if(match) {
+            const board = match.player1.userId === userId ? match.player1 : match.player2;
+            board.hand = board.hand.filter(cardId => cardId !== gcardId);
         }
     }
 

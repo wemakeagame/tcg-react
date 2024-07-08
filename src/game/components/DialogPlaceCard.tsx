@@ -26,6 +26,7 @@ export const DialogPlaceCard: React.FC<DialogPlaceCardProps> = ({
         }
 
         onPlaceMonsterCard(boardMoster);
+        onClose();
     }
 
     return <Dialog.Root open={open}>

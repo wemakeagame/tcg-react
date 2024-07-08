@@ -6,6 +6,7 @@ export interface User {
     username: string;
     password?: string;
     email: string;
+    backCard: string;
 }
 
 @Injectable()
@@ -17,12 +18,14 @@ export class UserRepository {
             email: 'player1@tcg.com',
             id: '1',
             password: '123',
+            backCard: "/assets/gcards/back.png"
         },
         {
             username: 'player2',
             email: 'player2@tcg.com',
             id: '2',
             password: '123',
+            backCard: "/assets/gcards/back.png"
         }
     ]
 
@@ -43,6 +46,7 @@ export class UserRepository {
         if(!this.getUser(user.username) && !this.getUser(undefined, user.email)) {
             this.currentId++;
             user.id = this.currentId.toString();
+            user.backCard = "/assets/gcards/back.png";
             this.data.push(user);
             return user;
         }

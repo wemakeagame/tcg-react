@@ -149,6 +149,7 @@ export class MatchService {
 
                 if(isPostionFree) {
                     this.matchRepository.placeMonsterCard(userId, cardToPlace);
+                    this.matchRepository.removeCardFromHand(userId, cardToPlace.gcardId);
                 }
             }
             

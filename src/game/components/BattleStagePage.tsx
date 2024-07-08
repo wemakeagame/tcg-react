@@ -3,7 +3,7 @@ import { Card, Flex } from "@radix-ui/themes";
 import { useCallback, useEffect, useState } from "react";
 import { GCard } from "../../card/model/gcard";
 import { Page } from "../../core/components/Page";
-import { useGetApi } from "../../core/hooks/useApi";
+import { useGetApi, usePostApi } from "../../core/hooks/useApi";
 import { useAuthData } from "../../user/hooks/useAuthData";
 import { useBattleVerify } from "../hooks/useBattleVerify";
 import { BoardCard, BoardMosterCard, PlayerMatch } from "../models/match";
@@ -12,6 +12,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { GCardDnD } from "../../card/components/GCardDnD";
 import { BattleBoardCardSpot } from "./BattleBoardCardSpot";
 import { DialogPlaceCard } from "./DialogPlaceCard";
+import { User } from "../../user/model/user";
+import { toast } from "react-toastify";
 
 export const BattleStagePage = () => {
     const user = useAuthData(true);
@@ -23,7 +25,12 @@ export const BattleStagePage = () => {
     const [isMyTurn, setIsMyTurn] = useState(false);
     const [isPlaceCardOptionsOpen, setIsPlaceCardOptionsOpen] = useState(false);
     const [placingCard, setPlacingCard] = useState<GCard>();
-    const [placingCardBoardPosition, setPlacingCardBoardPosition] = useState<BoardCard['boardPostion']>(1)
+    const [placingCardBoardPosition, setPlacingCardBoardPosition] = useState<BoardCard['boardPostion']>(1);
+
+    const [placeMosterCardResponse, setPlaceMosterCardBody] = usePostApi<{
+        userId: User['id'],
+        cardToPlace: BoardMosterCard
+    }, { message: string }>("http://localhost:5500/match/place-monster-card")
 
     useEffect(() => {
         if (matchResponse) {
@@ -56,18 +63,30 @@ export const BattleStagePage = () => {
         setIsPlaceCardOptionsOpen(false);
     }, [])
 
-    const onPlaceMonsterCard = useCallback((monsterCard : BoardMosterCard) => {
-       // call api
-       console.log(monsterCard);
-    }, [])
+    const onPlaceMonsterCard = useCallback((monsterCard: BoardMosterCard) => {
+        if (user?.id) {
+            setPlaceMosterCardBody({
+                cardToPlace: monsterCard,
+                userId: user.id
+            })
+        }
+    }, []);
+
+    useEffect(() => {
+        if(placeMosterCardResponse?.data?.message === 'ok') {
+            toast("Placed card");
+            const newHand = hand.filter(gcard => gcard?.id !== placingCard?.id);
+            setHand(newHand);
+        }
+    }, [placeMosterCardResponse])
 
     return <Page>
-        {placingCard ? <DialogPlaceCard 
-            open={isPlaceCardOptionsOpen} 
-            gcard={placingCard} 
+        {placingCard ? <DialogPlaceCard
+            open={isPlaceCardOptionsOpen}
+            gcard={placingCard}
             boardPostion={placingCardBoardPosition}
             onPlaceMonsterCard={onPlaceMonsterCard}
-            onClose={onClosePlaceCard} 
+            onClose={onClosePlaceCard}
         /> : null}
         <DndProvider backend={HTML5Backend}>
             <Flex direction={'column'} gap="2">
@@ -80,20 +99,20 @@ export const BattleStagePage = () => {
                 </Flex>
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
-                    
+
                 </Flex>
-                {player ? <Flex justify={'center'} style={{maxHeight:"50px"}}>
+                {player ? <Flex justify={'center'} style={{ maxHeight: "50px" }}>
                     {isMyTurn ? <TriangleDownIcon width={80} height={80} /> : null}
                     {!isMyTurn ? <TriangleUpIcon width={80} height={80} /> : null}
                 </Flex> : null}
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={1}/>
-                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={1}/>
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={2}/>
-                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={2}/>
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={3}/>
-                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={3}/>
+                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={user?.backCard} />
+                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={user?.backCard} />
+                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={user?.backCard} />
+                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={user?.backCard} />
+                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={user?.backCard} />
+                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={user?.backCard} />
                 </Flex>
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">

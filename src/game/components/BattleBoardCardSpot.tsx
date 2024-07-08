@@ -1,10 +1,12 @@
 import { Card } from "@radix-ui/themes";
 import { useDrop } from "react-dnd";
 import { GCard, GCardType } from "../../card/model/gcard";
+import { User } from "../../user/model/user";
 import { BoardCard } from "../models/match";
 
 type BattleBoardCardSpotProps = {
     type: GCardType[];
+    backCardUrl: User["backCard"];
     boardPosition: BoardCard['boardPostion'];
     onDrop: (gcard: GCard, boardPostion: BoardCard['boardPostion']) => void;
 }

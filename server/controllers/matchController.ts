@@ -73,6 +73,7 @@ export class MatchController {
 
         if (userId && cardToPlace) {
           this.matchService.placeMonsterCard(userId, cardToPlace);
+          res.send({ message: "ok" }); 
         } else {
           throw new Error("Something is wrong with this action");
         }
