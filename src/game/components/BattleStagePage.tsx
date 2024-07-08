@@ -6,7 +6,7 @@ import { Page } from "../../core/components/Page";
 import { useGetApi } from "../../core/hooks/useApi";
 import { useAuthData } from "../../user/hooks/useAuthData";
 import { useBattleVerify } from "../hooks/useBattleVerify";
-import { PlayerMatch } from "../models/match";
+import { BoardCard, BoardMosterCard, PlayerMatch } from "../models/match";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { GCardDnD } from "../../card/components/GCardDnD";
@@ -23,6 +23,7 @@ export const BattleStagePage = () => {
     const [isMyTurn, setIsMyTurn] = useState(false);
     const [isPlaceCardOptionsOpen, setIsPlaceCardOptionsOpen] = useState(false);
     const [placingCard, setPlacingCard] = useState<GCard>();
+    const [placingCardBoardPosition, setPlacingCardBoardPosition] = useState<BoardCard['boardPostion']>(1)
 
     useEffect(() => {
         if (matchResponse) {
@@ -45,17 +46,29 @@ export const BattleStagePage = () => {
     }, [cardResponse, player?.hand]);
 
 
-    const onDropCardStop = useCallback((gcard: GCard) => {
+    const onDropCardStop = useCallback((gcard: GCard, boardPosition: BoardCard['boardPostion']) => {
         setPlacingCard(gcard);
         setIsPlaceCardOptionsOpen(true);
+        setPlacingCardBoardPosition(boardPosition);
     }, []);
 
     const onClosePlaceCard = useCallback(() => {
         setIsPlaceCardOptionsOpen(false);
     }, [])
 
+    const onPlaceMonsterCard = useCallback((monsterCard : BoardMosterCard) => {
+       // call api
+       console.log(monsterCard);
+    }, [])
+
     return <Page>
-        {placingCard ? <DialogPlaceCard open={isPlaceCardOptionsOpen} gcard={placingCard} onClose={onClosePlaceCard} /> : null}
+        {placingCard ? <DialogPlaceCard 
+            open={isPlaceCardOptionsOpen} 
+            gcard={placingCard} 
+            boardPostion={placingCardBoardPosition}
+            onPlaceMonsterCard={onPlaceMonsterCard}
+            onClose={onClosePlaceCard} 
+        /> : null}
         <DndProvider backend={HTML5Backend}>
             <Flex direction={'column'} gap="2">
                 <Flex justify={'end'}>
@@ -67,12 +80,7 @@ export const BattleStagePage = () => {
                 </Flex>
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
-                    <BattleBoardCardSpot type={[]} onDrop={onDropCardStop} />
-                    <BattleBoardCardSpot type={[]} onDrop={onDropCardStop} />
-                    <BattleBoardCardSpot type={[]} onDrop={onDropCardStop} />
-                    <BattleBoardCardSpot type={[]} onDrop={onDropCardStop} />
-                    <BattleBoardCardSpot type={[]} onDrop={onDropCardStop} />
-                    <BattleBoardCardSpot type={[]} onDrop={onDropCardStop} />
+                    
                 </Flex>
                 {player ? <Flex justify={'center'} style={{maxHeight:"50px"}}>
                     {isMyTurn ? <TriangleDownIcon width={80} height={80} /> : null}
@@ -80,12 +88,12 @@ export const BattleStagePage = () => {
                 </Flex> : null}
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} />
-                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} />
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} />
-                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} />
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} />
-                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} />
+                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={1}/>
+                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={1}/>
+                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={2}/>
+                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={2}/>
+                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={3}/>
+                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={3}/>
                 </Flex>
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">

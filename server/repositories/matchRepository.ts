@@ -1,5 +1,5 @@
 import { Injectable } from "@decorators/di";
-import { GCard, GCardMonster, GCardSpell } from "./model/gcard";
+import { GCard } from "./model/gcard";
 
 
 export type BoardCard = {

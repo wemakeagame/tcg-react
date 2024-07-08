@@ -1,17 +1,33 @@
 import { Button, Dialog, Flex } from "@radix-ui/themes"
 import { GCard } from "../../card/model/gcard";
+import { BoardCard, BoardMosterCard } from "../models/match";
 
 type DialogPlaceCardProps = {
     open: boolean;
     gcard: GCard;
+    boardPostion: BoardCard['boardPostion']
     onClose: () => void;
+    onPlaceMonsterCard: (boardCard: BoardMosterCard) => void;
 }
 
 export const DialogPlaceCard: React.FC<DialogPlaceCardProps> = ({
     open,
     gcard,
-    onClose
+    onClose,
+    boardPostion,
+    onPlaceMonsterCard,
 }) => {
+    const placeMonsterDown = (revelead: boolean, position: BoardMosterCard['position']) => {
+        const boardMoster: BoardMosterCard = {
+            position: position,
+            gcardId: gcard.id,
+            revelead: revelead,
+            boardPostion
+        }
+
+        onPlaceMonsterCard(boardMoster);
+    }
+
     return <Dialog.Root open={open}>
         <Dialog.Content maxWidth="450px">
             <Dialog.Title>Place the card</Dialog.Title>
@@ -21,16 +37,16 @@ export const DialogPlaceCard: React.FC<DialogPlaceCardProps> = ({
 
             <Flex gap="3" mt="4" justify="end" direction={'column'}>
                 {gcard.type === 'monster' ? <Flex direction={'column'} gap="3">
-                    <Button>
+                    <Button onClick={() => placeMonsterDown(false, 'defense')}>
                         Place Defense face down
                     </Button>
-                    <Button variant="soft" >
+                    <Button variant="soft" onClick={() => placeMonsterDown(true, 'defense')}>
                         Place Defense face up
                     </Button>
-                    <Button>
+                    <Button onClick={() => placeMonsterDown(false, 'attack')}>
                         Place Attack face down
                     </Button>
-                    <Button variant="soft" >
+                    <Button variant="soft" onClick={() => placeMonsterDown(true, 'attack')}>
                         Place Attack face up
                     </Button>
                 </Flex> : null}

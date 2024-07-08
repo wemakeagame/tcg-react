@@ -74,11 +74,11 @@ export class MatchController {
         if (userId && cardToPlace) {
           this.matchService.placeMonsterCard(userId, cardToPlace);
         } else {
-          res.send({ message: "disconnected" });
+          throw new Error("Something is wrong with this action");
         }
       } catch (e) {
         res.statusCode = 500;
-        res.send({ error: "It was not possible to verify connection" });
+        res.send({ error: "it was not possible to do this action" });
       }
     });
   }
