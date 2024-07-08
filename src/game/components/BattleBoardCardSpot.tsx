@@ -14,9 +14,10 @@ export const BattleBoardCardSpot: React.FC<BattleBoardCardSpotProps> = ({type, o
       }));
 
     const style = {
-        width: "170px", 
-        height: "240px",
-        background: (type.includes('spell') ? 'red' : 'blue'),
+        width: "145px", 
+        height: "225px",
+        background: (type.includes('spell') ? '#8700ff' : '#594e4e'),
+        border: "1px dashed #ccccccc",
         top: type.includes('monster') ? '-10px' : '0'
     }
       

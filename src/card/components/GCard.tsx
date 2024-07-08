@@ -56,11 +56,11 @@ export const GCardViewBase: React.FC<GCardViewBaseProps> = ({
   const color = getBackgroundCard(gcard.color);
 
   return (
-    <Card style={{ width: "160px", background: color, padding: '3px' }}>
+    <Card style={{ width: "140px", background: color, padding: '2px' }}>
       <Flex justify={'between'} direction={'column'} height="100%">
-        <Card>
+        <Card style={{ padding: '10px 5px' }}>
           <Flex justify={"between"}>
-            <Text size={"2"} weight={"bold"} wrap={'nowrap'}>
+            <Text size={"1"} weight={"bold"} wrap={'nowrap'}>
               {gcard.name}
             </Text>
             <Text size={"1"} style={{ top: '-10px', position: 'relative' }}>{gcard.rarity}</Text>
@@ -74,7 +74,7 @@ export const GCardViewBase: React.FC<GCardViewBaseProps> = ({
                 maxHeight: "auto",
                 border: "1px solid #000000",
                 background: "#ffffff",
-                margin: "10px",
+                margin: "5px",
               }}
             ></img>
           </Flex>
@@ -90,7 +90,7 @@ export const GCardViewBase: React.FC<GCardViewBaseProps> = ({
           align={"center"}
           justify={'center'}
         >
-          <Text size={'1'} weight={"bold"} style={{ fontStyle: "italic" }}>{gcard.type} - </Text>
+          <Text size={'1'} weight={"bold"} style={{ fontStyle: "italic", fontSize: "10px" }}>{gcard.type} - </Text>
           {gcard.color.map((color) => (
             <StarFilledIcon color={colorMap[color]} />
           ))}

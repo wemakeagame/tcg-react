@@ -28,7 +28,7 @@ export const BattleStagePage = () => {
         if (matchResponse) {
             setPlayer(matchResponse?.data?.player1?.userId === user?.id ? matchResponse?.data?.player1 : matchResponse?.data?.player2);
 
-            if(matchResponse.data?.turn === user?.id) {
+            if (matchResponse.data?.turn === user?.id) {
                 setIsMyTurn(true);
                 setCanPlaceCard(true);
             }
@@ -55,20 +55,28 @@ export const BattleStagePage = () => {
     }, [])
 
     return <Page>
-        {placingCard ? <DialogPlaceCard open={isPlaceCardOptionsOpen} gcard={placingCard} onClose={onClosePlaceCard}/> : null}
+        {placingCard ? <DialogPlaceCard open={isPlaceCardOptionsOpen} gcard={placingCard} onClose={onClosePlaceCard} /> : null}
         <DndProvider backend={HTML5Backend}>
-            <Flex direction={'column'} gap="4">
+            <Flex direction={'column'} gap="2">
                 <Flex justify={'end'}>
-                    deck: 99
-                    hand: 99
-                    life: 20
+                    <Card>
+                        deck: 99
+                        hand: 99
+                        life: 20
+                    </Card>
                 </Flex>
-                <Flex flexGrow={'1'}>
-                    board opponet
+
+                <Flex flexGrow={'1'} justify={'between'} gap="2">
+                    <BattleBoardCardSpot type={[]} onDrop={onDropCardStop} />
+                    <BattleBoardCardSpot type={[]} onDrop={onDropCardStop} />
+                    <BattleBoardCardSpot type={[]} onDrop={onDropCardStop} />
+                    <BattleBoardCardSpot type={[]} onDrop={onDropCardStop} />
+                    <BattleBoardCardSpot type={[]} onDrop={onDropCardStop} />
+                    <BattleBoardCardSpot type={[]} onDrop={onDropCardStop} />
                 </Flex>
-                {player ? <Flex justify={'center'} gap="2">
-                    {isMyTurn ? <TriangleDownIcon width={80} height={80} /> : null }
-                    {!isMyTurn ? <TriangleUpIcon width={80} height={80} /> : null }
+                {player ? <Flex justify={'center'} style={{maxHeight:"50px"}}>
+                    {isMyTurn ? <TriangleDownIcon width={80} height={80} /> : null}
+                    {!isMyTurn ? <TriangleUpIcon width={80} height={80} /> : null}
                 </Flex> : null}
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
