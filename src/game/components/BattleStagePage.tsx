@@ -27,6 +27,10 @@ export const BattleStagePage = () => {
     const [placingCard, setPlacingCard] = useState<GCard>();
     const [placingCardBoardPosition, setPlacingCardBoardPosition] = useState<BoardCard['boardPostion']>(1);
 
+    const [monsterBoard1, setMonsterBoard1] = useState<BoardMosterCard>();
+    const [monsterBoard2, setMonsterBoard2] = useState<BoardMosterCard>();
+    const [monsterBoard3, setMonsterBoard3] = useState<BoardMosterCard>();
+
     const [placeMosterCardResponse, setPlaceMosterCardBody] = usePostApi<{
         userId: User['id'],
         cardToPlace: BoardMosterCard
@@ -40,8 +44,31 @@ export const BattleStagePage = () => {
                 setIsMyTurn(true);
                 setCanPlaceCard(true);
             }
+
+            if(cardResponse?.data && player?.monsters) {
+                const monster1 = player.monsters.find(monster => monster.boardPostion === 1);
+
+                if(monster1) {
+                    monster1.gcard = cardResponse.data.find(card => card.id === monster1.gcardId);
+                    setMonsterBoard1(monster1);
+                }
+
+                const monster2 = player.monsters.find(monster => monster.boardPostion === 2);
+
+                if(monster2) {
+                    monster2.gcard = cardResponse.data.find(card => card.id === monster2.gcardId);
+                    setMonsterBoard2(monster2);
+                }
+
+                const monster3 = player.monsters.find(monster => monster.boardPostion === 3);
+
+                if(monster3) {
+                    monster3.gcard = cardResponse.data.find(card => card.id === monster3.gcardId);
+                    setMonsterBoard3(monster3);
+                }
+            }
         }
-    }, [matchResponse]);
+    }, [matchResponse, cardResponse]);
 
     useEffect(() => {
         if (player?.hand && cardResponse?.data) {
@@ -107,11 +134,11 @@ export const BattleStagePage = () => {
                 </Flex> : null}
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={user?.backCard} />
+                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={user?.backCard} boardCard={monsterBoard1} />
                     <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={user?.backCard} />
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={user?.backCard} />
+                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={user?.backCard} boardCard={monsterBoard2}/>
                     <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={user?.backCard} />
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={user?.backCard} />
+                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={user?.backCard} boardCard={monsterBoard3}/>
                     <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={user?.backCard} />
                 </Flex>
 

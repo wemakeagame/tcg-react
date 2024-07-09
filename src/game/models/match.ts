@@ -3,7 +3,8 @@ import { GCard, GCardMonster, GCardSpell } from "../../card/model/gcard";
 export type BoardCard = {
     gcardId: GCard['id']
     boardPostion: 1 | 2 | 3
-    revelead : boolean
+    revelead : boolean,
+    gcard?: GCard
 }
 
 export type BoardMosterCard = BoardCard & {
