@@ -4,6 +4,7 @@ import { useDrop } from "react-dnd";
 import { GCard, GCardType } from "../../card/model/gcard";
 import { User } from "../../user/model/user";
 import { BoardCard, BoardMosterCard } from "../models/match";
+import { BoardMonsterCardView } from "./BoardMonsterCardView";
 
 type BattleBoardCardSpotProps = {
     type: GCardType[];
@@ -14,8 +15,8 @@ type BattleBoardCardSpotProps = {
 }
 
 export const BattleBoardCardSpot: React.FC<BattleBoardCardSpotProps> = ({
-    type, 
-    onDrop, 
+    type,
+    onDrop,
     boardPosition,
     backCardUrl,
     boardCard
@@ -25,36 +26,26 @@ export const BattleBoardCardSpot: React.FC<BattleBoardCardSpotProps> = ({
         return onDrop(gcard, boardPosition);
     }
 
-    const [,drop] = useDrop(() => ({
+    const [, drop] = useDrop(() => ({
         accept: type,
         drop: onDropPosition,
-      }));
+    }));
 
-    const boardCardMonster = boardCard?.gcard?.type.includes("monster") ? boardCard as BoardMosterCard : null;
+    const boardMosterCard = boardCard?.gcard?.type.includes("monster") ? boardCard as BoardMosterCard : null;
 
     const style = useMemo(() => ({
-        width: "145px", 
+        width: "145px",
         height: "225px",
         background: (type.includes('spell') ? '#8700ff' : '#594e4e'),
         border: "1px dashed #ccccccc",
         padding: "0",
         top: type.includes('monster') ? '-10px' : '0',
-        transform: type.includes('monster') && boardCardMonster?.position === 'defense' ? "rotate(90deg)" : "rotate(0deg)",
-    }), [boardCardMonster]);
-      
+        transform: type.includes('monster') && boardMosterCard?.position === 'defense' ? "rotate(90deg)" : "rotate(0deg)",
+    }), [boardMosterCard]);
+
     return <Card ref={drop} style={style}>
         {
-            boardCard && (boardCardMonster && boardCardMonster.revelead ? "renderiza": <img
-            src={`http://localhost:5500/${backCardUrl}`}
-            alt=""
-            style={{
-              width: "135px",
-              height: "215",
-              border: "1px solid #000000",
-              background: "#ffffff",
-              margin: "5px",
-            }}
-          ></img>)
+            boardCard && backCardUrl && <BoardMonsterCardView boardMosterCard={boardMosterCard} backCardUrl = { backCardUrl } />
         }
     </Card>
 }

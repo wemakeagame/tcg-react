@@ -50,8 +50,16 @@ export class MatchController {
         if (match) {
           res.send({ 
             chat: match.chat, 
-            player1: userId === match.player1.userId ? match.player1 : null, 
-            player2: userId === match.player2.userId ? match.player2 : null,
+            player1: userId === match.player1.userId ? match.player1 : {
+              monsters: match.player1.monsters,
+              traps: match.player1.traps,
+              userId: match.player1.userId,
+            }, 
+            player2: userId === match.player2.userId ? match.player2 : {
+              monsters: match.player2.monsters,
+              traps: match.player2.traps,
+              userId: match.player2.userId,
+            },
             turn: match.turn
           });
           this.matchService.verifyConnection(userId);

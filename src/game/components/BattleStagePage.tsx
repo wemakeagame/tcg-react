@@ -146,7 +146,7 @@ export const BattleStagePage = () => {
                     <Flex gap={'4'} style={{ background: "#4CAF50", padding: '10px' }}>
                         {hand.map(gcard => gcard && <GCardDnD gcard={gcard} isSelected={false} onSelect={(id) => id} canDrag={canPlaceCard} />)}
                     </Flex>
-                    <Card style={{ flexGrow: '0.5' }}>Deck: {player?.deck.length}</Card>
+                    <Card style={{ flexGrow: '0.5' }}>Deck: {player?.deck?.length}</Card>
                 </Flex>
             </Flex>
         </DndProvider>
