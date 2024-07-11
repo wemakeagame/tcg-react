@@ -34,11 +34,13 @@ export const BattleBoardCardSpot: React.FC<BattleBoardCardSpotProps> = ({
     const boardMosterCard = boardCard?.gcard?.type.includes("monster") ? boardCard as BoardMosterCard : null;
 
     const style = useMemo(() => ({
-        width: "145px",
-        height: "225px",
+        width: "140px",
+        height: "235px",
         background: (type.includes('spell') ? '#8700ff' : '#594e4e'),
         border: "1px dashed #ccccccc",
         padding: "0",
+        display: "flex",
+        justifyContent: "center",
         top: type.includes('monster') ? '-10px' : '0',
         transform: type.includes('monster') && boardMosterCard?.position === 'defense' ? "rotate(90deg)" : "rotate(0deg)",
     }), [boardMosterCard]);
