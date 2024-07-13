@@ -11,7 +11,14 @@ type BattleBoardCardSpotProps = {
     backCardUrl: User["backCard"];
     boardPosition: BoardCard['boardPostion'];
     boardCard?: BoardCard;
+    canAttack?: boolean;
     onDrop: (gcard: GCard, boardPostion: BoardCard['boardPostion']) => void;
+}
+
+const getAttackStyle = (boardMosterCard?: BoardMosterCard | null, canAttack?: boolean) => {
+    return canAttack && boardMosterCard?.canAttack ? {
+        outline: "3px solid blue"
+    } : {};
 }
 
 export const BattleBoardCardSpot: React.FC<BattleBoardCardSpotProps> = ({
@@ -19,7 +26,8 @@ export const BattleBoardCardSpot: React.FC<BattleBoardCardSpotProps> = ({
     onDrop,
     boardPosition,
     backCardUrl,
-    boardCard
+    boardCard,
+    canAttack
 }) => {
 
     const onDropPosition = (gcard: GCard) => {
@@ -33,7 +41,7 @@ export const BattleBoardCardSpot: React.FC<BattleBoardCardSpotProps> = ({
 
     const boardMosterCard = boardCard?.gcard?.type.includes("monster") ? boardCard as BoardMosterCard : null;
 
-    const style = useMemo(() => ({
+    const style = useMemo(() => ({...{
         width: "140px",
         height: "235px",
         background: (type.includes('spell') ? '#8700ff' : '#594e4e'),
@@ -43,11 +51,11 @@ export const BattleBoardCardSpot: React.FC<BattleBoardCardSpotProps> = ({
         justifyContent: "center",
         top: type.includes('monster') ? '-10px' : '0',
         transform: type.includes('monster') && boardMosterCard?.position === 'defense' ? "rotate(90deg)" : "rotate(0deg)",
-    }), [boardMosterCard]);
+    }, ...getAttackStyle(boardMosterCard, canAttack)}), [boardMosterCard, canAttack]);
 
-    return <Card ref={drop} style={style}>
+    return <Card ref={drop} style={style} >
         {
-            boardCard && backCardUrl && <BoardMonsterCardView boardMosterCard={boardMosterCard} backCardUrl = { backCardUrl } />
+            boardCard && backCardUrl && <BoardMonsterCardView boardMosterCard={boardMosterCard} backCardUrl={backCardUrl} />
         }
-    </Card>
+    </Card >
 }

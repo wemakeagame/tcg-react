@@ -13,11 +13,7 @@ type BattleBoardProps = {
 }
 
 
-const getAttackStyle = (boardMosterCard?: BoardMosterCard, canAttack?: boolean) => {
-    return canAttack && boardMosterCard?.canAttack ? {
-        outline: "3px solid blue"
-    } : {};
-}
+
 
 export const BattleBoard: React.FC<BattleBoardProps> = ({
     onDropCardStop,
@@ -30,13 +26,11 @@ export const BattleBoard: React.FC<BattleBoardProps> = ({
 
 
     return <Flex flexGrow={'1'} justify={'between'} gap="2">
-        <div style={getAttackStyle(monsterBoard1, canAttack)}>
-            <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={backCardUrl} boardCard={monsterBoard1} />
-        </div>
+        <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={backCardUrl} boardCard={monsterBoard1} canAttack={canAttack}/>
         <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={backCardUrl} />
-        <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={backCardUrl} boardCard={monsterBoard2} />
+        <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={backCardUrl} boardCard={monsterBoard2} canAttack={canAttack}/>
         <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={backCardUrl} />
-        <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={backCardUrl} boardCard={monsterBoard3} />
+        <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={backCardUrl} boardCard={monsterBoard3} canAttack={canAttack}/>
         <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={backCardUrl} />
     </Flex>
 }
