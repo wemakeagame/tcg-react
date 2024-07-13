@@ -85,7 +85,20 @@ export class MatchController {
       }
     });
 
-    //wainting for match
+    // set attack pahse
+    this.app.post(`${this.path}/attack`, (req: Request, res: Response) => {
+      try {
+        const userId = req.body?.userId;
+        this.matchService.passToAttackPhase(userId);
+
+        res.send({ message: "changed to attack phase" });
+      } catch (e) {
+        res.statusCode = 500;
+        res.send({ error: "It was not possible to verify connection" });
+      }
+    });
+
+    //place monster
     this.app.post(`${this.path}/place-monster-card`, (req: Request, res: Response) => {
       try {
         const userId = req.body?.userId;

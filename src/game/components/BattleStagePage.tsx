@@ -21,6 +21,7 @@ export const BattleStagePage = () => {
     const matchResponse = useBattleVerify(user?.id);
     const cardResponse = useGetApi<GCard[]>("http://localhost:5500/gcard");
     const [, setPassTurnBody] = usePostApi<{userId: User['id']}, {message: string}>("http://localhost:5500/match/pass");
+    const [, setPassAttackPhaseBody] = usePostApi<{userId: User['id']}, {message: string}>("http://localhost:5500/match/attack");
     const [hand, setHand] = useState<(GCard | undefined)[]>([]);
     const [player, setPlayer] = useState<PlayerMatch>();
     const [opponent, setOpponent] = useState<PlayerMatch>();
@@ -84,7 +85,25 @@ export const BattleStagePage = () => {
         setPassTurnBody({userId: user?.id});
         setIsMyTurn(false);
         setCanPlaceCard(false);
-    }, [])
+    }, []);
+
+    
+    const canAttack = useCallback(() => {
+        return isMyTurn && player?.monsters.some(m => m.canAttack) && player.phase === 'maintenance';
+    }, [isMyTurn, player]);
+
+    const passPhase = useCallback(() => {
+        if(canAttack()) {
+            setPassAttackPhaseBody({userId: user?.id});
+            if(player) {
+                player.phase = 'attack';
+                setPlayer(player);
+            }
+            
+        } else {
+            passTurn();
+        }
+    }, [user?.id, player]);
 
     const onPlaceMonsterCard = useCallback((monsterCard: BoardMosterCard) => {
         if (user?.id) {
@@ -114,7 +133,9 @@ export const BattleStagePage = () => {
             const newHand = hand.filter(gcard => gcard?.id !== placingCard?.id);
             setHand(newHand);
         }
-    }, [placeMosterCardResponse])
+    }, [placeMosterCardResponse]);
+
+
 
     return <Page>
         {placingCard ? <DialogPlaceCard
@@ -166,7 +187,7 @@ export const BattleStagePage = () => {
                     <Card style={{ flexGrow: '0.5' }}>
                         <Flex direction={"column"} justify="between" height={'100%'}>
                             <span>Deck: {player?.deck?.length}</span>
-                            <Button onClick={() => passTurn()} disabled={!isMyTurn}>Pass turn</Button>
+                            <Button onClick={passPhase} disabled={!isMyTurn}>{ !canAttack() ? "Pass turn" : "Attack"}</Button>
                         </Flex>
                     </Card>
                 </Flex>

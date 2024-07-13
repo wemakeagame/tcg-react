@@ -9,7 +9,8 @@ export type BoardCard = {
 }
 
 export type BoardMosterCard = BoardCard & {
-    position: 'attack' | 'defense'
+    position: 'attack' | 'defense',
+    canAttack: boolean,
 }
 
 export type BoardEquipamentCard = Omit<BoardCard, "revelead">;
@@ -25,6 +26,7 @@ export type PlayerMatch = {
     traps: BoarSpellCard[];
     deck: GCard['id'][];
     hasPlacedMonster: boolean;
+    phase: "maintenance" | "attack";
 }
 
 

@@ -12,7 +12,7 @@ const TIME_CHECK_MATCH = 5000;
 
 @Injectable()
 export class MatchService {
-    
+
     constructor(
         @Inject('MatchRepository') private matchRepository: MatchRepository,
         @Inject('DeckService') private deckService: DeckService,
@@ -23,12 +23,12 @@ export class MatchService {
             const matchData = this.matchRepository.getMatchData();
 
             matchData.forEach(match => {
-                if(match.id) {
+                if (match.id) {
                     const lastReceivedPlayer1 = match.player1.lastReceived.valueOf();
                     const lastReceivedPlayer2 = match.player2.lastReceived.valueOf();
                     const diffDatePlayer1 = new Date().valueOf() - lastReceivedPlayer1;
                     const diffDatePlayer2 = new Date().valueOf() - lastReceivedPlayer2;
-                    if(diffDatePlayer1 > TIME_REMOVE_MATCH || diffDatePlayer2 > TIME_REMOVE_MATCH) {
+                    if (diffDatePlayer1 > TIME_REMOVE_MATCH || diffDatePlayer2 > TIME_REMOVE_MATCH) {
                         this.matchRepository.unregisterMatch(match.id);
                     }
                 }
@@ -43,13 +43,13 @@ export class MatchService {
     public registerMatch(player1Id: User['id'], player2Id: User['id']) {
         const isUserInAMatch = this.matchRepository.isUserInMatch(player1Id, player2Id);
 
-        if(!isUserInAMatch) {
+        if (!isUserInAMatch) {
 
             const deckPlayer1 = this.deckService.getUserDeck(player1Id);
             const deckPlayer2 = this.deckService.getUserDeck(player2Id);
-            
+
             const match: Match = {
-                turn: getRandomInt(0,100) > 50 ? player1Id : player2Id,
+                turn: getRandomInt(0, 100) > 50 ? player1Id : player2Id,
                 player1: {
                     lastReceived: new Date(),
                     userId: player1Id,
@@ -58,6 +58,7 @@ export class MatchService {
                     traps: [],
                     deck: [],
                     hasPlacedMonster: false,
+                    phase: 'maintenance'
                 },
                 player2: {
                     lastReceived: new Date(),
@@ -67,6 +68,7 @@ export class MatchService {
                     traps: [],
                     deck: [],
                     hasPlacedMonster: false,
+                    phase: 'maintenance'
                 },
                 chat: [{
                     username: 'system',
@@ -78,25 +80,25 @@ export class MatchService {
                 }],
             }
 
-            if(deckPlayer1) {
+            if (deckPlayer1) {
                 this.buyCard([...deckPlayer1.gcardIds], match.player1, 4);
             }
 
-            if(deckPlayer2) {
+            if (deckPlayer2) {
                 this.buyCard([...deckPlayer2.gcardIds], match.player2, 4);
             }
 
-            if(deckPlayer1 && deckPlayer2) {
+            if (deckPlayer1 && deckPlayer2) {
                 this.matchRepository.registerMatch(match);
             }
-        }        
+        }
     }
 
     private buyCard(deckPlayer: Deck['gcardIds'], playerMatch: PlayerMatch, amount?: number) {
         const totalCards = amount || 1;
         let newPlayerDeck: Deck['gcardIds'] = deckPlayer;
 
-        for(let i = 0; i<totalCards; i++) {
+        for (let i = 0; i < totalCards; i++) {
             const indexCard = getRandomInt(0, newPlayerDeck.length - 1);
             const gcardId = newPlayerDeck[indexCard];
             playerMatch.hand.push(gcardId);
@@ -108,69 +110,69 @@ export class MatchService {
 
     public verifyConnection(userId: User['id']) {
         const match = this.getMatchByUser(userId);
-        if(match) {
-            const isPlayer1:boolean = match.player1.userId === userId;
-            if(isPlayer1) {
+        if (match) {
+            const isPlayer1: boolean = match.player1.userId === userId;
+            if (isPlayer1) {
                 match.player1.lastReceived = new Date();
             } else {
-                match.player2.lastReceived  = new Date();
+                match.player2.lastReceived = new Date();
             }
-            
+
             this.matchRepository.updateMatchConnection(match);
         }
 
         return false;
     }
 
-    public getMatchByUser (userId: User['id']) {
-        return  this.matchRepository.getMatchByUser(userId);
+    public getMatchByUser(userId: User['id']) {
+        return this.matchRepository.getMatchByUser(userId);
     }
 
-    public updateChat( userId: User['id'], message: string, username: string) {
+    public updateChat(userId: User['id'], message: string, username: string) {
         const match = this.getMatchByUser(userId);
-        match?.chat.push({username, message})
+        match?.chat.push({ username, message })
     }
 
     private checkIsCardInPosition(
-        typeCard: GCard['type'], 
-        position: BoardCard['boardPostion'], 
+        typeCard: GCard['type'],
+        position: BoardCard['boardPostion'],
         playerMatch: PlayerMatch) {
-            if(typeCard === 'monster') {
-                return playerMatch.monsters.find(m => m.boardPostion === position);
-            } else if(typeCard === 'spell') {
-                return playerMatch.traps.find(m => m.boardPostion === position);
-            }
+        if (typeCard === 'monster') {
+            return playerMatch.monsters.find(m => m.boardPostion === position);
+        } else if (typeCard === 'spell') {
+            return playerMatch.traps.find(m => m.boardPostion === position);
+        }
     }
 
-    public placeMonsterCard( userId: User['id'], cardToPlace: BoardMosterCard) {
+    public placeMonsterCard(userId: User['id'], cardToPlace: BoardMosterCard) {
         const match = this.getMatchByUser(userId);
-        if(match) {
+        if (match) {
             const board = match.player1.userId === userId ? match.player1 : match.player2;
             const card = this.gCardRepository.getCard(cardToPlace.gcardId);
-            if(card) {
+            if (card) {
                 const isPostionFree = !this.checkIsCardInPosition(card.type, cardToPlace.boardPostion, board);
 
-                if(isPostionFree) {
+                if (isPostionFree) {
                     this.matchRepository.placeMonsterCard(userId, cardToPlace);
                     this.matchRepository.removeCardFromHand(userId, cardToPlace.gcardId);
                 }
             }
-            
+
 
         } else {
             throw new Error("User not present in a match");
         }
-        
+
     }
 
     public passTurn(userId: User['id']) {
         const match = this.getMatchByUser(userId);
-        if(match) {
+        if (match) {
             const player1Match = match.player1;
             const player2Match = match.player2;
 
 
-            if(player1Match.userId === userId && match.turn === userId) {
+            if (player1Match.userId === userId && match.turn === userId) {
                 match.turn = player2Match.userId
             } else {
                 match.turn = player1Match.userId
@@ -178,6 +180,33 @@ export class MatchService {
 
             player1Match.hasPlacedMonster = false;
             player2Match.hasPlacedMonster = false;
+            player1Match.phase = 'maintenance';
+            player2Match.phase = 'maintenance';
+
+            player1Match.monsters.forEach(m => {
+                m.canAttack = true;
+            });
+
+            player2Match.monsters.forEach(m => {
+                m.canAttack = true;
+            });
+
+            this.matchRepository.updateMatchData(match);
+        }
+        else {
+            throw new Error("User doesn't have a match");
+        }
+
+    }
+
+    public passToAttackPhase(userId: User['id']) {
+        const match = this.getMatchByUser(userId);
+        if (match) {
+            if (match.player1.userId === userId && match.turn === userId) {
+                match.player1.phase = 'attack';
+            } else {
+                match.player2.phase = 'attack';
+            }
 
             this.matchRepository.updateMatchData(match);
         }

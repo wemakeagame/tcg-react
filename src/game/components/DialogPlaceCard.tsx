@@ -24,7 +24,8 @@ export const DialogPlaceCard: React.FC<DialogPlaceCardProps> = ({
             position: position,
             gcardId: gcard.id,
             revelead: revelead,
-            boardPostion
+            boardPostion,
+            canAttack: false,
         }
 
         onPlaceMonsterCard(boardMoster);
