@@ -15,6 +15,7 @@ import { DialogPlaceCard } from "./DialogPlaceCard";
 import { User } from "../../user/model/user";
 import { toast } from "react-toastify";
 import { useUpdateBoard } from "../hooks/useUpdateBoard";
+import { BattleBoard } from "./BattleBoard";
 
 export const BattleStagePage = () => {
     const user = useAuthData(true);
@@ -23,6 +24,7 @@ export const BattleStagePage = () => {
     const [, setPassTurnBody] = usePostApi<{userId: User['id']}, {message: string}>("http://localhost:5500/match/pass");
     const [hand, setHand] = useState<(GCard | undefined)[]>([]);
     const [player, setPlayer] = useState<PlayerMatch>();
+    const [opponent, setOpponent] = useState<PlayerMatch>();
     const [canPlaceCard, setCanPlaceCard] = useState(false);
     const [isMyTurn, setIsMyTurn] = useState(false);
     const [isPlaceCardOptionsOpen, setIsPlaceCardOptionsOpen] = useState(false);
@@ -38,6 +40,15 @@ export const BattleStagePage = () => {
         setMonsterBoard3
     } = useUpdateBoard(player, cardResponse?.data);
 
+    const {
+        monsterBoard1 : monsterBoardOpponent1,
+        monsterBoard2 :monsterBoardOpponent2,
+        monsterBoard3 : monsterBoardOpponent3,
+        // setMonsterBoard1: setMonsterBoardOpponent1,
+        // setMonsterBoard2: setMonsterBoardOpponent2,
+        // setMonsterBoard3: setMonsterBoardOpponent3
+    } = useUpdateBoard(opponent, cardResponse?.data);
+
      const [placeMosterCardResponse, setPlaceMosterCardBody] = usePostApi<{
         userId: User['id'],
         cardToPlace: BoardMosterCard
@@ -46,7 +57,7 @@ export const BattleStagePage = () => {
     useEffect(() => {
         if (matchResponse) {
             setPlayer(matchResponse?.data?.player1?.userId === user?.id ? matchResponse?.data?.player1 : matchResponse?.data?.player2);
-
+            setOpponent(matchResponse?.data?.player1?.userId === user?.id ? matchResponse?.data?.player2 : matchResponse?.data?.player1)
             const isMyTurnEval = matchResponse.data?.turn === user?.id;
 
             setIsMyTurn(isMyTurnEval);
@@ -127,22 +138,25 @@ export const BattleStagePage = () => {
                     </Card>
                 </Flex>
 
-                <Flex flexGrow={'1'} justify={'between'} gap="2">
-
-                </Flex>
+                {user && user.backCard && <BattleBoard 
+                onDropCardStop={onDropCardStop}
+                backCardUrl={user.backCard}
+                monsterBoard1={monsterBoardOpponent1}
+                monsterBoard2={monsterBoardOpponent2}
+                monsterBoard3={monsterBoardOpponent3}
+              />}
                 {player ? <Flex justify={'center'} style={{ maxHeight: "50px" }}>
                     {isMyTurn ? <TriangleDownIcon width={80} height={80} /> : null}
                     {!isMyTurn ? <TriangleUpIcon width={80} height={80} /> : null}
                 </Flex> : null}
 
-                <Flex flexGrow={'1'} justify={'between'} gap="2">
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={user?.backCard} boardCard={monsterBoard1} />
-                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={user?.backCard} />
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={user?.backCard} boardCard={monsterBoard2} />
-                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={user?.backCard} />
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={user?.backCard} boardCard={monsterBoard3} />
-                    <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={user?.backCard} />
-                </Flex>
+              {user && user.backCard && <BattleBoard 
+                onDropCardStop={onDropCardStop}
+                backCardUrl={user.backCard}
+                monsterBoard1={monsterBoard1}
+                monsterBoard2={monsterBoard2}
+                monsterBoard3={monsterBoard3}
+              />}
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
                     <Flex gap={'4'} style={{ background: "#4CAF50", padding: '10px' }}>
