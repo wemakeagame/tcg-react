@@ -10,7 +10,6 @@ import { BoardCard, BoardMosterCard, PlayerMatch } from "../models/match";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { GCardDnD } from "../../card/components/GCardDnD";
-import { BattleBoardCardSpot } from "./BattleBoardCardSpot";
 import { DialogPlaceCard } from "./DialogPlaceCard";
 import { User } from "../../user/model/user";
 import { toast } from "react-toastify";
@@ -44,9 +43,6 @@ export const BattleStagePage = () => {
         monsterBoard1 : monsterBoardOpponent1,
         monsterBoard2 :monsterBoardOpponent2,
         monsterBoard3 : monsterBoardOpponent3,
-        // setMonsterBoard1: setMonsterBoardOpponent1,
-        // setMonsterBoard2: setMonsterBoardOpponent2,
-        // setMonsterBoard3: setMonsterBoardOpponent3
     } = useUpdateBoard(opponent, cardResponse?.data);
 
      const [placeMosterCardResponse, setPlaceMosterCardBody] = usePostApi<{
@@ -61,11 +57,9 @@ export const BattleStagePage = () => {
             const isMyTurnEval = matchResponse.data?.turn === user?.id;
 
             setIsMyTurn(isMyTurnEval);
-            setCanPlaceCard(isMyTurnEval);
-
-            
+            setCanPlaceCard(isMyTurnEval && !player?.hasPlacedMonster);
         }
-    }, [matchResponse, cardResponse]);
+    }, [matchResponse, cardResponse, player?.hasPlacedMonster]);
 
     useEffect(() => {
         if (player?.hand && cardResponse?.data) {
@@ -109,6 +103,8 @@ export const BattleStagePage = () => {
                     setMonsterBoard3(monsterCard);
                 }
             }
+
+            setCanPlaceCard(false);
         }
     }, [placingCardBoardPosition, user?.id, cardResponse?.data]);
 
@@ -160,7 +156,12 @@ export const BattleStagePage = () => {
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
                     <Flex gap={'4'} style={{ background: "#4CAF50", padding: '10px' }}>
-                        {hand.map(gcard => gcard && <GCardDnD key={user?.username + gcard.id} gcard={gcard} isSelected={false} onSelect={(id) => id} canDrag={canPlaceCard} />)}
+                        {hand.map(gcard => gcard && <GCardDnD 
+                            key={user?.username + gcard.id} 
+                            gcard={gcard} isSelected={false} 
+                            onSelect={(id) => id} 
+                            canDrag={canPlaceCard} 
+                        />)}
                     </Flex>
                     <Card style={{ flexGrow: '0.5' }}>
                         <Flex direction={"column"} justify="between" height={'100%'}>

@@ -24,6 +24,7 @@ export type PlayerMatch = {
     monsters: BoardMosterCard[];
     traps: BoarSpellCard[];
     deck: GCard['id'][];
+    hasPlacedMonster: boolean;
 }
 
 
@@ -92,6 +93,7 @@ export class MatchRepository {
         if(match) {
             const board = match.player1.userId === userId ? match.player1 : match.player2;
             board.monsters.push(cardToPlace);
+            board.hasPlacedMonster = true;
         }
     }
 

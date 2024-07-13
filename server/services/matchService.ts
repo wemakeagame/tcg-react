@@ -56,7 +56,8 @@ export class MatchService {
                     hand: [],
                     monsters: [],
                     traps: [],
-                    deck: []
+                    deck: [],
+                    hasPlacedMonster: false,
                 },
                 player2: {
                     lastReceived: new Date(),
@@ -64,7 +65,8 @@ export class MatchService {
                     hand: [],
                     monsters: [],
                     traps: [],
-                    deck: []
+                    deck: [],
+                    hasPlacedMonster: false,
                 },
                 chat: [{
                     username: 'system',
@@ -173,6 +175,9 @@ export class MatchService {
             } else {
                 match.turn = player1Match.userId
             }
+
+            player1Match.hasPlacedMonster = false;
+            player2Match.hasPlacedMonster = false;
 
             this.matchRepository.updateMatchData(match);
         }

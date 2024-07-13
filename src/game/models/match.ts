@@ -24,6 +24,7 @@ export type PlayerMatch = {
     monsters: BoardMosterCard[];
     traps: BoarSpellCard[];
     deck: GCard['id'][];
+    hasPlacedMonster: boolean;
 }
 
 
