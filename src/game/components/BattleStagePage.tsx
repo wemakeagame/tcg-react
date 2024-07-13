@@ -58,7 +58,7 @@ export const BattleStagePage = () => {
             const isMyTurnEval = matchResponse.data?.turn === user?.id;
 
             setIsMyTurn(isMyTurnEval);
-            setCanPlaceCard(isMyTurnEval && !player?.hasPlacedMonster);
+            setCanPlaceCard(isMyTurnEval && !player?.hasPlacedMonster && player?.phase === 'maintenance');
         }
     }, [matchResponse, cardResponse, player?.hasPlacedMonster]);
 
@@ -98,6 +98,7 @@ export const BattleStagePage = () => {
             if(player) {
                 player.phase = 'attack';
                 setPlayer(player);
+                setCanPlaceCard(false);
             }
             
         } else {
@@ -173,6 +174,7 @@ export const BattleStagePage = () => {
                 monsterBoard1={monsterBoard1}
                 monsterBoard2={monsterBoard2}
                 monsterBoard3={monsterBoard3}
+                canAttack={isMyTurn && player?.phase === 'attack'}
               />}
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
