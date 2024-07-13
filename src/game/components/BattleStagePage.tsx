@@ -1,5 +1,5 @@
 import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
-import { Card, Flex } from "@radix-ui/themes";
+import { Button, Card, Flex } from "@radix-ui/themes";
 import { useCallback, useEffect, useState } from "react";
 import { GCard } from "../../card/model/gcard";
 import { Page } from "../../core/components/Page";
@@ -19,6 +19,7 @@ export const BattleStagePage = () => {
     const user = useAuthData(true);
     const matchResponse = useBattleVerify(user?.id);
     const cardResponse = useGetApi<GCard[]>("http://localhost:5500/gcard");
+    const [, setPassTurnBody] = usePostApi<{userId: User['id']}, {message: string}>("http://localhost:5500/match/pass");
     const [hand, setHand] = useState<(GCard | undefined)[]>([]);
     const [player, setPlayer] = useState<PlayerMatch>();
     const [canPlaceCard, setCanPlaceCard] = useState(false);
@@ -40,29 +41,29 @@ export const BattleStagePage = () => {
         if (matchResponse) {
             setPlayer(matchResponse?.data?.player1?.userId === user?.id ? matchResponse?.data?.player1 : matchResponse?.data?.player2);
 
-            if (matchResponse.data?.turn === user?.id) {
-                setIsMyTurn(true);
-                setCanPlaceCard(true);
-            }
+            const isMyTurnEval = matchResponse.data?.turn === user?.id;
 
-            if(cardResponse?.data && player?.monsters) {
+            setIsMyTurn(isMyTurnEval);
+            setCanPlaceCard(isMyTurnEval);
+
+            if (cardResponse?.data && player?.monsters) {
                 const monster1 = player.monsters.find(monster => monster.boardPostion === 1);
 
-                if(monster1) {
+                if (monster1) {
                     monster1.gcard = cardResponse.data.find(card => card.id === monster1.gcardId);
                     setMonsterBoard1(monster1);
                 }
 
                 const monster2 = player.monsters.find(monster => monster.boardPostion === 2);
 
-                if(monster2) {
+                if (monster2) {
                     monster2.gcard = cardResponse.data.find(card => card.id === monster2.gcardId);
                     setMonsterBoard2(monster2);
                 }
 
                 const monster3 = player.monsters.find(monster => monster.boardPostion === 3);
 
-                if(monster3) {
+                if (monster3) {
                     monster3.gcard = cardResponse.data.find(card => card.id === monster3.gcardId);
                     setMonsterBoard3(monster3);
                 }
@@ -88,6 +89,12 @@ export const BattleStagePage = () => {
 
     const onClosePlaceCard = useCallback(() => {
         setIsPlaceCardOptionsOpen(false);
+    }, []);
+
+    const passTurn = useCallback(() => {
+        setPassTurnBody({userId: user?.id});
+        setIsMyTurn(false);
+        setCanPlaceCard(false);
     }, [])
 
     const onPlaceMonsterCard = useCallback((monsterCard: BoardMosterCard) => {
@@ -95,12 +102,23 @@ export const BattleStagePage = () => {
             setPlaceMosterCardBody({
                 cardToPlace: monsterCard,
                 userId: user.id
-            })
+            });
+
+            if (cardResponse?.data) {
+                monsterCard.gcard = cardResponse.data.find(card => card.id === monsterCard.gcardId);
+                if (placingCardBoardPosition === 1) {
+                    setMonsterBoard1(monsterCard);
+                } else if (placingCardBoardPosition === 2) {
+                    setMonsterBoard2(monsterCard);
+                } else if (placingCardBoardPosition === 3) {
+                    setMonsterBoard3(monsterCard);
+                }
+            }
         }
-    }, []);
+    }, [placingCardBoardPosition, user?.id, cardResponse?.data]);
 
     useEffect(() => {
-        if(placeMosterCardResponse?.data?.message === 'ok') {
+        if (placeMosterCardResponse?.data?.message === 'ok') {
             toast("Placed card");
             const newHand = hand.filter(gcard => gcard?.id !== placingCard?.id);
             setHand(newHand);
@@ -136,17 +154,22 @@ export const BattleStagePage = () => {
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
                     <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={user?.backCard} boardCard={monsterBoard1} />
                     <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={user?.backCard} />
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={user?.backCard} boardCard={monsterBoard2}/>
+                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={user?.backCard} boardCard={monsterBoard2} />
                     <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={user?.backCard} />
-                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={user?.backCard} boardCard={monsterBoard3}/>
+                    <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={user?.backCard} boardCard={monsterBoard3} />
                     <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={user?.backCard} />
                 </Flex>
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
                     <Flex gap={'4'} style={{ background: "#4CAF50", padding: '10px' }}>
-                        {hand.map(gcard => gcard && <GCardDnD gcard={gcard} isSelected={false} onSelect={(id) => id} canDrag={canPlaceCard} />)}
+                        {hand.map(gcard => gcard && <GCardDnD key={user?.username + gcard.id} gcard={gcard} isSelected={false} onSelect={(id) => id} canDrag={canPlaceCard} />)}
                     </Flex>
-                    <Card style={{ flexGrow: '0.5' }}>Deck: {player?.deck?.length}</Card>
+                    <Card style={{ flexGrow: '0.5' }}>
+                        <Flex direction={"column"} justify="between" height={'100%'}>
+                            <span>Deck: {player?.deck?.length}</span>
+                            <Button onClick={() => passTurn()} disabled={!isMyTurn}>Pass turn</Button>
+                        </Flex>
+                    </Card>
                 </Flex>
             </Flex>
         </DndProvider>

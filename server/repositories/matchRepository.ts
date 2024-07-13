@@ -103,4 +103,12 @@ export class MatchRepository {
         }
     }
 
+    public updateMatchData(match: Match) {
+        this.data.forEach((m, i) => {
+            if(m.id == match.id) {
+                this.data[i] = match;
+            }
+        })
+    }
+
 }

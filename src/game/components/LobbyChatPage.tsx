@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button, Card, Flex, Text } from "@radix-ui/themes";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Page } from "../../core/components/Page";
-import { useInterval } from "../../core/hooks/useInterval";
 import { usePostApi } from "../../core/hooks/useApi";
 import { useAuthData } from "../../user/hooks/useAuthData";
 import { useCallback, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { ChatMessage, UserChat } from "../../user/components/UserChat";
 import { useBattleVerify } from "../hooks/useBattleVerify";
 
@@ -23,15 +21,6 @@ export function LobbyChatPage() {
   const [chat, setChat] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
-    if (matchResponse?.data?.message === "disconnected") {
-      toast("The other player disconnected...");
-      const timeoutToRedirect = setTimeout(() => {
-        navigate("/waiting-battle");
-      }, 2000)
-
-      return () => clearTimeout(timeoutToRedirect);
-    }
-
     if (matchResponse?.data?.chat) {
       setChat(matchResponse.data.chat);
     }

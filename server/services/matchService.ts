@@ -3,6 +3,7 @@ import { GCardRepository } from "../repositories/gcardRepository";
 import { BoardCard, BoardMosterCard, Match, MatchRepository, PlayerMatch } from "../repositories/matchRepository";
 import { Deck } from "../repositories/model/deck";
 import { GCard } from "../repositories/model/gcard";
+import { User } from "../repositories/userRespository";
 import { getRandomInt } from "../utils/utilsFunctions";
 import { DeckService } from "./deckService";
 
@@ -39,7 +40,7 @@ export class MatchService {
     }
 
 
-    public registerMatch(player1Id: string, player2Id: string) {
+    public registerMatch(player1Id: User['id'], player2Id: User['id']) {
         const isUserInAMatch = this.matchRepository.isUserInMatch(player1Id, player2Id);
 
         if(!isUserInAMatch) {
@@ -91,19 +92,19 @@ export class MatchService {
 
     private buyCard(deckPlayer: Deck['gcardIds'], playerMatch: PlayerMatch, amount?: number) {
         const totalCards = amount || 1;
-        let newPlayerDeck: Deck['gcardIds'] = [];
+        let newPlayerDeck: Deck['gcardIds'] = deckPlayer;
 
         for(let i = 0; i<totalCards; i++) {
-            const indexCard = getRandomInt(0, deckPlayer.length - 1);
-            const gcardId = deckPlayer[indexCard];
+            const indexCard = getRandomInt(0, newPlayerDeck.length - 1);
+            const gcardId = newPlayerDeck[indexCard];
             playerMatch.hand.push(gcardId);
-            newPlayerDeck = deckPlayer.filter(id => id !== gcardId);
+            newPlayerDeck = newPlayerDeck.filter(id => id !== gcardId);
         }
 
         playerMatch.deck = newPlayerDeck;
     }
 
-    public verifyConnection(userId: string) {
+    public verifyConnection(userId: User['id']) {
         const match = this.getMatchByUser(userId);
         if(match) {
             const isPlayer1:boolean = match.player1.userId === userId;
@@ -119,11 +120,11 @@ export class MatchService {
         return false;
     }
 
-    public getMatchByUser (userId: string) {
+    public getMatchByUser (userId: User['id']) {
         return  this.matchRepository.getMatchByUser(userId);
     }
 
-    public updateChat( userId: string, message: string, username: string) {
+    public updateChat( userId: User['id'], message: string, username: string) {
         const match = this.getMatchByUser(userId);
         match?.chat.push({username, message})
     }
@@ -139,7 +140,7 @@ export class MatchService {
             }
     }
 
-    public placeMonsterCard( userId: string, cardToPlace: BoardMosterCard) {
+    public placeMonsterCard( userId: User['id'], cardToPlace: BoardMosterCard) {
         const match = this.getMatchByUser(userId);
         if(match) {
             const board = match.player1.userId === userId ? match.player1 : match.player2;
@@ -157,8 +158,27 @@ export class MatchService {
         } else {
             throw new Error("User not present in a match");
         }
-
-
         
+    }
+
+    public passTurn(userId: User['id']) {
+        const match = this.getMatchByUser(userId);
+        if(match) {
+            const player1Match = match.player1;
+            const player2Match = match.player2;
+
+
+            if(player1Match.userId === userId && match.turn === userId) {
+                match.turn = player2Match.userId
+            } else {
+                match.turn = player1Match.userId
+            }
+
+            this.matchRepository.updateMatchData(match);
+        }
+        else {
+            throw new Error("User doesn't have a match");
+        }
+
     }
 }

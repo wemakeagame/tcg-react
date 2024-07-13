@@ -72,6 +72,19 @@ export class MatchController {
       }
     });
 
+    // passing the turn
+    this.app.post(`${this.path}/pass`, (req: Request, res: Response) => {
+      try {
+        const userId = req.body?.userId;
+        this.matchService.passTurn(userId);
+
+        res.send({ message: "turn passed" });
+      } catch (e) {
+        res.statusCode = 500;
+        res.send({ error: "It was not possible to verify connection" });
+      }
+    });
+
     //wainting for match
     this.app.post(`${this.path}/place-monster-card`, (req: Request, res: Response) => {
       try {
