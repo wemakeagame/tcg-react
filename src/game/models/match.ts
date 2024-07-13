@@ -1,4 +1,5 @@
-import { GCard, GCardMonster, GCardSpell } from "../../card/model/gcard";
+import { GCard } from "../../card/model/gcard";
+import { ChatMessage } from "../../user/components/UserChat";
 
 export type BoardCard = {
     gcardId: GCard['id']
@@ -34,3 +35,11 @@ export type Match = {
     chat: {username: string, message: string}[];
 }
 
+
+export type MatchResponseData =   { 
+    chat?: ChatMessage[]; 
+    message?: string, 
+    player1?: PlayerMatch, 
+    player2?: PlayerMatch, 
+    turn: PlayerMatch['userId'] 
+}

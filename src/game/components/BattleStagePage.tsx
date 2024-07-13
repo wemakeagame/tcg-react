@@ -14,6 +14,7 @@ import { BattleBoardCardSpot } from "./BattleBoardCardSpot";
 import { DialogPlaceCard } from "./DialogPlaceCard";
 import { User } from "../../user/model/user";
 import { toast } from "react-toastify";
+import { useUpdateBoard } from "../hooks/useUpdateBoard";
 
 export const BattleStagePage = () => {
     const user = useAuthData(true);
@@ -28,11 +29,16 @@ export const BattleStagePage = () => {
     const [placingCard, setPlacingCard] = useState<GCard>();
     const [placingCardBoardPosition, setPlacingCardBoardPosition] = useState<BoardCard['boardPostion']>(1);
 
-    const [monsterBoard1, setMonsterBoard1] = useState<BoardMosterCard>();
-    const [monsterBoard2, setMonsterBoard2] = useState<BoardMosterCard>();
-    const [monsterBoard3, setMonsterBoard3] = useState<BoardMosterCard>();
+    const {
+        monsterBoard1,
+        monsterBoard2,
+        monsterBoard3,
+        setMonsterBoard1,
+        setMonsterBoard2,
+        setMonsterBoard3
+    } = useUpdateBoard(player, cardResponse?.data);
 
-    const [placeMosterCardResponse, setPlaceMosterCardBody] = usePostApi<{
+     const [placeMosterCardResponse, setPlaceMosterCardBody] = usePostApi<{
         userId: User['id'],
         cardToPlace: BoardMosterCard
     }, { message: string }>("http://localhost:5500/match/place-monster-card")
@@ -46,28 +52,7 @@ export const BattleStagePage = () => {
             setIsMyTurn(isMyTurnEval);
             setCanPlaceCard(isMyTurnEval);
 
-            if (cardResponse?.data && player?.monsters) {
-                const monster1 = player.monsters.find(monster => monster.boardPostion === 1);
-
-                if (monster1) {
-                    monster1.gcard = cardResponse.data.find(card => card.id === monster1.gcardId);
-                    setMonsterBoard1(monster1);
-                }
-
-                const monster2 = player.monsters.find(monster => monster.boardPostion === 2);
-
-                if (monster2) {
-                    monster2.gcard = cardResponse.data.find(card => card.id === monster2.gcardId);
-                    setMonsterBoard2(monster2);
-                }
-
-                const monster3 = player.monsters.find(monster => monster.boardPostion === 3);
-
-                if (monster3) {
-                    monster3.gcard = cardResponse.data.find(card => card.id === monster3.gcardId);
-                    setMonsterBoard3(monster3);
-                }
-            }
+            
         }
     }, [matchResponse, cardResponse]);
 
@@ -79,7 +64,6 @@ export const BattleStagePage = () => {
             }
         }
     }, [cardResponse, player?.hand]);
-
 
     const onDropCardStop = useCallback((gcard: GCard, boardPosition: BoardCard['boardPostion']) => {
         setPlacingCard(gcard);
