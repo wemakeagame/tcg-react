@@ -6,11 +6,10 @@ import { User } from "../../user/model/user";
 import { BoardCard, BoardMosterCard } from "../models/match";
 import { BoardMonsterCardView } from "./BoardMonsterCardView";
 
-type BattleBoardCardSpotProps = {
-    type: GCardType[];
+type BattleBoardCardMonsterSpotProps = {
     backCardUrl: User["backCard"];
     boardPosition: BoardCard['boardPostion'];
-    boardCard?: BoardCard;
+    boardCard?: BoardMosterCard;
     canAttack?: boolean;
     onDrop: (gcard: GCard, boardPostion: BoardCard['boardPostion']) => void;
 }
@@ -21,8 +20,7 @@ const getAttackStyle = (boardMosterCard?: BoardMosterCard | null, canAttack?: bo
     } : {};
 }
 
-export const BattleBoardCardSpot: React.FC<BattleBoardCardSpotProps> = ({
-    type,
+export const BattleBoardCardMonsterSpot: React.FC<BattleBoardCardMonsterSpotProps> = ({
     onDrop,
     boardPosition,
     backCardUrl,
@@ -35,27 +33,26 @@ export const BattleBoardCardSpot: React.FC<BattleBoardCardSpotProps> = ({
     }
 
     const [, drop] = useDrop(() => ({
-        accept: type,
+        accept: ['monster', 'equipament'],
         drop: onDropPosition,
     }));
 
-    const boardMosterCard = boardCard?.gcard?.type.includes("monster") ? boardCard as BoardMosterCard : null;
-
+    
     const style = useMemo(() => ({...{
         width: "140px",
         height: "235px",
-        background: (type.includes('spell') ? '#8700ff' : '#594e4e'),
+        background: '#594e4e',
         border: "1px dashed #ccccccc",
         padding: "0",
         display: "flex",
         justifyContent: "center",
-        top: type.includes('monster') ? '-10px' : '0',
-        transform: type.includes('monster') && boardMosterCard?.position === 'defense' ? "rotate(90deg)" : "rotate(0deg)",
-    }, ...getAttackStyle(boardMosterCard, canAttack)}), [boardMosterCard, canAttack]);
+        top: '-10px',
+        transform: boardCard?.position === 'defense' ? "rotate(90deg)" : "rotate(0deg)",
+    }, ...getAttackStyle(boardCard, canAttack)}), [boardCard, canAttack]);
 
     return <Card ref={drop} style={style} >
         {
-            boardCard && backCardUrl && <BoardMonsterCardView boardMosterCard={boardMosterCard} backCardUrl={backCardUrl} />
+            boardCard && backCardUrl && <BoardMonsterCardView boardMosterCard={boardCard} backCardUrl={backCardUrl} />
         }
     </Card >
 }

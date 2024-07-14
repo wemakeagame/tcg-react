@@ -1,7 +1,8 @@
 import { Flex } from "@radix-ui/themes";
 import { GCard } from "../../card/model/gcard";
 import { BoardCard, BoardMosterCard } from "../models/match";
-import { BattleBoardCardSpot } from "./BattleBoardCardSpot"
+import { BattleBoardCardMonsterSpot } from "./BattleBoardCardMonsterSpot";
+import { BattleBoardCardTrapSpot } from "./BattleBoardCardTrapSpot";
 
 type BattleBoardProps = {
     onDropCardStop: (gcard: GCard, boardPostion: BoardCard['boardPostion']) => void;
@@ -24,13 +25,12 @@ export const BattleBoard: React.FC<BattleBoardProps> = ({
     canAttack
 }) => {
 
-
     return <Flex flexGrow={'1'} justify={'between'} gap="2">
-        <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={backCardUrl} boardCard={monsterBoard1} canAttack={canAttack}/>
-        <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={1} backCardUrl={backCardUrl} />
-        <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={backCardUrl} boardCard={monsterBoard2} canAttack={canAttack}/>
-        <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={2} backCardUrl={backCardUrl} />
-        <BattleBoardCardSpot type={['monster', 'equipament']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={backCardUrl} boardCard={monsterBoard3} canAttack={canAttack}/>
-        <BattleBoardCardSpot type={['spell']} onDrop={onDropCardStop} boardPosition={3} backCardUrl={backCardUrl} />
+        <BattleBoardCardMonsterSpot onDrop={onDropCardStop} boardPosition={1} backCardUrl={backCardUrl} boardCard={monsterBoard1} canAttack={canAttack} />
+        <BattleBoardCardTrapSpot onDrop={onDropCardStop} boardPosition={1} backCardUrl={backCardUrl} />
+        <BattleBoardCardMonsterSpot onDrop={onDropCardStop} boardPosition={2} backCardUrl={backCardUrl} boardCard={monsterBoard2} canAttack={canAttack} />
+        <BattleBoardCardTrapSpot onDrop={onDropCardStop} boardPosition={2} backCardUrl={backCardUrl} />
+        <BattleBoardCardMonsterSpot onDrop={onDropCardStop} boardPosition={3} backCardUrl={backCardUrl} boardCard={monsterBoard3} canAttack={canAttack} />
+        <BattleBoardCardTrapSpot onDrop={onDropCardStop} boardPosition={3} backCardUrl={backCardUrl} />
     </Flex>
 }
