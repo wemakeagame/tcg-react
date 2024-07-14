@@ -1,7 +1,7 @@
 import { Card } from "@radix-ui/themes";
 import { useMemo } from "react";
 import { useDrop } from "react-dnd";
-import { GCard, GCardType } from "../../card/model/gcard";
+import { GCard } from "../../card/model/gcard";
 import { User } from "../../user/model/user";
 import { BoardCard, BoardMosterCard } from "../models/match";
 import { BoardMonsterCardView } from "./BoardMonsterCardView";
@@ -12,6 +12,7 @@ type BattleBoardCardMonsterSpotProps = {
     boardCard?: BoardMosterCard;
     canAttack?: boolean;
     onDrop: (gcard: GCard, boardPostion: BoardCard['boardPostion']) => void;
+    onClick: (boardMonsterCard?: BoardMosterCard) => void;
 }
 
 const getAttackStyle = (boardMosterCard?: BoardMosterCard | null, canAttack?: boolean) => {
@@ -22,6 +23,7 @@ const getAttackStyle = (boardMosterCard?: BoardMosterCard | null, canAttack?: bo
 
 export const BattleBoardCardMonsterSpot: React.FC<BattleBoardCardMonsterSpotProps> = ({
     onDrop,
+    onClick,
     boardPosition,
     backCardUrl,
     boardCard,
@@ -37,20 +39,22 @@ export const BattleBoardCardMonsterSpot: React.FC<BattleBoardCardMonsterSpotProp
         drop: onDropPosition,
     }));
 
-    
-    const style = useMemo(() => ({...{
-        width: "140px",
-        height: "235px",
-        background: '#594e4e',
-        border: "1px dashed #ccccccc",
-        padding: "0",
-        display: "flex",
-        justifyContent: "center",
-        top: '-10px',
-        transform: boardCard?.position === 'defense' ? "rotate(90deg)" : "rotate(0deg)",
-    }, ...getAttackStyle(boardCard, canAttack)}), [boardCard, canAttack]);
 
-    return <Card ref={drop} style={style} >
+    const style = useMemo(() => ({
+        ...{
+            width: "140px",
+            height: "235px",
+            background: '#594e4e',
+            border: "1px dashed #ccccccc",
+            padding: "0",
+            display: "flex",
+            justifyContent: "center",
+            top: '-10px',
+            transform: boardCard?.position === 'defense' ? "rotate(90deg)" : "rotate(0deg)",
+        }, ...getAttackStyle(boardCard, canAttack)
+    }), [boardCard, canAttack]);
+
+    return <Card ref={drop} style={style} onClick={() => onClick(boardCard)}>
         {
             boardCard && backCardUrl && <BoardMonsterCardView boardMosterCard={boardCard} backCardUrl={backCardUrl} />
         }

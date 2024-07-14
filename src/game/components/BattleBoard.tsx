@@ -11,9 +11,8 @@ type BattleBoardProps = {
     monsterBoard2?: BoardMosterCard
     monsterBoard3?: BoardMosterCard,
     canAttack?: boolean
+    onSelectMonster: (boardMonsterCard?: BoardMosterCard) => void;
 }
-
-
 
 
 export const BattleBoard: React.FC<BattleBoardProps> = ({
@@ -22,15 +21,16 @@ export const BattleBoard: React.FC<BattleBoardProps> = ({
     monsterBoard1,
     monsterBoard2,
     monsterBoard3,
-    canAttack
+    canAttack,
+    onSelectMonster,
 }) => {
 
     return <Flex flexGrow={'1'} justify={'between'} gap="2">
-        <BattleBoardCardMonsterSpot onDrop={onDropCardStop} boardPosition={1} backCardUrl={backCardUrl} boardCard={monsterBoard1} canAttack={canAttack} />
+        <BattleBoardCardMonsterSpot onDrop={onDropCardStop} boardPosition={1} backCardUrl={backCardUrl} boardCard={monsterBoard1} canAttack={canAttack} onClick={onSelectMonster}/>
         <BattleBoardCardTrapSpot onDrop={onDropCardStop} boardPosition={1} backCardUrl={backCardUrl} />
-        <BattleBoardCardMonsterSpot onDrop={onDropCardStop} boardPosition={2} backCardUrl={backCardUrl} boardCard={monsterBoard2} canAttack={canAttack} />
+        <BattleBoardCardMonsterSpot onDrop={onDropCardStop} boardPosition={2} backCardUrl={backCardUrl} boardCard={monsterBoard2} canAttack={canAttack} onClick={onSelectMonster}/>
         <BattleBoardCardTrapSpot onDrop={onDropCardStop} boardPosition={2} backCardUrl={backCardUrl} />
-        <BattleBoardCardMonsterSpot onDrop={onDropCardStop} boardPosition={3} backCardUrl={backCardUrl} boardCard={monsterBoard3} canAttack={canAttack} />
+        <BattleBoardCardMonsterSpot onDrop={onDropCardStop} boardPosition={3} backCardUrl={backCardUrl} boardCard={monsterBoard3} canAttack={canAttack} onClick={onSelectMonster}/>
         <BattleBoardCardTrapSpot onDrop={onDropCardStop} boardPosition={3} backCardUrl={backCardUrl} />
     </Flex>
 }

@@ -15,13 +15,14 @@ import { User } from "../../user/model/user";
 import { toast } from "react-toastify";
 import { useUpdateBoard } from "../hooks/useUpdateBoard";
 import { BattleBoard } from "./BattleBoard";
+import { DialogMonsterBoardActions } from "./DialogMonsterBoardActions";
 
 export const BattleStagePage = () => {
     const user = useAuthData(true);
     const matchResponse = useBattleVerify(user?.id);
     const cardResponse = useGetApi<GCard[]>("http://localhost:5500/gcard");
-    const [, setPassTurnBody] = usePostApi<{userId: User['id']}, {message: string}>("http://localhost:5500/match/pass");
-    const [, setPassAttackPhaseBody] = usePostApi<{userId: User['id']}, {message: string}>("http://localhost:5500/match/attack");
+    const [, setPassTurnBody] = usePostApi<{ userId: User['id'] }, { message: string }>("http://localhost:5500/match/pass");
+    const [, setPassAttackPhaseBody] = usePostApi<{ userId: User['id'] }, { message: string }>("http://localhost:5500/match/attack");
     const [hand, setHand] = useState<(GCard | undefined)[]>([]);
     const [player, setPlayer] = useState<PlayerMatch>();
     const [opponent, setOpponent] = useState<PlayerMatch>();
@@ -29,6 +30,7 @@ export const BattleStagePage = () => {
     const [isMyTurn, setIsMyTurn] = useState(false);
     const [isPlaceCardOptionsOpen, setIsPlaceCardOptionsOpen] = useState(false);
     const [placingCard, setPlacingCard] = useState<GCard>();
+    const [actionsMonsterCard, setActionsMonsterCard] = useState<BoardMosterCard>();
     const [placingCardBoardPosition, setPlacingCardBoardPosition] = useState<BoardCard['boardPostion']>(1);
 
     const {
@@ -41,12 +43,12 @@ export const BattleStagePage = () => {
     } = useUpdateBoard(player, cardResponse?.data);
 
     const {
-        monsterBoard1 : monsterBoardOpponent1,
-        monsterBoard2 :monsterBoardOpponent2,
-        monsterBoard3 : monsterBoardOpponent3,
+        monsterBoard1: monsterBoardOpponent1,
+        monsterBoard2: monsterBoardOpponent2,
+        monsterBoard3: monsterBoardOpponent3,
     } = useUpdateBoard(opponent, cardResponse?.data);
 
-     const [placeMosterCardResponse, setPlaceMosterCardBody] = usePostApi<{
+    const [placeMosterCardResponse, setPlaceMosterCardBody] = usePostApi<{
         userId: User['id'],
         cardToPlace: BoardMosterCard
     }, { message: string }>("http://localhost:5500/match/place-monster-card")
@@ -81,26 +83,30 @@ export const BattleStagePage = () => {
         setIsPlaceCardOptionsOpen(false);
     }, []);
 
+    const onCloseMonsterActions = useCallback(() => {
+        setActionsMonsterCard(undefined);
+    }, []);
+
     const passTurn = useCallback(() => {
-        setPassTurnBody({userId: user?.id});
+        setPassTurnBody({ userId: user?.id });
         setIsMyTurn(false);
         setCanPlaceCard(false);
     }, []);
 
-    
+
     const canAttack = useCallback(() => {
         return isMyTurn && player?.monsters.some(m => m.canAttack) && player.phase === 'maintenance';
     }, [isMyTurn, player]);
 
     const passPhase = useCallback(() => {
-        if(canAttack()) {
-            setPassAttackPhaseBody({userId: user?.id});
-            if(player) {
+        if (canAttack()) {
+            setPassAttackPhaseBody({ userId: user?.id });
+            if (player) {
                 player.phase = 'attack';
                 setPlayer(player);
                 setCanPlaceCard(false);
             }
-            
+
         } else {
             passTurn();
         }
@@ -128,6 +134,11 @@ export const BattleStagePage = () => {
         }
     }, [placingCardBoardPosition, user?.id, cardResponse?.data]);
 
+
+    const onSelectMonster = useCallback((boardMosterCard?: BoardMosterCard) => {
+        setActionsMonsterCard(boardMosterCard);
+    }, [])
+
     useEffect(() => {
         if (placeMosterCardResponse?.data?.message === 'ok') {
             toast("Placed card");
@@ -135,8 +146,6 @@ export const BattleStagePage = () => {
             setHand(newHand);
         }
     }, [placeMosterCardResponse]);
-
-
 
     return <Page>
         {placingCard ? <DialogPlaceCard
@@ -146,6 +155,16 @@ export const BattleStagePage = () => {
             onPlaceMonsterCard={onPlaceMonsterCard}
             onClose={onClosePlaceCard}
         /> : null}
+
+        {actionsMonsterCard ? <DialogMonsterBoardActions
+            open={!!actionsMonsterCard}
+            boardCard={actionsMonsterCard}
+            reveal={() => null}
+            attack={() => null}
+            toggleBattlePosition={() => null}
+            onClose={onCloseMonsterActions}
+        /> : null}
+
         <DndProvider backend={HTML5Backend}>
             <Flex direction={'column'} gap="2">
                 <Flex justify={'end'}>
@@ -156,40 +175,42 @@ export const BattleStagePage = () => {
                     </Card>
                 </Flex>
 
-                {user && user.backCard && <BattleBoard 
-                onDropCardStop={onDropCardStop}
-                backCardUrl={user.backCard}
-                monsterBoard1={monsterBoardOpponent1}
-                monsterBoard2={monsterBoardOpponent2}
-                monsterBoard3={monsterBoardOpponent3}
-              />}
+                {user && user.backCard && <BattleBoard
+                    onSelectMonster={onSelectMonster}
+                    onDropCardStop={onDropCardStop}
+                    backCardUrl={user.backCard}
+                    monsterBoard1={monsterBoardOpponent1}
+                    monsterBoard2={monsterBoardOpponent2}
+                    monsterBoard3={monsterBoardOpponent3}
+                />}
                 {player ? <Flex justify={'center'} style={{ maxHeight: "50px" }}>
                     {isMyTurn ? <TriangleDownIcon width={80} height={80} /> : null}
                     {!isMyTurn ? <TriangleUpIcon width={80} height={80} /> : null}
                 </Flex> : null}
 
-              {user && user.backCard && <BattleBoard 
-                onDropCardStop={onDropCardStop}
-                backCardUrl={user.backCard}
-                monsterBoard1={monsterBoard1}
-                monsterBoard2={monsterBoard2}
-                monsterBoard3={monsterBoard3}
-                canAttack={isMyTurn && player?.phase === 'attack'}
-              />}
+                {user && user.backCard && <BattleBoard
+                    onSelectMonster={onSelectMonster}
+                    onDropCardStop={onDropCardStop}
+                    backCardUrl={user.backCard}
+                    monsterBoard1={monsterBoard1}
+                    monsterBoard2={monsterBoard2}
+                    monsterBoard3={monsterBoard3}
+                    canAttack={isMyTurn && player?.phase === 'attack'}
+                />}
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
                     <Flex gap={'4'} style={{ background: "#4CAF50", padding: '10px' }}>
-                        {hand.map(gcard => gcard && <GCardDnD 
-                            key={user?.username + gcard.id} 
-                            gcard={gcard} isSelected={false} 
-                            onSelect={(id) => id} 
-                            canDrag={canPlaceCard} 
+                        {hand.map(gcard => gcard && <GCardDnD
+                            key={user?.username + gcard.id}
+                            gcard={gcard} isSelected={false}
+                            onSelect={(id) => id}
+                            canDrag={canPlaceCard}
                         />)}
                     </Flex>
                     <Card style={{ flexGrow: '0.5' }}>
                         <Flex direction={"column"} justify="between" height={'100%'}>
                             <span>Deck: {player?.deck?.length}</span>
-                            <Button onClick={passPhase} disabled={!isMyTurn}>{ !canAttack() ? "Pass turn" : "Attack"}</Button>
+                            <Button onClick={passPhase} disabled={!isMyTurn}>{!canAttack() ? "Pass turn" : "Attack"}</Button>
                         </Flex>
                     </Card>
                 </Flex>
