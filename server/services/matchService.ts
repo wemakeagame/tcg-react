@@ -177,6 +177,19 @@ export class MatchService {
         }
     }
 
+    public revealCard(userId: User['id'], cardToPlace: BoardMosterCard) {
+        const match = this.getMatchByUser(userId);
+        if (match) {
+            const card = this.gCardRepository.getCard(cardToPlace.gcardId);
+            if (card) {
+                this.matchRepository.revealCard(userId, cardToPlace);
+            }
+        } else {
+            throw new Error("User not present in a match");
+        }
+    }
+
+
     public passTurn(userId: User['id']) {
         const match = this.getMatchByUser(userId);
         if (match) {

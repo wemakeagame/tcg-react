@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@decorators/di";
+import { Inject } from "@decorators/di";
 import { Express, Request, Response } from "express";
 import { BoardMosterCard } from "../repositories/matchRepository";
 import { MatchService } from "../services/matchService";
@@ -126,6 +126,25 @@ export class MatchController {
 
         if (userId && cardToPlace) {
           this.matchService.toggleMonsterPosition(userId, cardToPlace);
+          res.send({ message: "ok" }); 
+        } else {
+          throw new Error("Something is wrong with this action");
+        }
+      } catch (e) {
+        res.statusCode = 500;
+        res.send({ error: "it was not possible to do this action" });
+      }
+    });
+
+
+    //toggle position monster
+    this.app.post(`${this.path}/reveal`, (req: Request, res: Response) => {
+      try {
+        const userId = req.body?.userId;
+        const cardToPlace = req.body?.cardToPlace as BoardMosterCard;
+
+        if (userId && cardToPlace) {
+          this.matchService.revealCard(userId, cardToPlace);
           res.send({ message: "ok" }); 
         } else {
           throw new Error("Something is wrong with this action");

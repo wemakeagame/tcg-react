@@ -58,7 +58,10 @@ export const BattleStagePage = () => {
         cardToPlace: BoardMosterCard
     }, { message: string }>("http://localhost:5500/match/toggle-monster-position")
 
-    
+    const [, setRevealMonster] = usePostApi<{
+        userId: User['id'],
+        cardToPlace: BoardMosterCard
+    }, { message: string }>("http://localhost:5500/match/reveal")
 
     useEffect(() => {
         if (matchResponse) {
@@ -138,25 +141,42 @@ export const BattleStagePage = () => {
             }
 
             setCanPlaceCard(false);
+            toast("Placed card");
         }
     }, [placingCardBoardPosition, user?.id, cardResponse?.data]);
 
 
     const onSelectMonster = useCallback((boardMosterCard?: BoardMosterCard) => {
-        if(isMyTurn) {
+        if (isMyTurn) {
             setActionsMonsterCard(boardMosterCard);
         }
     }, [isMyTurn]);
 
     const onSelectOpponentMonster = useCallback((boardMosterCard?: BoardMosterCard) => {
-        if(isMyTurn) {
+        if (isMyTurn) {
             // TODO when attack check the oponent card
         }
     }, [isMyTurn]);
 
+    const updateCardOnBoard = useCallback(() => {
+        if(actionsMonsterCard) {
+            if(actionsMonsterCard.boardPostion === 1) {
+                setMonsterBoard1({...actionsMonsterCard});
+            }
+    
+            if(actionsMonsterCard.boardPostion === 2) {
+                setMonsterBoard2({...actionsMonsterCard});
+            }
+    
+            if(actionsMonsterCard.boardPostion === 3) {
+                setMonsterBoard3({...actionsMonsterCard});
+            }
+        }
+    }, [actionsMonsterCard]);
+
     const toggleBattlePosition = useCallback(() => {
-        if(actionsMonsterCard && user) {
-            const nextPosition = actionsMonsterCard.position === 'attack' ? 'defense' : 'attack';;
+        if (actionsMonsterCard && user) {
+            const nextPosition = actionsMonsterCard.position === 'attack' ? 'defense' : 'attack';
             toast(`Changed from ${actionsMonsterCard.position} to ${nextPosition}`)
             actionsMonsterCard.position = nextPosition;
             setTogglePositionMonster({
@@ -164,14 +184,28 @@ export const BattleStagePage = () => {
                 cardToPlace: actionsMonsterCard
             });
 
+            updateCardOnBoard();
             setActionsMonsterCard(undefined);
-            
         }
-    }, [actionsMonsterCard, user]);
+    }, [actionsMonsterCard, user, updateCardOnBoard]);
+
+    const revealCard = useCallback(() => {
+        if (actionsMonsterCard && user) {
+            toast(`you revelead ${actionsMonsterCard.gcard?.name}`)
+            actionsMonsterCard.revelead = true;
+            setRevealMonster({
+                userId: user.id,
+                cardToPlace: actionsMonsterCard
+            });
+
+            updateCardOnBoard()
+            setActionsMonsterCard(undefined);
+        }
+    }, [actionsMonsterCard, user, updateCardOnBoard]);
 
     useEffect(() => {
         if (placeMosterCardResponse?.data?.message === 'ok') {
-            toast("Placed card");
+           
             const newHand = hand.filter(gcard => gcard?.id !== placingCard?.id);
             setHand(newHand);
         }
@@ -190,7 +224,7 @@ export const BattleStagePage = () => {
             open={!!actionsMonsterCard}
             boardCard={actionsMonsterCard}
             phase={player.phase}
-            reveal={() => null}
+            reveal={revealCard}
             attack={() => null}
             toggleBattlePosition={toggleBattlePosition}
             onClose={onCloseMonsterActions}
