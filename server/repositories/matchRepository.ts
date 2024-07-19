@@ -99,6 +99,18 @@ export class MatchRepository {
         }
     }
 
+    public toggleBattlePosition(userId: string, cardToPlace: BoardMosterCard) {
+        const match = this.getMatchDataByUser(userId);
+        if(match) {
+            const board = match.player1.userId === userId ? match.player1 : match.player2;
+            board.monsters.forEach(monster => {
+                if(monster.gcardId === cardToPlace.gcardId) {
+                    monster.position = cardToPlace.position;
+                }
+            })
+        }
+    }
+
     public removeCardFromHand(userId: string, gcardId: GCard['id']) {
         const match = this.getMatchDataByUser(userId);
         if(match) {

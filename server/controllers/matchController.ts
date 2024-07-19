@@ -116,5 +116,24 @@ export class MatchController {
         res.send({ error: "it was not possible to do this action" });
       }
     });
+
+    //toggle position monster
+    this.app.post(`${this.path}/toggle-monster-position`, (req: Request, res: Response) => {
+      try {
+        const userId = req.body?.userId;
+        const cardToPlace = req.body?.cardToPlace as BoardMosterCard;
+       
+
+        if (userId && cardToPlace) {
+          this.matchService.toggleMonsterPosition(userId, cardToPlace);
+          res.send({ message: "ok" }); 
+        } else {
+          throw new Error("Something is wrong with this action");
+        }
+      } catch (e) {
+        res.statusCode = 500;
+        res.send({ error: "it was not possible to do this action" });
+      }
+    });
   }
 }

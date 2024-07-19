@@ -165,6 +165,18 @@ export class MatchService {
 
     }
 
+    public toggleMonsterPosition(userId: User['id'], cardToPlace: BoardMosterCard) {
+        const match = this.getMatchByUser(userId);
+        if (match) {
+            const card = this.gCardRepository.getCard(cardToPlace.gcardId);
+            if (card) {
+                this.matchRepository.toggleBattlePosition(userId, cardToPlace);
+            }
+        } else {
+            throw new Error("User not present in a match");
+        }
+    }
+
     public passTurn(userId: User['id']) {
         const match = this.getMatchByUser(userId);
         if (match) {

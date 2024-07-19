@@ -51,7 +51,14 @@ export const BattleStagePage = () => {
     const [placeMosterCardResponse, setPlaceMosterCardBody] = usePostApi<{
         userId: User['id'],
         cardToPlace: BoardMosterCard
-    }, { message: string }>("http://localhost:5500/match/place-monster-card")
+    }, { message: string }>("http://localhost:5500/match/place-monster-card");
+
+    const [, setTogglePositionMonster] = usePostApi<{
+        userId: User['id'],
+        cardToPlace: BoardMosterCard
+    }, { message: string }>("http://localhost:5500/match/toggle-monster-position")
+
+    
 
     useEffect(() => {
         if (matchResponse) {
@@ -136,8 +143,31 @@ export const BattleStagePage = () => {
 
 
     const onSelectMonster = useCallback((boardMosterCard?: BoardMosterCard) => {
-        setActionsMonsterCard(boardMosterCard);
-    }, [])
+        if(isMyTurn) {
+            setActionsMonsterCard(boardMosterCard);
+        }
+    }, [isMyTurn]);
+
+    const onSelectOpponentMonster = useCallback((boardMosterCard?: BoardMosterCard) => {
+        if(isMyTurn) {
+            // TODO when attack check the oponent card
+        }
+    }, [isMyTurn]);
+
+    const toggleBattlePosition = useCallback(() => {
+        if(actionsMonsterCard && user) {
+            const nextPosition = actionsMonsterCard.position === 'attack' ? 'defense' : 'attack';;
+            toast(`Changed from ${actionsMonsterCard.position} to ${nextPosition}`)
+            actionsMonsterCard.position = nextPosition;
+            setTogglePositionMonster({
+                userId: user.id,
+                cardToPlace: actionsMonsterCard
+            });
+
+            setActionsMonsterCard(undefined);
+            
+        }
+    }, [actionsMonsterCard, user]);
 
     useEffect(() => {
         if (placeMosterCardResponse?.data?.message === 'ok') {
@@ -162,7 +192,7 @@ export const BattleStagePage = () => {
             phase={player.phase}
             reveal={() => null}
             attack={() => null}
-            toggleBattlePosition={() => null}
+            toggleBattlePosition={toggleBattlePosition}
             onClose={onCloseMonsterActions}
         /> : null}
 
@@ -177,7 +207,7 @@ export const BattleStagePage = () => {
                 </Flex>
 
                 {user && user.backCard && opponent && <BattleBoard
-                    onSelectMonster={onSelectMonster}
+                    onSelectMonster={onSelectOpponentMonster}
                     onDropCardStop={onDropCardStop}
                     backCardUrl={user.backCard}
                     monsterBoard1={monsterBoardOpponent1}
