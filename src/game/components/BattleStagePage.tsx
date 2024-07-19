@@ -176,27 +176,30 @@ export const BattleStagePage = () => {
                     </Card>
                 </Flex>
 
-                {user && user.backCard && <BattleBoard
+                {user && user.backCard && opponent && <BattleBoard
                     onSelectMonster={onSelectMonster}
                     onDropCardStop={onDropCardStop}
                     backCardUrl={user.backCard}
                     monsterBoard1={monsterBoardOpponent1}
                     monsterBoard2={monsterBoardOpponent2}
                     monsterBoard3={monsterBoardOpponent3}
+                    phase={opponent.phase}
+                    isMyTurn={isMyTurn}
                 />}
                 {player ? <Flex justify={'center'} style={{ maxHeight: "50px" }}>
                     {isMyTurn ? <TriangleDownIcon width={80} height={80} /> : null}
                     {!isMyTurn ? <TriangleUpIcon width={80} height={80} /> : null}
                 </Flex> : null}
 
-                {user && user.backCard && <BattleBoard
+                {user && user.backCard && player && <BattleBoard
                     onSelectMonster={onSelectMonster}
                     onDropCardStop={onDropCardStop}
                     backCardUrl={user.backCard}
                     monsterBoard1={monsterBoard1}
                     monsterBoard2={monsterBoard2}
                     monsterBoard3={monsterBoard3}
-                    canAttack={isMyTurn && player?.phase === 'attack'}
+                    phase={player.phase}
+                    isMyTurn={isMyTurn}
                 />}
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">

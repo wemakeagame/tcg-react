@@ -3,14 +3,15 @@ import { useMemo } from "react";
 import { useDrop } from "react-dnd";
 import { GCard } from "../../card/model/gcard";
 import { User } from "../../user/model/user";
-import { BoardCard, BoardMosterCard } from "../models/match";
+import { BoardCard, BoardMosterCard, PlayerMatch } from "../models/match";
 import { BoardMonsterCardView } from "./BoardMonsterCardView";
 
 type BattleBoardCardMonsterSpotProps = {
     backCardUrl: User["backCard"];
     boardPosition: BoardCard['boardPostion'];
     boardCard?: BoardMosterCard;
-    canAttack?: boolean;
+    isMyTurn?: boolean;
+    phase: PlayerMatch['phase'];
     onDrop: (gcard: GCard, boardPostion: BoardCard['boardPostion']) => void;
     onClick: (boardMonsterCard?: BoardMosterCard) => void;
 }
@@ -21,13 +22,20 @@ const getAttackStyle = (boardMosterCard?: BoardMosterCard | null, canAttack?: bo
     } : {};
 }
 
+const getActionStyle = (boardMosterCard?: BoardMosterCard | null, hasActions?: boolean) => {
+    return hasActions && boardMosterCard?.gcard ? {
+        outline: "3px solid red"
+    } : {};
+}
+
 export const BattleBoardCardMonsterSpot: React.FC<BattleBoardCardMonsterSpotProps> = ({
     onDrop,
     onClick,
     boardPosition,
     backCardUrl,
     boardCard,
-    canAttack
+    isMyTurn,
+    phase
 }) => {
 
     const onDropPosition = (gcard: GCard) => {
@@ -37,7 +45,11 @@ export const BattleBoardCardMonsterSpot: React.FC<BattleBoardCardMonsterSpotProp
     const [, drop] = useDrop(() => ({
         accept: ['monster', 'equipament'],
         drop: onDropPosition,
-    }));
+    })); 
+
+    const canAttack = isMyTurn && phase === 'attack';
+
+    const hasActions = phase === 'maintenance' && isMyTurn;
 
 
     const style = useMemo(() => ({
@@ -45,14 +57,14 @@ export const BattleBoardCardMonsterSpot: React.FC<BattleBoardCardMonsterSpotProp
             width: "140px",
             height: "235px",
             background: '#594e4e',
-            border: "1px dashed #cccccc",
+            border: 'none',
             padding: "0",
             display: "flex",
             justifyContent: "center",
             top: '-10px',
             transform: boardCard?.position === 'defense' ? "rotate(90deg)" : "rotate(0deg)",
-        }, ...getAttackStyle(boardCard, canAttack)
-    }), [boardCard, canAttack]);
+        }, ...getAttackStyle(boardCard, canAttack), ...getActionStyle(boardCard, hasActions)
+    }), [boardCard, canAttack, hasActions]);
 
     return <Card ref={drop} style={style} onClick={() => onClick(boardCard)}>
         {

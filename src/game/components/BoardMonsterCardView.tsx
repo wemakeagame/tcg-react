@@ -17,7 +17,6 @@ export const BoardMonsterCardView: React.FC<BoardMonsterCardProps> = ({boardMost
             style={{
               width: "135px",
               height: "215",
-              border: "1px solid #000000",
               background: "#ffffff",
               margin: "5px",
             }}
