@@ -156,9 +156,10 @@ export const BattleStagePage = () => {
             onClose={onClosePlaceCard}
         /> : null}
 
-        {actionsMonsterCard ? <DialogMonsterBoardActions
+        {actionsMonsterCard && player ? <DialogMonsterBoardActions
             open={!!actionsMonsterCard}
             boardCard={actionsMonsterCard}
+            phase={player.phase}
             reveal={() => null}
             attack={() => null}
             toggleBattlePosition={() => null}

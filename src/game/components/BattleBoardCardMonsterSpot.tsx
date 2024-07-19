@@ -45,7 +45,7 @@ export const BattleBoardCardMonsterSpot: React.FC<BattleBoardCardMonsterSpotProp
             width: "140px",
             height: "235px",
             background: '#594e4e',
-            border: "1px dashed #ccccccc",
+            border: "1px dashed #cccccc",
             padding: "0",
             display: "flex",
             justifyContent: "center",
