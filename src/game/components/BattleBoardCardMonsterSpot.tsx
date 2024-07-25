@@ -1,6 +1,7 @@
 import { Card } from "@radix-ui/themes";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useDrop } from "react-dnd";
+import { useAnimateKeyframes } from "react-simple-animate";
 import { GCard } from "../../card/model/gcard";
 import { User } from "../../user/model/user";
 import { BoardCard, BoardMosterCard, PlayerMatch } from "../models/match";
@@ -12,6 +13,7 @@ type BattleBoardCardMonsterSpotProps = {
     boardCard?: BoardMosterCard;
     isMyTurn?: boolean;
     phase: PlayerMatch['phase'];
+    blink: boolean;
     onDrop: (gcard: GCard, boardPostion: BoardCard['boardPostion']) => void;
     onClick: (boardMonsterCard?: BoardMosterCard) => void;
 }
@@ -35,8 +37,31 @@ export const BattleBoardCardMonsterSpot: React.FC<BattleBoardCardMonsterSpotProp
     backCardUrl,
     boardCard,
     isMyTurn,
-    phase
+    phase,
+    blink
 }) => {
+
+
+    const { play, pause, style: animStyle } = useAnimateKeyframes({
+        iterationCount: "infinite",
+        direction: "alternate",
+        duration: 0.5,
+        keyframes: [
+            "outline: 0px solid red",
+            "outline: 10px solid red"
+        ]
+    });
+
+    useEffect(() => {
+        if (blink) {
+            play(true);
+            pause(false);
+        } else {
+            play(false);
+            pause(true);
+        }
+    }, [blink])
+
 
     const onDropPosition = (gcard: GCard) => {
         return onDrop(gcard, boardPosition);
@@ -45,14 +70,14 @@ export const BattleBoardCardMonsterSpot: React.FC<BattleBoardCardMonsterSpotProp
     const [, drop] = useDrop(() => ({
         accept: ['monster', 'equipament'],
         drop: onDropPosition,
-    })); 
+    }));
 
     const canAttack = isMyTurn && phase === 'attack';
 
     const hasActions = phase === 'maintenance' && isMyTurn;
 
 
-    const style = useMemo(() => ({
+    const baseStyle = useMemo(() => ({
         ...{
             width: "140px",
             height: "235px",
@@ -61,14 +86,25 @@ export const BattleBoardCardMonsterSpot: React.FC<BattleBoardCardMonsterSpotProp
             padding: "0",
             display: "flex",
             justifyContent: "center",
-            top: '-10px',
             transform: boardCard?.position === 'defense' ? "rotate(90deg)" : "rotate(0deg)",
         }, ...getAttackStyle(boardCard, canAttack), ...getActionStyle(boardCard, hasActions)
     }), [boardCard, canAttack, hasActions]);
 
-    return <Card ref={drop} style={style} onClick={() => onClick(boardCard)}>
-        {
-            boardCard && backCardUrl && <BoardMonsterCardView boardMosterCard={boardCard} backCardUrl={backCardUrl} />
-        }
-    </Card >
+
+    const baseWrapperStyle = {
+        top: '-10px',
+        borderRadius: '5px'
+    };
+
+    const currentAnimStyle = {
+        ...animStyle, ...baseWrapperStyle
+    }
+
+    return <div style={blink ? currentAnimStyle : { ...baseWrapperStyle, ...{ outline: 'none' } }}>
+        <Card ref={drop} style={baseStyle} onClick={() => onClick(boardCard)}>
+            {
+                boardCard && backCardUrl && <BoardMonsterCardView boardMosterCard={boardCard} backCardUrl={backCardUrl} />
+            }
+        </Card >
+    </div>
 }
