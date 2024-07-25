@@ -32,6 +32,7 @@ export const BattleStagePage = () => {
     const [placingCard, setPlacingCard] = useState<GCard>();
     const [actionsMonsterCard, setActionsMonsterCard] = useState<BoardMosterCard>();
     const [placingCardBoardPosition, setPlacingCardBoardPosition] = useState<BoardCard['boardPostion']>(1);
+    const [attackingCard, setAttackingCard] = useState<BoardMosterCard>();
 
     const {
         monsterBoard1,
@@ -119,7 +120,9 @@ export const BattleStagePage = () => {
 
         } else {
             passTurn();
+            setAttackingCard(undefined);
         }
+        
     }, [user?.id, player]);
 
     const onPlaceMonsterCard = useCallback((monsterCard: BoardMosterCard) => {
@@ -189,6 +192,24 @@ export const BattleStagePage = () => {
         }
     }, [actionsMonsterCard, user, updateCardOnBoard]);
 
+
+    const attackCard = useCallback(() => {
+        if (actionsMonsterCard && user) {
+            const hasOpponentMonster = monsterBoardOpponent1?.gcard || monsterBoardOpponent2?.gcard || monsterBoardOpponent3?.gcard;
+            if(hasOpponentMonster) {
+                toast(`Please select the target`);
+                setAttackingCard(actionsMonsterCard);
+
+            } else {
+                // TODO attack life points
+            }
+
+
+           setActionsMonsterCard(undefined);
+        }
+    }, [actionsMonsterCard, user, updateCardOnBoard]);
+
+
     const revealCard = useCallback(() => {
         if (actionsMonsterCard && user) {
             toast(`you revelead ${actionsMonsterCard.gcard?.name}`)
@@ -225,7 +246,7 @@ export const BattleStagePage = () => {
             boardCard={actionsMonsterCard}
             phase={player.phase}
             reveal={revealCard}
-            attack={() => null}
+            attack={attackCard}
             toggleBattlePosition={toggleBattlePosition}
             onClose={onCloseMonsterActions}
         /> : null}
@@ -249,6 +270,7 @@ export const BattleStagePage = () => {
                     monsterBoard3={monsterBoardOpponent3}
                     phase={opponent.phase}
                     isMyTurn={isMyTurn}
+                    blink={!!attackingCard}
                 />}
                 {player ? <Flex justify={'center'} style={{ maxHeight: "50px" }}>
                     {isMyTurn ? <TriangleDownIcon width={80} height={80} /> : null}
@@ -264,6 +286,7 @@ export const BattleStagePage = () => {
                     monsterBoard3={monsterBoard3}
                     phase={player.phase}
                     isMyTurn={isMyTurn}
+                    blink={false}
                 />}
 
                 <Flex flexGrow={'1'} justify={'between'} gap="2">
