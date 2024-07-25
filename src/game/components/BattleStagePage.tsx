@@ -241,7 +241,7 @@ export const BattleStagePage = () => {
             onClose={onClosePlaceCard}
         /> : null}
 
-        {actionsMonsterCard && player ? <DialogMonsterBoardActions
+        {actionsMonsterCard && player && !attackingCard ? <DialogMonsterBoardActions
             open={!!actionsMonsterCard}
             boardCard={actionsMonsterCard}
             phase={player.phase}
@@ -254,11 +254,11 @@ export const BattleStagePage = () => {
         <DndProvider backend={HTML5Backend}>
             <Flex direction={'column'} gap="2">
                 <Flex justify={'end'}>
-                    <Card>
-                        deck: 99
-                        hand: 99
-                        life: 20
-                    </Card>
+                    {opponent && <Card style={{display: 'flex', justifyContent: 'space-between', minWidth: '300px'}}>
+                        <span>Deck: {`${opponent?.deckAmount}`}</span>
+                        <span>Hand: {`${opponent?.handAmount}`}</span>
+                        <span>Life: {`${opponent?.life}`}</span>
+                    </Card>}
                 </Flex>
 
                 {user && user.backCard && opponent && <BattleBoard
@@ -301,6 +301,7 @@ export const BattleStagePage = () => {
                     <Card style={{ flexGrow: '0.5' }}>
                         <Flex direction={"column"} justify="between" height={'100%'}>
                             <span>Deck: {player?.deck?.length}</span>
+                            <span>Life: {player?.life}</span>
                             <Button onClick={passPhase} disabled={!isMyTurn}>{!canAttack() ? "Pass turn" : "Attack"}</Button>
                         </Flex>
                     </Card>

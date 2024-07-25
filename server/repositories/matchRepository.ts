@@ -27,6 +27,7 @@ export type PlayerMatch = {
     deck: GCard['id'][];
     phase: 'maintenance' | 'attack';
     hasPlacedMonster: boolean;
+    life: number;
 }
 
 

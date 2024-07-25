@@ -58,7 +58,8 @@ export class MatchService {
                     traps: [],
                     deck: [],
                     hasPlacedMonster: false,
-                    phase: 'maintenance'
+                    phase: 'maintenance',
+                    life: 20,
                 },
                 player2: {
                     lastReceived: new Date(),
@@ -68,7 +69,8 @@ export class MatchService {
                     traps: [],
                     deck: [],
                     hasPlacedMonster: false,
-                    phase: 'maintenance'
+                    phase: 'maintenance',
+                    life: 20,
                 },
                 chat: [{
                     username: 'system',

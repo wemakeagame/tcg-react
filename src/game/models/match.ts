@@ -26,6 +26,9 @@ export type PlayerMatch = {
     traps: BoarSpellCard[];
     deck: GCard['id'][];
     hasPlacedMonster: boolean;
+    life: number;
+    handAmount?: number;
+    deckAmount?: number;
     phase: "maintenance" | "attack";
 }
 

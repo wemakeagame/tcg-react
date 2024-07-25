@@ -54,11 +54,17 @@ export class MatchController {
               monsters: match.player1.monsters,
               traps: match.player1.traps,
               userId: match.player1.userId,
+              life: match.player1.life,
+              handAmount: match.player1.hand.length,
+              deckAmount: match.player1.deck.length,
             }, 
             player2: userId === match.player2.userId ? match.player2 : {
               monsters: match.player2.monsters,
               traps: match.player2.traps,
               userId: match.player2.userId,
+              life: match.player2.life,
+              handAmount: match.player2.hand.length,
+              deckAmount: match.player2.deck.length,
             },
             turn: match.turn
           });

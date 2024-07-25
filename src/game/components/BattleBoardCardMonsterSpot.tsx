@@ -26,7 +26,7 @@ const getAttackStyle = (boardMosterCard?: BoardMosterCard | null, canAttack?: bo
 
 const getActionStyle = (boardMosterCard?: BoardMosterCard | null, hasActions?: boolean) => {
     return hasActions && boardMosterCard?.gcard ? {
-        outline: "3px solid red"
+        outline: "3px solid orange"
     } : {};
 }
 
