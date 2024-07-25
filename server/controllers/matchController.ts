@@ -160,5 +160,29 @@ export class MatchController {
         res.send({ error: "it was not possible to do this action" });
       }
     });
+
+    //resolve attack
+    this.app.post(`${this.path}/resolve-attack`, (req: Request, res: Response) => {
+      try {
+        const userId = req.body?.userId;
+        const attackingCard = req.body?.attackingCard as BoardMosterCard;
+        const opponentAttackPosition = req.body?.opponentAttackPosition;
+
+        if (userId && attackingCard) {
+          const response = this.matchService.resolveAttack(userId, attackingCard, opponentAttackPosition);
+
+          if(response) {
+            res.send({ message: "ok" }); 
+          }
+          
+        } else {
+          throw new Error("Something is wrong with this action");
+        }
+      } catch (e) {
+        res.statusCode = 500;
+        console.error(e);
+        res.send({ error: "it was not possible to do this action" });
+      }
+    });
   }
 }

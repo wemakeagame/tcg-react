@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@decorators/di";
 import { GCardRepository } from "../repositories/gcardRepository";
 import { BoardCard, BoardMosterCard, Match, MatchRepository, PlayerMatch } from "../repositories/matchRepository";
 import { Deck } from "../repositories/model/deck";
-import { GCard } from "../repositories/model/gcard";
+import { GCard, GCardMonster } from "../repositories/model/gcard";
 import { User } from "../repositories/userRespository";
 import { getRandomInt } from "../utils/utilsFunctions";
 import { DeckService } from "./deckService";
@@ -241,5 +241,44 @@ export class MatchService {
             throw new Error("User doesn't have a match");
         }
 
+    }
+
+    public resolveAttack(userId: User['id'], attackingCardBoard: BoardMosterCard, opponentAttackPosition?: number) {
+        const match = this.getMatchByUser(userId);
+
+        let player: PlayerMatch | null = null;
+        let opponent: PlayerMatch | null = null;
+
+        if (match) {
+            if (match.player1.userId === userId && match.turn === userId) {
+                player = match.player1;
+                opponent = match.player2;
+            } 
+            if (match.player2.userId === userId && match.turn === userId) {
+                player = match.player2;
+                opponent = match.player1;
+            } 
+
+            if(opponent && player) {
+                if(opponentAttackPosition) {
+                    // TODO calculate the battle
+                    // TODO calculate traps
+                } else {
+                    const attackingCard = this.gCardRepository.getCard(attackingCardBoard.gcardId) as GCardMonster;
+                    opponent.life -= attackingCard.power;
+                    
+                    
+                }
+            } else {
+                throw new Error("player or opponent coudn't be resolved");
+            }
+
+            this.matchRepository.updateMatchData(match);
+
+            return true;
+        }
+        else {
+            throw new Error("User doesn't have a match");
+        }
     }
 }

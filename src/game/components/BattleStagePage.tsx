@@ -64,6 +64,12 @@ export const BattleStagePage = () => {
         cardToPlace: BoardMosterCard
     }, { message: string }>("http://localhost:5500/match/reveal")
 
+    const [attackResponse, setAttackBody] = usePostApi<{
+        userId: User['id'],
+        attackingCard: BoardMosterCard,
+        opponentAttackPosition?: number
+    }, { message: string }>("http://localhost:5500/match/resolve-attack")
+
     useEffect(() => {
         if (matchResponse) {
             setPlayer(matchResponse?.data?.player1?.userId === user?.id ? matchResponse?.data?.player1 : matchResponse?.data?.player2);
@@ -122,7 +128,7 @@ export const BattleStagePage = () => {
             passTurn();
             setAttackingCard(undefined);
         }
-        
+
     }, [user?.id, player]);
 
     const onPlaceMonsterCard = useCallback((monsterCard: BoardMosterCard) => {
@@ -161,18 +167,18 @@ export const BattleStagePage = () => {
         }
     }, [isMyTurn]);
 
-    const updateCardOnBoard = useCallback(() => {
-        if(actionsMonsterCard) {
-            if(actionsMonsterCard.boardPostion === 1) {
-                setMonsterBoard1({...actionsMonsterCard});
+    const updateCardOnBoard = useCallback((targetCard: BoardMosterCard) => {
+        if (targetCard) {
+            if (targetCard.boardPostion === 1) {
+                setMonsterBoard1({ ...targetCard });
             }
-    
-            if(actionsMonsterCard.boardPostion === 2) {
-                setMonsterBoard2({...actionsMonsterCard});
+
+            if (targetCard.boardPostion === 2) {
+                setMonsterBoard2({ ...targetCard });
             }
-    
-            if(actionsMonsterCard.boardPostion === 3) {
-                setMonsterBoard3({...actionsMonsterCard});
+
+            if (targetCard.boardPostion === 3) {
+                setMonsterBoard3({ ...targetCard });
             }
         }
     }, [actionsMonsterCard]);
@@ -187,7 +193,7 @@ export const BattleStagePage = () => {
                 cardToPlace: actionsMonsterCard
             });
 
-            updateCardOnBoard();
+            updateCardOnBoard(actionsMonsterCard);
             setActionsMonsterCard(undefined);
         }
     }, [actionsMonsterCard, user, updateCardOnBoard]);
@@ -196,16 +202,20 @@ export const BattleStagePage = () => {
     const attackCard = useCallback(() => {
         if (actionsMonsterCard && user) {
             const hasOpponentMonster = monsterBoardOpponent1?.gcard || monsterBoardOpponent2?.gcard || monsterBoardOpponent3?.gcard;
-            if(hasOpponentMonster) {
+            if (hasOpponentMonster) {
                 toast(`Please select the target`);
                 setAttackingCard(actionsMonsterCard);
-
             } else {
-                // TODO attack life points
+                setAttackBody({
+                    userId: user.id,
+                    attackingCard: actionsMonsterCard,
+                })
             }
 
+            actionsMonsterCard.canAttack = false;
+            updateCardOnBoard(actionsMonsterCard)
 
-           setActionsMonsterCard(undefined);
+            setActionsMonsterCard(undefined);
         }
     }, [actionsMonsterCard, user, updateCardOnBoard]);
 
@@ -219,14 +229,14 @@ export const BattleStagePage = () => {
                 cardToPlace: actionsMonsterCard
             });
 
-            updateCardOnBoard()
+            updateCardOnBoard(actionsMonsterCard)
             setActionsMonsterCard(undefined);
         }
     }, [actionsMonsterCard, user, updateCardOnBoard]);
 
     useEffect(() => {
         if (placeMosterCardResponse?.data?.message === 'ok') {
-           
+
             const newHand = hand.filter(gcard => gcard?.id !== placingCard?.id);
             setHand(newHand);
         }
@@ -254,7 +264,7 @@ export const BattleStagePage = () => {
         <DndProvider backend={HTML5Backend}>
             <Flex direction={'column'} gap="2">
                 <Flex justify={'end'}>
-                    {opponent && <Card style={{display: 'flex', justifyContent: 'space-between', minWidth: '300px'}}>
+                    {opponent && <Card style={{ display: 'flex', justifyContent: 'space-between', minWidth: '300px' }}>
                         <span>Deck: {`${opponent?.deckAmount}`}</span>
                         <span>Hand: {`${opponent?.handAmount}`}</span>
                         <span>Life: {`${opponent?.life}`}</span>
