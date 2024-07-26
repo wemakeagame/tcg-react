@@ -242,6 +242,12 @@ export const BattleStagePage = () => {
         }
     }, [placeMosterCardResponse]);
 
+    useEffect(() => {
+        if(opponent) {
+            toast(`Oponnent was hit and lost life to ${opponent.life}`);
+        }
+    }, [opponent?.life]);
+
     return <Page>
         {placingCard ? <DialogPlaceCard
             open={isPlaceCardOptionsOpen}

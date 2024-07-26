@@ -266,8 +266,12 @@ export class MatchService {
                 } else {
                     const attackingCard = this.gCardRepository.getCard(attackingCardBoard.gcardId) as GCardMonster;
                     opponent.life -= attackingCard.power;
-                    
-                    
+                    const boardMoster = player.monsters.find((m) => m.gcardId === attackingCard.id);
+                    if(boardMoster) {
+                        boardMoster.canAttack = false;
+                        boardMoster.position = 'attack';
+                        boardMoster.revelead = true;
+                    }
                 }
             } else {
                 throw new Error("player or opponent coudn't be resolved");
