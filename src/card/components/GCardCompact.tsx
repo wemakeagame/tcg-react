@@ -28,7 +28,7 @@ export const GCardCompactViewBase: React.FC<GCardViewBaseProps> = ({
   return (
     <Card
       style={{ height: "70px", background: color, outline: outline, minWidth:"400px" }}
-      onClick={() => onSelect(gcard.id)}
+      onClick={() => onSelect && onSelect(gcard.id)}
     >
       <Card>
         <Flex justify={"between"}>

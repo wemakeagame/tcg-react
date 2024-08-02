@@ -15,8 +15,8 @@ import {
 } from "@radix-ui/react-icons";
 
 type SelectedCardType = {
-  isSelected: boolean;
-  onSelect: (cardId: string) => void;
+  isSelected?: boolean;
+  onSelect?: (cardId: string) => void;
 };
 
 export type GCardViewBaseProps = PropsWithChildren & {

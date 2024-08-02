@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { useUpdateBoard } from "../hooks/useUpdateBoard";
 import { BattleBoard } from "./BattleBoard";
 import { DialogMonsterBoardActions } from "./DialogMonsterBoardActions";
+import { DialogBattle } from "./DialogBattle";
 
 export const BattleStagePage = () => {
     const user = useAuthData(true);
@@ -163,7 +164,7 @@ export const BattleStagePage = () => {
 
     const onSelectOpponentMonster = useCallback((boardMosterCard?: BoardMosterCard) => {
         if (isMyTurn) {
-            // TODO when attack check the oponent card
+            debugger;
         }
     }, [isMyTurn]);
 
@@ -243,7 +244,7 @@ export const BattleStagePage = () => {
     }, [placeMosterCardResponse]);
 
     useEffect(() => {
-        if(opponent) {
+        if (opponent && opponent.life < 20) {
             toast(`Oponnent was hit and lost life to ${opponent.life}`);
         }
     }, [opponent?.life]);
@@ -266,6 +267,8 @@ export const BattleStagePage = () => {
             toggleBattlePosition={toggleBattlePosition}
             onClose={onCloseMonsterActions}
         /> : null}
+
+        {attackingCard && <DialogBattle open={true} onClose={() => null} attakingMoster={attackingCard} blockingMoster={attackingCard}></DialogBattle>}
 
         <DndProvider backend={HTML5Backend}>
             <Flex direction={'column'} gap="2">
