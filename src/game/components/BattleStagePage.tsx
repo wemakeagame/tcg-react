@@ -34,6 +34,7 @@ export const BattleStagePage = () => {
     const [actionsMonsterCard, setActionsMonsterCard] = useState<BoardMosterCard>();
     const [placingCardBoardPosition, setPlacingCardBoardPosition] = useState<BoardCard['boardPostion']>(1);
     const [attackingCard, setAttackingCard] = useState<BoardMosterCard>();
+    const [blockingCard, setBlockingCard] = useState<BoardMosterCard>();
 
     const {
         monsterBoard1,
@@ -163,8 +164,14 @@ export const BattleStagePage = () => {
     }, [isMyTurn]);
 
     const onSelectOpponentMonster = useCallback((boardMosterCard?: BoardMosterCard) => {
-        if (isMyTurn) {
-            debugger;
+        if (isMyTurn && user && actionsMonsterCard) {
+            setBlockingCard(boardMosterCard);
+
+            setAttackBody({
+                userId: user.id,
+                attackingCard: actionsMonsterCard,
+                opponentAttackPosition: boardMosterCard?.boardPostion
+            })
         }
     }, [isMyTurn]);
 
@@ -249,6 +256,13 @@ export const BattleStagePage = () => {
         }
     }, [opponent?.life]);
 
+    useEffect(() => {
+        // resolver as animacoes da batalha
+        setAttackingCard(undefined);
+        setBlockingCard(undefined);
+
+    }, [attackResponse])
+
     return <Page>
         {placingCard ? <DialogPlaceCard
             open={isPlaceCardOptionsOpen}
@@ -268,7 +282,12 @@ export const BattleStagePage = () => {
             onClose={onCloseMonsterActions}
         /> : null}
 
-        {attackingCard && <DialogBattle open={true} onClose={() => null} attakingMoster={attackingCard} blockingMoster={attackingCard}></DialogBattle>}
+        {attackingCard && blockingCard && <DialogBattle 
+            open={true} 
+            onClose={() => null} 
+            attakingMoster={attackingCard} 
+            blockingMoster={blockingCard} />
+        }
 
         <DndProvider backend={HTML5Backend}>
             <Flex direction={'column'} gap="2">

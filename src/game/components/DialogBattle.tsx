@@ -17,8 +17,9 @@ export const DialogBattle: React.FC<DialogBattleProps> = ({ open, attakingMoster
                 
             </Dialog.Description>
 
-            {attakingMoster?.gcard && blockingMoster?.gcard && <Flex gap="3" mt="4" justify="end" direction={'column'}>
+            {attakingMoster?.gcard && blockingMoster?.gcard && <Flex gap="3" mt="4" justify="between" direction={'row'}>
                 <GCardView gcard={attakingMoster.gcard}></GCardView>
+                 <Flex justify={"center"} align={'center'}>X</Flex>
                 <GCardView gcard={blockingMoster.gcard}></GCardView>
             </Flex>}
         </Dialog.Content>
